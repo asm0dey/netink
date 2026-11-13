@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 import type { Argv } from "yargs";
 import { hideBin } from "yargs/helpers";
-import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { chmodSync, existsSync, readFileSync, realpathSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { loadModel } from "./load";
 import { parseDsl } from "./dsl/parse";
@@ -211,8 +211,9 @@ function editCmd(req: EditRequest, file: string, json: boolean): number {
   catch { return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file, or create it with netdraw init" }); }
   const r = edit(text, file, req);
   if (!r.ok) return fail(json, 1, { error: r.error, file, line: r.line, hint: r.hint, candidates: r.candidates });
-  const tmp = join(dirname(file), `.${basename(file)}.${process.pid}.tmp`);
-  try { writeFileSync(tmp, r.text); renameSync(tmp, file); }
+  // through a symlink to its target, keeping the target's mode (a private file stays private)
+  const real = realpathSync(file), tmp = join(dirname(real), `.${basename(real)}.${process.pid}.tmp`);
+  try { writeFileSync(tmp, r.text); chmodSync(tmp, statSync(real).mode); renameSync(tmp, real); }
   catch (e) {
     rmSync(tmp, { force: true });
     return fail(json, 1, { error: `cannot write ${file}: ${(e as Error).message.split("\n")[0]}`, file, hint: "check the file's directory is writable" });

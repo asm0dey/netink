@@ -283,3 +283,15 @@ test("a repeated flag: the last one wins", async () => {
   const { parseEditArgv } = await import("../src/edit/command");
   expect(parseEditArgv(["vlan", "set", "a", "--color", "red", "--color", "blue"])).toMatchObject({ req: { args: { flags: { color: "blue" } } } });
 });
+test("an edit keeps the file mode and writes through a symlink", async () => {
+  const { chmodSync, lstatSync, statSync, symlinkSync } = await import("node:fs");
+  const f = fresh("mode.net", "vlan a 1\n");
+  chmodSync(f, 0o600);
+  expect(run("vlan", "add", "b", "2", "--file", f).code).toBe(0);
+  expect(statSync(f).mode & 0o777).toBe(0o600);
+  const target = fresh("target.net", "vlan a 1\n"), link = fresh("link.net");
+  symlinkSync(target, link);
+  expect(run("vlan", "add", "b", "2", "--file", link).code).toBe(0);
+  expect(lstatSync(link).isSymbolicLink()).toBe(true);
+  expect(readFileSync(target, "utf8")).toBe("vlan a 1\nvlan b 2\n");
+});
