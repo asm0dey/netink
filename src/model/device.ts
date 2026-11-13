@@ -90,6 +90,8 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
   const label = s.label ?? [id.toUpperCase(), s.model, lanIp?.cidr.split("/")[0], s.os].filter(Boolean).join(" · ");
   const node = mk(id, "device", "dev", label, s.note ? [s.note] : []);
   const addrsOf = (n: string) => addresses.filter((a) => a.iface === n).map((a) => a.cidr);
+  // a chip lists its addresses, minus the one the device label already shows
+  const chipAddrs = (n: string) => addrsOf(n).filter((c) => c !== lanIp?.cidr);
   const hasRouter = items.some((i) => i.kind === "router");
   const add = (parent: MNode, n: MNode, i?: Iface) => { parent.children.push(n); if (i) { ref.set(i.name, n.id); ifaceOf.set(n.id, i); } };
 
@@ -97,7 +99,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     const g = mk(`${id}/wan`, "group", "wan", "WAN list", [], 1);
     for (const w of wan) {
       const sub = [w.route !== undefined || w.distance !== undefined ? [w.route, w.distance !== undefined && `distance ${w.distance}`].filter(Boolean).join(" · ") : undefined,
-        w.dhcp !== undefined ? `DHCP ${w.dhcp === true ? "client" : w.dhcp}` : undefined].filter((x): x is string => !!x);
+        w.dhcp !== undefined ? `DHCP ${w.dhcp === true ? "client" : w.dhcp}` : undefined, ...chipAddrs(w.iface)].filter((x): x is string => !!x);
       // a WAN VLAN chip is styled by its VLAN def (render colours it like that lane)
       const vdef = vlans.find((v) => v.ids !== "untagged" && w.vlan !== undefined && v.ids.includes(w.vlan));
       const vstyle = vdef ? vlanStyle(vdef.name) : fallback("lte");
@@ -128,13 +130,13 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
   for (const i of ifaces) {
     if (i.type !== "ether" || wanNames.has(i.name)) continue;
     const parent = (i.bridge && groups.get(i.bridge)) || node;
-    add(parent, mk(child(i.name), "port", "port", i.name, [], 4), i);
+    add(parent, mk(child(i.name), "port", "port", i.name, chipAddrs(i.name), 4), i);
     placed.set(i.name, parent);
   }
   for (const i of ifaces) {
     if (i.type !== "vlan" || wanNames.has(i.name)) continue;
     const parent = (i.parent && (groups.get(i.parent) ?? placed.get(i.parent))) || (i.bridge && groups.get(i.bridge)) || node;
-    add(parent, mk(child(i.name), "iface", "vif", i.name, [], 3), i);
+    add(parent, mk(child(i.name), "iface", "vif", i.name, chipAddrs(i.name), 3), i);
   }
   for (const { bridge, tag, names, ssids, rows } of radioItems) {
     const r: Radio = { id: `${id}/radio${bridge !== undefined ? "-" + esc(bridge) : ""}${tag !== undefined ? "-tag" + tag : ""}`,

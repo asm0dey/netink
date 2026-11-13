@@ -309,3 +309,10 @@ test("router label names NAT only when a wan line has nat", () => {
   expect(node(dslModel("device d\n  router\n  bridge br\n    ports ether2\n"), "d/router")!.label).toBe("routing · firewall");
   expect(node(dslModel("device d\n  wan ether1 nat\n  router\n"), "d/router")!.label).toBe("routing · NAT · firewall");
 });
+test("address lines show on their port and vlan-iface chips, except the one already in the device label", () => {
+  const m = dslModel("device d\n  wan ether1\n  ports eth0\n  vlan-iface v9 on eth0 vlan 9\n  vlan-iface v8 on eth0 vlan 8 address 10.8.0.1/24 lan\n  address eth0 10.0.0.1/30, 2001:db8::1/64\n  address v9 10.9.0.1/24\n  address ether1 203.0.113.2/30\n");
+  expect(node(m, "d/eth0")!.sub).toEqual(["10.0.0.1/30", "2001:db8::1/64"]);
+  expect(node(m, "d/v9")!.sub).toEqual(["10.9.0.1/24"]);
+  expect(node(m, "d/v8")!.sub).toEqual([]);
+  expect(node(m, "d/ether1")!.sub).toEqual(["203.0.113.2/30"]);
+});
