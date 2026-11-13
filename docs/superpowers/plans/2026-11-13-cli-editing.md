@@ -349,7 +349,18 @@ The other deferred minor (a device with `items: []` prints as `device d`, which 
 - [ ] **Step 2: Verify:** `mise run build && dist/netdraw --help` exits 0 and prints the help; `dist/netdraw check --file examples/home/network.net` exits 0; `SHELL=/bin/zsh dist/netdraw completion` prints a script naming `netdraw`. `mise run build-all` writes 8 files under `dist/` (needs network the first time: bun downloads each target's runtime); `file dist/*` shows the expected OS/arch for each.
 - [ ] **Step 3: Privacy check, commit** `build: mise tasks for host and cross-compiled binaries`
 
-### Task 14: Wrap-up
+### Task 14: Formatter (owner request, 2026-11-13: Biome)
+
+**Files:**
+- Create: `biome.json`
+- Modify: `package.json`, `bun.lock`, `mise.toml`, every `src/**/*.ts` and `test/**/*.ts` (reformat only)
+
+- [ ] **Step 1:** `bun add -d @biomejs/biome`. `biome.json`: formatter on, `indentStyle: "space"`, `indentWidth: 2`, `lineWidth: 120`; linter off (not requested); files limited to `src/**` and `test/**` (never `examples/`, `docs/`, `test/fixtures/`).
+- [ ] **Step 2:** mise tasks: `fmt` = `bunx biome format --write src test`; `fmt-check` = `bunx biome format src test`; `test` becomes `bunx biome format src test && bun test` so unformatted code fails the test task.
+- [ ] **Step 3:** `mise run fmt`, then `mise run test && mise run typecheck` — Expected: PASS, golden SVG untouched (`git status test/fixtures` clean). The diff is whitespace/line-break only: `git diff -w --stat` shows only the reflow of wrapped lines; review that no comment moved away from the code it explains.
+- [ ] **Step 4: Privacy check, commit** `style: format with Biome` (one commit containing only the config, the tasks and the reflow).
+
+### Task 15: Wrap-up
 
 - [ ] Update memory file `milestone2-state.md`: part C done through the last commit; next is part D (scale) / docs.
 - [ ] `mise run test && mise run typecheck`, privacy check, `git status` clean.
