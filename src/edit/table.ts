@@ -1,7 +1,7 @@
 import type { DevItem, Stmt, VlanRef } from "../types";
 
 export type Verb = "add" | "set" | "rm";
-export type Complete = "node" | "parent" | "port" | "vlan" | "color" | "path" | "jumps" | "side" | "legend-mode" | "legend-position";
+export type Complete = "node" | "parent" | "port" | "vlan" | "color" | "path" | "jumps" | "side" | "legend-mode" | "legend-position" | "style-key";
 export type Arg = { name: string; optional?: true; variadic?: true; complete?: Complete }; // variadic: the rest of the words (row)
 export type Flag = { name: string; type: "string" | "boolean"; clearable?: true; complete?: Complete; help: string };
 export type Args = { verb?: Verb; parent?: string; pos: string[]; flags: Record<string, string | boolean | undefined> };
@@ -269,7 +269,7 @@ const legendNote = legendNoun("legend note", "note", [{ name: "text" }], "legend
 
 const style: Noun = {
   name: "style", block: false, covers: ["style"], verbs: ["add", "set", "rm"], upsert: true,
-  args: [{ name: "key", complete: "jumps" }, { name: "value", optional: true, complete: "jumps" }], flags: [],
+  args: [{ name: "key", complete: "style-key" }, { name: "value", optional: true, complete: "jumps" }], flags: [],
   help: "style add|set|rm jumps [arc|gap|none]",
   match: (t, a) => t.kind === "style" && t.key === a.pos[0],
   make(a) {
@@ -282,7 +282,7 @@ const style: Noun = {
 const arrowNoun = (kind: "route" | "allow"): Noun => ({
   // `allow` also serves the in-block form: with a parent (`--in <device>`) the pool is that device's items
   name: kind, block: false, covers: kind === "allow" ? [kind, "item:allow"] : [kind], verbs: ["add", "set", "rm"], args: [{ name: "from", complete: "node" }, { name: "to", complete: "node" }],
-  flags: [clearable("label", "arrow label")], help: `${kind} add|set|rm <from> <to> [--label text]`,
+  flags: [clearable("label", "arrow label"), ...(kind === "allow" ? [{ name: "in", type: "string" as const, complete: "node" as const, help: "the device whose block holds the line" }] : [])], help: `${kind} add|set|rm <from> <to> [--label text]`,
   match: (t, a) => t.kind === kind && t.from === a.pos[0] && t.to === a.pos[1],
   make: (a) => arrowNoun(kind).apply({ line: 0, kind, from: bare(a.pos[0], "from"), to: bare(a.pos[1], "to") }, a)[0]!,
   apply(t, a) {

@@ -31,7 +31,7 @@ const COMMON = ["after", "before", "select-text"];
 function request(noun: Noun, verb: Verb, a: Record<string, unknown>): EditRequest {
   const pos = noun.args.flatMap((p) => { const v = a[p.name]; return v === undefined ? [] : Array.isArray(v) ? v.map(String) : [String(v)]; });
   const flags: Args["flags"] = {};
-  for (const n of [...noun.flags.map((f) => f.name), ...COMMON]) {
+  for (const n of [...noun.flags.map((f) => f.name).filter((n) => !(noun.name === "allow" && n === "in")), ...COMMON]) { // `--in` is the parent, not a flag
     const v = a[n];
     if (v !== undefined) flags[n] = (Array.isArray(v) ? v.at(-1) : v) as string | boolean; // a repeated flag: the last one wins
   }
@@ -49,7 +49,6 @@ function verbs(y: Argv, noun: Noun, onEdit: OnEdit): Argv {
     })].join(" ");
     y.command(usage, `${verb} ${noun.name}`, (z: Argv): Argv => {
       for (const f of noun.flags) z.option(f.name, { type: f.type, describe: f.help, ...(f.type === "string" ? { requiresArg: true } : {}) });
-      if (noun.name === "allow") z.option("in", { type: "string", requiresArg: true, describe: "the device whose block holds the line" });
       return z
         .option("after", { type: "string", requiresArg: true, describe: "insert after this sibling (its key)" })
         .option("before", { type: "string", requiresArg: true, describe: "insert before this sibling (its key)" })

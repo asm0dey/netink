@@ -50,3 +50,32 @@ test("end to end", () => {
   expect(s.code).toBe(0);
   expect(s.out.split("\n")).toContain("vlan");
 });
+
+test("port names are the parent's ports, not slices of ids", () => {
+  const c = complete(["ports", "set", "core/bridge", "", "--file", DSL]);
+  expect(c).toContain("ether2");
+  expect(c).not.toContain("ridge");
+  const d = complete(["ports", "set", "core", "", "--file", DSL]);
+  expect(d).toContain("ether2");
+  expect(d).not.toContain("router");
+  expect(d).not.toContain("bridge");
+});
+test("the value after --file is a path: nothing", () => {
+  expect(complete(["ports", "add", "--file", ""])).toEqual([]);
+  expect(complete(["ports", "add", "--file=exa"])).toEqual([]);
+  expect(complete(["ports", "add", "--file", "=", "exa"])).toEqual([]);
+  expect(complete(["ports", "add", "--file", "="])).toEqual([]);
+});
+test("bash splits --file=x at the =", () => {
+  expect(complete(["ports", "add", "--file", "=", DSL, ""])).toContain("ap2/br-guest");
+});
+test("the verb is checked", () => {
+  expect(complete(["style", "jumps", ""])).toEqual([]);
+  expect(complete(["style", "add", ""])).toEqual(["jumps"]);
+  expect(complete(["style", "add", "jumps", ""])).toEqual(["arc", "gap", "none"]);
+  expect(complete(["vlan", "bogus", ""])).toEqual([]);
+});
+test("--in takes a device", () => {
+  expect(complete(["allow", "add", "--in", "", "--file", DSL])).toContain("core");
+  expect(complete(["allow", "add", "--i"])).toEqual(["--in"]);
+});
