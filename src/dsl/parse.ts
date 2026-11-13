@@ -14,8 +14,8 @@ const KEYWORDS = [
   "place", "row", "legend", "style", "route", "allow", "hide", "<device>.side",
 ];
 
-/** Strip a trailing comment (outside quotes) and trailing whitespace. */
-function stripComment(line: string): string {
+/** Index of the `#` that starts a trailing comment (outside quotes), or -1. */
+export function commentStart(line: string): number {
   let inStr = false;
   for (let i = 0; i < line.length; i++) {
     const c = line[i];
@@ -23,9 +23,15 @@ function stripComment(line: string): string {
       if (c === "\\") i++;
       else if (c === '"') inStr = false;
     } else if (c === '"') inStr = true;
-    else if (c === "#") return line.slice(0, i).trimEnd();
+    else if (c === "#") return i;
   }
-  return line.trimEnd();
+  return -1;
+}
+
+/** Strip a trailing comment (outside quotes) and trailing whitespace. */
+function stripComment(line: string): string {
+  const i = commentStart(line);
+  return (i < 0 ? line : line.slice(0, i)).trimEnd();
 }
 
 function tokenize(s: string): Tok[] {
