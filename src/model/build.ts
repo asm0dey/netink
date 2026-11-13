@@ -3,7 +3,8 @@ import { dirname, join } from "node:path";
 import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
 import { closest } from "./check";
-import type { DeviceFacts, Diag, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
+import { deriveArrows } from "./l3";
+import type { DeviceFacts, Diag, MArrow, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 
 type Opts = { all?: boolean; file?: string };
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
@@ -370,6 +371,30 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   for (const n of free) n.tier = tier.get(n.id) ?? 5;
   for (const l of out) if ((tier.get(l.from) ?? 0) > (tier.get(l.to) ?? 0)) [l.from, l.to] = [l.to, l.from];
 
+  // L3 arrows: derived per device, then DSL route/allow, then hide (arrow id or node id).
+  const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d.id, d.f, nodes, stmts));
+  const arrowEnd = (id: string, line: number) => {
+    const [node, port] = id.split(".", 2) as [string, string | undefined];
+    const r = resolve({ node, ...(port ? { port } : {}) }, line);
+    return r === "bare" ? node : r?.id;
+  };
+  for (const s of stmts) {
+    if (s.kind === "route" || s.kind === "allow") {
+      const from = arrowEnd(s.from, s.line), to = arrowEnd(s.to, s.line);
+      if (!from || !to) continue;
+      const id = `${s.kind}:${from}->${to}`;
+      if (!arrows.some((a) => a.id === id)) arrows.push({ id, from, to, kind: s.kind, ...(s.label ? { label: s.label } : {}) });
+    }
+  }
+  const arrowTier = (id: string) => tier.get(id) ?? 0;
+  for (const a of arrows) if (arrowTier(a.from) > arrowTier(a.to)) [a.from, a.to] = [a.to, a.from];
+  for (const s of of("hide")) {
+    const t = s.target.replace(".", "/");
+    const hit = arrows.filter((a) => a.id === s.target || a.from === t || a.to === t);
+    if (!hit.length) err(s.line, `hide target "${s.target}" matches no arrow or node`, "use an arrow id like route:core/router->core/bridge or a node id");
+    for (const a of hit) arrows.splice(arrows.indexOf(a), 1);
+  }
+
   const legend: LegendSpec = { mode: "auto", add: [], remove: [], notes: [], position: "bottom" };
   for (const s of of("legend")) {
     if (s.op === "auto" || s.op === "off") legend.mode = s.op;
@@ -382,7 +407,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   const subtitle = text("subtitle");
   return {
     title: text("title") ?? "", ...(subtitle !== undefined ? { subtitle } : {}),
-    nodes, links: out, arrows: [], vlans, legend,
+    nodes, links: out, arrows, vlans, legend,
     jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => s.hint), diags, ...(opts.file !== undefined ? { file: opts.file } : {}),
   };
 }
