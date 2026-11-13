@@ -89,12 +89,13 @@ New Acceptance 2 text: *"A DSL fixture with ≥30 devices and ≥24 VLANs render
 overlaps, every link traceable, legend complete. Fixtures: SCaLE (one big tree) and the
 NetBox demo data (many small sites)."*
 
-- `test/fixtures/scale/network.net`: SCaLE `main` size (≈42 devices, 21+ VLANs) from
+- `test/fixtures/scale/network.net`: SCaLE `full` size with APs (≈188 devices, 146 VLANs; the
+  `main` size has only 21 VLANs, below the ≥24 bar) from
   `socallinuxexpo/scale-network` `switch-configuration/config/*` and
   `facts/routers/routerlist.csv`; topology from the switchtypes `Hierarchy` column; VLAN
   IPv4+IPv6 prefixes and colours as published. Gateway routers get `router`, `wan` and
   `address` lines so `--view routing` has something to draw (same for NetBox's site routers). Uses trunk sets (section 4) for the
-  trunktypes. Optionally a `full` variant with APs (188 devices) for a slow/`check`-only test.
+  trunktypes.
 - `test/fixtures/netbox/network.net`: NetBox demo data v4.7 (72 devices, 108 cables, 63 VLANs,
   24 sites). Real cable ends, so ports are named; prefixes and addresses as in the dump.
   Disconnected sites are separate components.
