@@ -92,6 +92,8 @@ function build(model: Model) {
   const index = (n: MNode, top: MNode) => { info.set(n.id, { node: n, top }); n.children.forEach((c) => index(c, top)); };
   model.nodes.forEach((n) => index(n, n));
   const top = (id: string) => info.get(id)!.top;
+  /** An arrow pointing up the tiers: its ELK edge is flipped so layering still flows down. */
+  const up = (a: { from: string; to: string }) => (info.get(a.from)?.node.tier ?? 0) > (info.get(a.to)?.node.tier ?? 0);
 
   // Border ports: one per physical port that has a cable leaving its device.
   const border = new Map<string, { device: string; side: string }>();
@@ -136,18 +138,19 @@ function build(model: Model) {
     // NORTH border port: cable comes from above, so the inner edge flows border → chip; otherwise chip → border.
     ...[...border].map(([p, b]) => (b.side === "NORTH" ? edge(inner(p), bid(p), p, 4) : edge(inner(p), p, bid(p), 4))),
     ...model.links.map((l) => edge(l.id, via(l, l.from) ? bid(l.from) : l.from, via(l, l.to) ? bid(l.to) : l.to, Math.max(4, l.lanes.length * LANE_GAP))),
-    ...model.arrows.map((a) => edge(a.id, a.from, a.to, 4)),
+    // ELK runs every arrow down the tiers; `layout` reverses the points of the ones it flipped
+    ...model.arrows.map((a) => (up(a) ? edge(a.id, a.to, a.from, 4) : edge(a.id, a.from, a.to, 4))),
     // `place a near b`: invisible edge b → a pulls a below b and towards it (best effort, see the note above). Never placed.
     ...model.hints.flatMap((h) => (h.type === "near" && info.has(h.a) && info.has(h.b)
       ? [{ ...edge(`near:${h.b}->${h.a}`, h.b, h.a, 0), layoutOptions: { "elk.edge.thickness": "0", "elk.layered.priority.straightness": "100", "elk.layered.priority.shortness": "100" } }] : [])),
   ].sort(byId);
 
   const graph: ElkNode = { id: "root", layoutOptions: ROOT_OPTIONS, children: ordered(model.nodes, model).map(toElk), edges };
-  return { graph, border, via, inner };
+  return { graph, border, via, inner, up };
 }
 
 export async function layout(model: Model): Promise<Placed> {
-  const { graph, border, via, inner } = build(model);
+  const { graph, border, via, inner, up } = build(model);
   const out = await elk.layout(graph);
 
   const boxes = new Map<string, Box>();
@@ -178,7 +181,11 @@ export async function layout(model: Model): Promise<Placed> {
     height: out.height ?? 0,
     boxes,
     links: model.links.map((l) => placed(l.id, l.from, l.to, l.label, true)),
-    arrows: model.arrows.map((a) => placed(a.id, a.from, a.to, a.label, false)),
+    arrows: model.arrows.map((a) => {
+      if (!up(a)) return placed(a.id, a.from, a.to, a.label, false);
+      const p = placed(a.id, a.to, a.from, a.label, false);
+      return { ...p, points: p.points.reverse() };
+    }),
   };
 }
 

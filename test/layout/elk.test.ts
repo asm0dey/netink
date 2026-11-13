@@ -158,3 +158,15 @@ test("hint edges are laid out but never placed", async () => {
   const placed = new Set([...p.links, ...p.arrows].map((l) => l.id));
   for (const e of hintEdges) expect(placed.has(e.id)).toBe(false);
 });
+
+test("an upward allow arrow ends on its `to` box (the arrowhead end)", async () => {
+  const { parseDsl } = await import("../../src/dsl/parse");
+  const { buildModel } = await import("../../src/model/build");
+  const m = buildModel(parseDsl("cloud c\ndevice d\nlink c -- d\nallow d -> c\n", "t.net").stmts, new Map());
+  const p = await layout(m);
+  const a = m.arrows[0]!, pts = p.arrows.find((x) => x.id === a.id)!.points;
+  const on = (q: P, b: Box) => q.x >= b.x - 1 && q.x <= b.x + b.w + 1 && q.y >= b.y - 1 && q.y <= b.y + b.h + 1;
+  expect([a.from, a.to]).toEqual(["d", "c"]);
+  expect(on(pts.at(-1)!, p.boxes.get("c")!)).toBe(true);
+  expect(on(pts[0]!, p.boxes.get("d")!)).toBe(true);
+});

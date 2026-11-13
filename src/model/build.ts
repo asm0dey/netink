@@ -396,7 +396,8 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     }
   }
   const arrowTier = (id: string) => tier.get(id) ?? 0;
-  for (const a of arrows) if (arrowTier(a.from) > arrowTier(a.to)) [a.from, a.to] = [a.to, a.from];
+  // route arrows are double-headed, so tier order is free; allow is one-way (head on `to`) and keeps its direction
+  for (const a of arrows) if (a.kind === "route" && arrowTier(a.from) > arrowTier(a.to)) [a.from, a.to] = [a.to, a.from];
   for (const s of of("hide")) {
     const t = s.target.replace(".", "/");
     const hit = arrows.filter((a) => a.id === s.target || a.from === t || a.to === t);

@@ -182,3 +182,10 @@ test("hint references are normalised to node ids", () => {
     "imports rsc x.rsc as x\ndevice y\nplace y near x.ether2\nrow x.ether2, y\nx.side br1 = top\n");
   expect(m.hints).toEqual([{ type: "near", a: "y", b: "x/ether2" }, { type: "row", ids: ["x/ether2", "y"] }, { type: "side", device: "x", group: "x/br1", side: "top" }]);
 });
+
+const dsl = (src: string, opts = {}) => buildModel(parseDsl(src, "t.net").stmts, new Map(), opts);
+
+test("an allow arrow keeps its DSL direction even when it points up the tiers", () => {
+  const m = dsl("cloud c\ndevice d\nlink c -- d\nallow d -> c\nroute d -> c\n");
+  expect(m.arrows.find((a) => a.kind === "allow")).toMatchObject({ from: "d", to: "c" });
+});
