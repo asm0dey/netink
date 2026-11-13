@@ -126,7 +126,10 @@ async function main(argv: string[]): Promise<number> {
   let svg: string, width: number, height: number;
   try {
     const placed = await layout(model);
-    svg = renderSvg(model, placed); width = placed.width; height = placed.height;
+    svg = renderSvg(model, placed);
+    // the SVG's own size: the legend can make it larger than the layout
+    const m = /^<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(svg)!;
+    width = Number(m[1]); height = Number(m[2]);
   } catch (e) {
     return fail(json, 1, { error: `layout failed: ${(e instanceof Error ? e.message : String(e)).split("\n")[0]!.slice(0, 200)}`, file, hint: "simplify the diagram (hide/row/place hints) and retry" });
   }
@@ -143,4 +146,14 @@ async function main(argv: string[]): Promise<number> {
   return 0;
 }
 
-process.exitCode = await main(process.argv.slice(2));
+/** Last resort: any throw no command handled becomes the documented error shape, never a stack trace. */
+async function run(argv: string[]): Promise<number> {
+  try { return await main(argv); }
+  catch (e) {
+    const i = argv.indexOf("--file"), file = i >= 0 ? argv[i + 1] : argv.find((a) => a.startsWith("--file="))?.slice(7);
+    const msg = (e instanceof Error ? e.message : String(e)).split("\n")[0]!.slice(0, 200);
+    return fail(argv.includes("--json"), 1, { error: `internal error: ${msg}`, file: file ?? "", hint: "this is a netdraw bug; please report it with the input that triggers it" });
+  }
+}
+
+process.exitCode = await run(process.argv.slice(2));

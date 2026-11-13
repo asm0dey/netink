@@ -71,3 +71,25 @@ test("help", () => {
   expect(r.out).toContain("link <ep> (-- <ep>)+");
   expect(run("render", "--help").code).toBe(0);
 });
+test("an unexpected throw is reported in the error shape, never as a stack trace", () => {
+  // inject a crash outside every command's own error handling: the check result fails to serialise
+  const pre = join(dir, "throw.ts");
+  writeFileSync(pre, `const s = JSON.stringify; JSON.stringify = ((v: any, ...r: any[]) => { if (v && typeof v === "object" && "diags" in v) throw new Error("injected\\nsecond line"); return s(v, ...r); }) as typeof JSON.stringify;\n`);
+  const go = (...a: string[]) => { const r = Bun.spawnSync(["bun", "--preload", pre, "src/cli.ts", ...a]); return { code: r.exitCode, out: r.stdout.toString(), err: r.stderr.toString() }; };
+  const j = go("check", "--file", HOME, "--json");
+  expect(j.code).toBe(1);
+  expect(JSON.parse(j.out)).toMatchObject({ error: "internal error: injected", file: HOME, line: 0 });
+  expect(JSON.parse(j.out).hint).toBeString();
+  expect(j.err).not.toContain(" at ");
+  // human mode: `show` indents its tree with String.prototype.repeat
+  writeFileSync(pre, `String.prototype.repeat = function () { throw new Error("injected"); };\n`);
+  const t = go("show", "core", "--file", HOME);
+  expect(t.code).toBe(1);
+  expect(t.err).toStartWith("error: internal error: injected");
+  expect(t.err).not.toContain(" at ");
+});
+test("render --json reports the SVG's own size, legend included", () => {
+  const j = JSON.parse(run("render", "--file", HOME, "--json").out);
+  const [, w, h] = j.svg.match(/^<svg [^>]*width="([\d.]+)" height="([\d.]+)"/);
+  expect([j.width, j.height]).toEqual([Number(w), Number(h)]);
+});
