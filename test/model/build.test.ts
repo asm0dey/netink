@@ -277,3 +277,15 @@ test("radio lines on one bridge and tag merge into one chip", () => {
   expect(m.diags).toEqual([]);
   expect(all(m.nodes).filter((n) => n.kind === "radio").map((n) => [n.id, n.label, n.sub])).toEqual([["ap/radio-br", "wlan1 / wlan2", ["A · B"]]]);
 });
+
+const dslModel = (src: string) => buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
+test("second address becomes a sub-line", () => {
+  const m = dslModel("device d\n  bridge br address 192.168.0.1/24, 2001:db8::1/64\n    ports ether1\n");
+  expect(node(m, "d/br")).toMatchObject({ label: "br · 192.168.0.1/24", sub: ["2001:db8::1/64"] });
+});
+test("IPv6-only bridge and vlan", () => {
+  const m = dslModel("vlan g 50 subnet 2001:db8:50::/64\ndevice d model \"X\"\n  bridge br lan address 2001:db8:50::1/64\n    vif v50 vlan 50 address 2001:db8:50::2/64\n");
+  expect(node(m, "d/br")!.label).toBe("br · 2001:db8:50::1/64");
+  expect(node(m, "d")!.label).toBe("D · X");
+  expect(m.diags).toEqual([]);
+});

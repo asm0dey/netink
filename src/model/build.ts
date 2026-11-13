@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, isAbsolute, join } from "node:path";
 import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
-import { closest } from "./check";
+import { addressDiags, closest } from "./check";
 import { deriveArrows } from "./l3";
 import { translate } from "../rsc/translate";
 import { buildDevice, mk, type Dev, type Radio } from "./device";
@@ -71,6 +71,8 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   // Devices with block lines; a later `device` line on the same id without them overrides its label and note.
   const devs = new Map<string, Dev>(), blocks = new Set<Stmt>();
   for (const s of stmts) if (s.kind === "node" && s.items && !devs.has(s.id)) { devs.set(s.id, buildDevice(s, vlans, err)); blocks.add(s); }
+
+  diags.push(...addressDiags(devs.values(), vlans, file));
 
   // Nodes in declaration order
   const nodes: MNode[] = [], nodeType = new Map<string, NodeStmt["type"]>();

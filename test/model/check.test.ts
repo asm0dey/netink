@@ -91,3 +91,26 @@ test("explicit vlans toward a fact-less end do not warn when the imported end ca
 test("explicit vlans the imported end does not carry still warn toward a fact-less end", () => {
   expect(one("link core.ether1 -- x vlans lan,lte\n")).toHaveLength(1);
 });
+
+const dev = (body: string, vlan = `vlan guest 50 color blue subnet 10.50.0.0/24\n`) => `${vlan}device d\n${body}`;
+test("address outside its VLAN's subnets warns", () => {
+  const w = check(dev(`  vif v50 vlan 50 address 10.99.0.1/24\n`)).filter((x) => x.level === "warning");
+  expect(w).toHaveLength(1);
+  expect(w[0]).toMatchObject({ line: 3 });
+  expect(w[0]!.message).toContain("10.99.0.1/24");
+  expect(w[0]!.message).toContain("10.50.0.0/24");
+});
+test("address inside its VLAN's subnets is quiet", () => {
+  expect(check(dev(`  vif v50 vlan 50 address 10.50.0.1/24, 2001:db8::1/64\n`))).toEqual([]);
+});
+test("same address on two interfaces warns", () => {
+  const w = check(dev(`  vif v50 vlan 50 address 10.50.0.1/24\n  vif v51 vlan 51 address 10.50.0.1/16\n`)).filter((x) => x.level === "warning");
+  expect(w.filter((x) => x.message.includes("already used"))).toHaveLength(1);
+  expect(w.find((x) => x.message.includes("already used"))).toMatchObject({ line: 4 });
+  expect(w[0]!.message).toContain("d.v50");
+});
+test("bridge address outside the VLAN its style came from warns", () => {
+  const w = check(dev(`  bridge br address 10.99.0.1/24\n    vif v50 vlan 50\n`)).filter((x) => x.level === "warning");
+  expect(w).toHaveLength(1);
+  expect(w[0]).toMatchObject({ line: 3 });
+});

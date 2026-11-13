@@ -1,4 +1,7 @@
-import type { Diag, Model } from "../types";
+import type { Diag, Model, VlanDef } from "../types";
+import { addrKey, inPrefix, parseCidr } from "./addr";
+import { laneOfStyle } from "./build";
+import type { Dev } from "./device";
 
 function dist(a: string, b: string): number {
   let prev = Array.from({ length: b.length + 1 }, (_, j) => j);
@@ -18,6 +21,28 @@ export function closest(name: string, candidates: Iterable<string>): string | un
     if (d < bd) { best = c; bd = d; }
   }
   return best;
+}
+
+/** Warnings for addresses outside their VLAN's subnets and for one address on two interfaces. */
+export function addressDiags(devs: Iterable<Dev>, vlans: VlanDef[], file: string): Diag[] {
+  const out: Diag[] = [], first = new Map<string, string>();
+  const warn = (line: number, message: string) => out.push({ level: "warning", file, line, message });
+  for (const d of devs) for (const a of d.addresses) {
+    const key = addrKey(a.cidr), at = `${d.id}.${a.iface}`;
+    if (key !== undefined) {
+      const prev = first.get(key);
+      if (prev !== undefined) warn(a.line, `address ${a.cidr} on ${at} is already used on ${prev}`);
+      else first.set(key, at);
+    }
+    const i = d.ifaces.find((x) => x.name === a.iface);
+    // a vlan interface belongs to the VLAN of its id; a bridge to the VLAN its style came from
+    const def = i?.type === "vlan" && i.vlanId !== undefined ? vlans.find((v) => v.ids !== "untagged" && v.ids.includes(i.vlanId!))
+      : i?.type === "bridge" ? vlans.find((v) => v.name === laneOfStyle(d.node.children.find((n) => n.id === d.ref.get(a.iface))?.style ?? "")) : undefined;
+    const fam = parseCidr(a.cidr)?.v, subnets = (def?.subnets ?? []).filter((s) => parseCidr(s)?.v === fam);
+    if (def && subnets.length && !subnets.some((s) => inPrefix(a.cidr, s)))
+      warn(a.line, `address ${a.cidr} on ${at} is outside vlan ${def.name} subnets ${subnets.join(", ")}`);
+  }
+  return out;
 }
 
 /**

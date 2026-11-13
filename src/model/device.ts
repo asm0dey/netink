@@ -1,5 +1,6 @@
 import { physOf } from "../rsc/translate";
 import type { DevItem, IfFlags, Iface, MNode, Stmt, VlanDef, VlanRef } from "../types";
+import { parseCidr } from "./addr";
 import { fallbackIn, vlanStyle } from "./build";
 
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
@@ -8,7 +9,7 @@ export type Radio = { id: string; bridge?: string; tag?: number; ifaces: Iface[]
 export type Dev = { id: string; line: number; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
   /** The neutral interface table the block lines describe; `table` names its `<port>.<id>` rows from `tagged`, which are not VLAN consumers. */
   ifaces: Iface[]; table: Set<string>;
-  wan: Extract<DevItem, { kind: "wan" }>[]; addresses: { iface: string; cidr: string; flags: IfFlags }[];
+  wan: Extract<DevItem, { kind: "wan" }>[]; addresses: { iface: string; cidr: string; flags: IfFlags; line: number }[];
   leases: { address: string; comment?: string }[]; allows: Extract<DevItem, { kind: "allow" }>[];
   /** WAN member name → distance of its default route. */ wanRoutes: Map<string, number>;
   /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
@@ -47,7 +48,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
       const br = bridge !== undefined ? { bridge } : {};
       if (it.kind === "bridge") {
         ifaces.push({ name: it.name, type: "bridge", ...(it.filtering ? { vlanFiltering: true } : {}) });
-        for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it) });
+        for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it), line: it.line });
         lines(it.items, it.name);
       } else if (it.kind === "ports") {
         const untagged = it.untagged !== undefined ? ids(it.untagged, it.line)[0] : undefined;
@@ -58,7 +59,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
         }
       } else if (it.kind === "vif") {
         ifaces.push({ name: it.name, type: "vlan", ...(it.on !== undefined ? { parent: it.on } : {}), vlanId: it.vlan, ...br });
-        for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it) });
+        for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it), line: it.line });
       } else if (it.kind === "radio") {
         const rows: Iface[] = it.ifaces.map((n) => ({ name: n, type: "wifi", ...br, ...(it.tag !== undefined ? { useTag: it.tag } : {}) }));
         ifaces.push(...rows);
@@ -66,17 +67,17 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
         if (!r) radioItems.push((r = { ...br, ...(it.tag !== undefined ? { tag: it.tag } : {}), names: [], ssids: [], rows: [] }));
         for (const row of rows) if (!r.names.includes(row.name)) { r.names.push(row.name); r.rows.push(row); }
         for (const x of it.ssids) if (!r.ssids.includes(x)) r.ssids.push(x);
-      } else if (it.kind === "address") for (const c of it.cidrs) addresses.push({ iface: it.iface, cidr: c, flags: flagsOf(it) });
+      } else if (it.kind === "address") for (const c of it.cidrs) addresses.push({ iface: it.iface, cidr: c, flags: flagsOf(it), line: it.line });
     }
   };
   lines(items);
   const byName = new Map<string, Iface>();
   for (const i of ifaces) if (!byName.has(i.name)) byName.set(i.name, i);
 
-  const lanIp = addresses.find((a) => a.flags.lan && /^\d+\.\d+\.\d+\.\d+(\/\d+)?$/.test(a.cidr));
+  const lanIp = addresses.find((a) => a.flags.lan && parseCidr(a.cidr)?.v === 4);
   const label = s.label ?? [id.toUpperCase(), s.model, lanIp?.cidr.split("/")[0], s.os].filter(Boolean).join(" · ");
   const node = mk(id, "device", "dev", label, s.note ? [s.note] : []);
-  const addrOf = (n: string) => addresses.find((a) => a.iface === n)?.cidr;
+  const addrsOf = (n: string) => addresses.filter((a) => a.iface === n).map((a) => a.cidr);
   const hasRouter = items.some((i) => i.kind === "router");
   const add = (parent: MNode, n: MNode, i?: Iface) => { parent.children.push(n); if (i) { ref.set(i.name, n.id); ifaceOf.set(n.id, i); } };
 
@@ -102,8 +103,8 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     // untagged def for a plain bridge; "guest"/"lan" only when no def applies
     const untagged = vlans.find((v) => v.ids === "untagged");
     const style = def ? vlanStyle(def.name) : b.guest ? fallback("guest") : untagged ? vlanStyle(untagged.name) : fallback("lan");
-    const cidr = addrOf(b.name);
-    const g = mk(child(b.name), "group", style, cidr ? `${b.name} · ${cidr}` : b.name, b.hotspot ? ["hotspot"] : [], 3);
+    const [cidr, ...more] = addrsOf(b.name);
+    const g = mk(child(b.name), "group", style, cidr ? `${b.name} · ${cidr}` : b.name, [...more, ...(b.hotspot ? ["hotspot"] : [])], 3);
     groups.set(b.name, g);
     node.children.push(g);
     ref.set(b.name, g.id);
