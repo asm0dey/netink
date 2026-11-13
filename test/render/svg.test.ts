@@ -107,7 +107,15 @@ test("group and WAN-chip colours follow the VLAN def, not its name", async () =>
     const renamed = loadModel(join(dir, "n.net")), orig = loadModel(HOME);
     const style = (m: Model, id: string) => { const w = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...w(n.children)]); return w(m.nodes).find((n) => n.id === id)!.style; };
     expect(["core/bridge", "core/br-guest", "ap2/br-guest", "core/vlan60-lte"].map((id) => style(renamed, id))).toEqual(["main", "visitors", "visitors", "backup"]);
-    const body = async (m: Model) => renderSvg(m, await layout(m)).split('<g class="legend">')[0];
+    // the header carries the canvas height, which follows the legend's (name-dependent) row count
+    const body = async (m: Model) => renderSvg(m, await layout(m)).split('<g class="legend">')[0]!.split("\n").filter((l) => !/^<svg |^<rect width=/.test(l)).join("\n");
     expect(await body(renamed)).toBe(await body(orig));
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("a use-tag radio chip is filled and outlined in its VLAN's colours", async () => {
+  const m = loadModel(HOME);
+  const p = await layout(m), b = p.boxes.get("ap1/radio-bridgeLocal-tag50")!;
+  const f = (n: number) => String(Math.round(n * 10) / 10);
+  expect(renderSvg(m, p)).toContain(`<rect x="${f(b.x)}" y="${f(b.y)}" width="${f(b.w)}" height="${f(b.h)}" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>`);
 });

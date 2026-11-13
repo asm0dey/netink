@@ -98,6 +98,7 @@ function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, lan
       const c = lanes.get(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
       rect(6, lanes.get(n.style)?.tint ?? TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
     } else if (n.style === "spare") rect(6, "#F5F5F5", { stroke: "#999", w: 1.5, dash: "4 3" });
+    else if (n.kind === "radio" && lanes.get(n.style)?.tint) rect(6, lanes.get(n.style)!.tint!, { stroke: lanes.get(n.style)!.stroke, w: 1.5 }); // a use-tag radio chip
     else if (n.style === "dev") rect(10, TINT.dev, { stroke: "#333", w: 2 });
     else if (n.style === "wan") rect(10, TINT.wan, { stroke: "#C62828", w: 1.5 });
     else if (container) {

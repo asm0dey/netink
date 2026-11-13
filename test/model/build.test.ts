@@ -211,3 +211,15 @@ test("a route, note or hint naming a hidden AP port is a check error that points
   const shown = buildModel(parseDsl(src, "t.net").stmts, facts, { all: true });
   expect(shown.diags.filter((d) => d.level === "error")).toEqual([]);
 });
+
+test("radios on a use-tag get their own chip in that VLAN's style; the trunk's lane ends on it", () => {
+  const m = loadModel(HOME);
+  const radios = all(node(m, "ap1")!.children).filter((n) => n.kind === "radio");
+  expect(radios.map((r) => [r.id, r.label, r.style, r.sub])).toEqual([
+    ["ap1/radio-bridgeLocal", "wlan1 / wlan2", "port", ["HomeNet · HomeNet-IoT"]],
+    ["ap1/radio-bridgeLocal-tag50", "wlan1-guest / wlan2-guest · use-tag 50", "guest", ["HomeNet-Guest"]],
+  ]);
+  expect(link(m, "ap1/ether1", "ap1/radio-bridgeLocal")?.lanes).toEqual(["lan"]);
+  expect(link(m, "ap1/ether1", "ap1/radio-bridgeLocal-tag50")?.lanes).toEqual(["guest"]);
+  expect(link(m, "core/ether3", "ap1/ether1")?.lanes).toEqual(["lan", "guest"]);
+});

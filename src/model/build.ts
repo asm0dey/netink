@@ -11,7 +11,8 @@ type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type LinkStmt = Extract<Stmt, { kind: "link" }>;
 /** A resolved link endpoint. `dev` is set for ends inside an imported device. */
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
-type Radio = { id: string; bridge?: string; phys: string[]; ssids: string[]; ifaces: Iface[] };
+/** One chip per bridge and VLAN tag: radios on a `use-tag` get their own chip, apart from the bridge's untagged ones. */
+type Radio = { id: string; bridge?: string; tag?: number; phys: string[]; ssids: string[]; ifaces: Iface[] };
 type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
   /** WAN member name → distance of the default route matched to it. */ wanRoutes: Map<string, number>;
   /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
@@ -37,8 +38,8 @@ function collectRadios(id: string, f: DeviceFacts): Radio[] {
   const out: Radio[] = [];
   for (const i of f.ifaces) {
     if (!isRadio(i) || i.name.startsWith("cap-") || (f.lists.WAN ?? []).includes(i.name)) continue;
-    let r = out.find((x) => x.bridge === i.bridge);
-    if (!r) out.push((r = { id: `${id}/radio${i.bridge ? "-" + i.bridge : ""}`, bridge: i.bridge, phys: [], ssids: [], ifaces: [] }));
+    let r = out.find((x) => x.bridge === i.bridge && x.tag === i.useTag);
+    if (!r) out.push((r = { id: `${id}/radio${i.bridge ? "-" + i.bridge : ""}${i.useTag !== undefined ? "-tag" + i.useTag : ""}`, bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), phys: [], ssids: [], ifaces: [] }));
     r.ifaces.push(i);
     if (!r.phys.includes(physOf(i.name))) r.phys.push(physOf(i.name));
     if (i.ssid && !r.ssids.includes(i.ssid)) r.ssids.push(i.ssid);
@@ -125,7 +126,10 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     add(parent, mk(`${id}/${i.name}`, "iface", "vif", i.name, [], 3), i);
   }
   for (const r of radios) {
-    const n = mk(r.id, "radio", "port", r.phys.join(" / "), r.ssids.length ? [r.ssids.join(" · ")] : [], 4);
+    // a tagged chip names its interfaces (the physical radios are shared with the untagged chip) and takes its VLAN's style
+    const def = r.tag !== undefined ? vlans.find((v) => v.ids !== "untagged" && v.ids.includes(r.tag!)) : undefined;
+    const label = r.tag !== undefined ? `${r.ifaces.map((i) => i.name).join(" / ")} · use-tag ${r.tag}` : r.phys.join(" / ");
+    const n = mk(r.id, "radio", def?.name ?? "port", label, r.ssids.length ? [r.ssids.join(" · ")] : [], 4);
     ((r.bridge && groups.get(r.bridge)) || node).children.push(n);
     for (const i of r.ifaces) ref.set(i.name, r.id);
   }
@@ -328,11 +332,15 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
       const g = v.bridge && d.ref.get(v.bridge);
       if (g && g !== d.ref.get(v.parent ?? "")) push(d.ref.get(v.name)!, g, [vlanName(v.vlanId) ?? "wire"], line);
     }
-    if (!d.hasRouter) for (const r of d.radios) {
-      const up = leaves(d.node).find((n) => n.kind === "port" && linked.has(n.id) && d.ifaceOf.get(n.id)?.bridge === r.bridge && r.bridge);
-      if (!up) continue;
-      const lanes = [...untagged, ...vlans.filter((v) => v.ids !== "untagged" && r.ifaces.some((i) => i.useTag !== undefined && (v.ids as number[]).includes(i.useTag))).map((v) => v.name)];
-      push(up.id, r.id, lanes.length ? lanes : ["wire"], line);
+    const bridged = (r: Radio) => leaves(d.node).filter((n) => n.kind === "port" && linked.has(n.id) && !!r.bridge && d.ifaceOf.get(n.id)?.bridge === r.bridge);
+    for (const r of d.radios) {
+      if (r.tag !== undefined) { // a tagged chip ends that VLAN's lane of every trunk port on its bridge that carries the tag
+        const name = vlanName(r.tag);
+        if (name) for (const p of bridged(r)) if (trunkIds.get(p.id)?.has(r.tag)) push(p.id, r.id, [name], line);
+      } else if (!d.hasRouter) {
+        const up = bridged(r)[0];
+        if (up) push(up.id, r.id, untagged.length ? untagged : ["wire"], line);
+      }
     }
     const spare = (p: MNode) => p.kind === "port" && !linked.has(p.id) && !!d.ifaceOf.get(p.id)?.bridge && !(d.f.lists.WAN ?? []).includes(d.ifaceOf.get(p.id)!.name);
     // A router shows its free ports as spare; on a router-less device (an AP) they are noise unless --all.
