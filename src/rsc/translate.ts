@@ -3,7 +3,7 @@ import type { DevItem, DeviceFacts, Diag, IfFlags, Iface, Stmt, VlanDef } from "
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type Route = DeviceFacts["routes"][number];
 /** One chip per bridge and VLAN tag: radios on a `use-tag` get their own chip, apart from the bridge's untagged ones. */
-type Radio = { bridge?: string; tag?: number; phys: string[]; ssids: string[]; ifaces: Iface[] };
+type Radio = { bridge?: string; tag?: number; ssids: string[]; ifaces: Iface[] };
 
 const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
@@ -21,9 +21,8 @@ function collectRadios(f: DeviceFacts): Radio[] {
   for (const i of f.ifaces) {
     if (!isRadio(i) || i.name.startsWith("cap-") || (f.lists.WAN ?? []).includes(i.name)) continue;
     let r = out.find((x) => x.bridge === i.bridge && x.tag === i.useTag);
-    if (!r) out.push((r = { bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), phys: [], ssids: [], ifaces: [] }));
+    if (!r) out.push((r = { bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), ssids: [], ifaces: [] }));
     r.ifaces.push(i);
-    if (!r.phys.includes(physOf(i.name))) r.phys.push(physOf(i.name));
     if (i.ssid && !r.ssids.includes(i.ssid)) r.ssids.push(i.ssid);
   }
   return out;
@@ -78,6 +77,7 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
   const cidrs = (n: string) => f.addresses.filter((a) => a.iface === n).map((a) => a.cidr);
   const out: DevItem[] = [];
 
+  // shortcut: a WAN vlan member that is also a bridge member is emitted only as its wan line (wan has no bridge spelling), so it loses its vif→bridge internal link; upgrade if a wan line learns a bridge.
   for (const { iface: i, route: r } of wanRoutes(f, vlans)) {
     const dhcp = f.dhcpClients.find((c) => c.iface === i.name);
     out.push({ line, kind: "wan", iface: i.name,
@@ -91,6 +91,7 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
   const ports = f.ifaces.filter((i) => !wan.includes(i.name) && i.type !== "bridge" && i.type !== "vlan" && !isRadio(i) && (i.type === "ether" || !!i.bridge));
   const portNames = new Set(ports.map((p) => p.name));
   // shortcut: `/interface bridge vlan` rows are imported as `<port>.<id>` vlan ifaces; on a bridged port with a ports line they are table rows. Upgrade if facts keep the table separately.
+  // shortcut: a VLAN-table row on a port with no ports line (a WAN or unbridged parent) falls back to a vif and so counts as a VLAN consumer; upgrade if facts keep the table separately.
   const isTable = (x: Iface) => x.parent !== undefined && x.name === `${x.parent}.${x.vlanId}` && !!byName.get(x.parent)?.bridge && portNames.has(x.parent);
   // shortcut: a non-WAN vlan iface without a vlan-id has no vif spelling and is not drawn; upgrade if exports without vlan-id turn up.
   const vifs = f.ifaces.filter((i) => i.type === "vlan" && i.vlanId !== undefined && !wan.includes(i.name) && !isTable(i));
@@ -105,6 +106,7 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
     }
     return lines;
   };
+  // shortcut: horizon on a vif or radio has no spelling and is dropped (the builder reads horizon only on ports); upgrade if lane inference starts to use it there.
   const vifLine = (i: Iface): DevItem => ({ line, kind: "vif", name: i.name, ...(i.parent !== undefined ? { on: i.parent } : {}), vlan: i.vlanId!, addresses: cidrs(i.name), ...flags(i.name) });
   const radioLine = (r: Radio): DevItem => ({ line, kind: "radio", ifaces: r.ifaces.map((i) => i.name), ...(r.tag !== undefined ? { tag: r.tag } : {}), ssids: r.ssids });
   const inside = (b?: string) => <T extends { bridge?: string }>(x: T) => (b === undefined ? !isBridge(x.bridge) : x.bridge === b);
