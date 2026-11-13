@@ -10,8 +10,10 @@ import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
 import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
+import { complete } from "./complete";
 import { NAMED } from "./model/style";
 import { renderSvg } from "./render/svg";
+import { NOUNS } from "./edit/table";
 import { base, registerEditCommands, usageMessage } from "./edit/command";
 import { edit, type Candidate, type EditRequest } from "./edit/edit";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
@@ -66,6 +68,9 @@ Usage:
       --json  print {ok, stmt, diags}.
   netdraw init [file]
       Create an empty DSL file (default ./network.net); refuses (exit 1) if it exists.
+  netdraw completion
+      Print a shell completion script (zsh or bash, from $SHELL): netdraw completion >> ~/.zshrc
+      Completes commands, nouns, verbs, flags and the ids and vlan names in the --file.
   netdraw --help | <command> --help
 
 Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
@@ -160,6 +165,8 @@ function importCmd(rsc: string | undefined, as: string | undefined, file: string
   return 0;
 }
 
+const COMPLETE_FIRST = new Set(["render", "check", "show", "import", "init", "completion", ...NOUNS.map((n) => n.name.split(" ")[0]!)]);
+
 type Args = { file: string; json: boolean; as?: string; all?: boolean; o?: string; what?: string; rsc?: string; path?: string };
 class Usage extends Error {}
 let crash: unknown; // an error a handler threw, rethrown to run()
@@ -180,6 +187,11 @@ export function cli(argv: string[]): Argv {
       if (msg === "missing command") err(HELP);
       exit = fail(json, 2, { error: msg, hint: "run netdraw --help" });
       throw new Usage(msg);
+    })
+    // yargs's script calls back with `--get-yargs-completions <words>`; the first word is the program name
+    .completion("completion", "print a shell completion script", () => {
+      const w = argv.slice(argv.indexOf("--get-yargs-completions") + 1);
+      return complete(w.length > 1 && !COMPLETE_FIRST.has(w[0]!) ? w.slice(1) : w);
     })
     .command("render", false, (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file" }), go((a) => render(a, "render")))
     .command("check", false, (y) => y.option("all", all), go((a) => render(a, "check")))
