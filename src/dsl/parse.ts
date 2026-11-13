@@ -1,3 +1,4 @@
+import { NAMED } from "../render/svg";
 import type { Diag, Endpoint, Stmt } from "../types";
 
 type Tok = { t: "w" | "s" | "p"; v: string }; // word, string, punctuation (, =)
@@ -89,6 +90,19 @@ const ep = (w: string): Endpoint => {
   return d < 0 ? { node: w } : { node: w.slice(0, d), port: w.slice(d + 1) };
 };
 
+/** `color` value: a theme name, or a quoted #rgb / #rrggbb (unquoted, `#` would start a comment). */
+function color(c: Cur): string {
+  if (c.isStr()) {
+    const v = c.str("color"), m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(v);
+    if (!m) throw new DslError(`bad hex color "${v}"`, 'use "#rrggbb", or a name without quotes');
+    return m[1]!.length === 3 ? "#" + [...m[1]!].map((x) => x + x).join("") : v;
+  }
+  if (c.done()) throw new DslError("expected color", 'quote hex colours: color "#ff0000"');
+  const v = c.word("color");
+  if (!(v.toLowerCase() in NAMED)) throw new DslError(`unknown color "${v}"`, `valid: ${Object.keys(NAMED).join(", ")}, or a quoted "#rrggbb"`);
+  return v;
+}
+
 /** key/value options after a node's id/label; each key takes a string except where noted. */
 function opts(c: Cur, keys: Record<string, "w" | "s">): Record<string, string> {
   const r: Record<string, string> = {};
@@ -138,7 +152,7 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
       });
       const s: Stmt = { line, kind: "vlan", name, ids };
       while (!c.done()) {
-        if (c.isWord("color")) { c.i++; s.color = c.word("color"); }
+        if (c.isWord("color")) { c.i++; s.color = color(c); }
         else s.subnet = c.str("subnet");
       }
       return [s];

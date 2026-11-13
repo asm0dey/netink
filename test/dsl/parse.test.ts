@@ -74,3 +74,15 @@ test("chained link label goes on the last pair only", () => {
   const { stmts } = parseDsl('link a -- b -- c label "x"', "f");
   expect(stmts.map((s) => (s.kind === "link" ? s.label : "?"))).toEqual([undefined, "x"]);
 });
+
+test("vlan colours: a named theme colour or a quoted hex; anything else is an error naming the valid ones", () => {
+  const vlan = (src: string) => parseDsl(src, "t.net");
+  expect(vlan('vlan a 10 color "#FF0000" "10.0.0.0/24"\n').stmts[0]).toMatchObject({ color: "#FF0000", subnet: "10.0.0.0/24" });
+  expect(vlan('vlan a 10 color "#f00"\n').stmts[0]).toMatchObject({ color: "#ff0000" });
+  expect(vlan("vlan a 10 color teal\n").stmts[0]).toMatchObject({ color: "teal" });
+  const unknown = vlan("vlan a 10 color mauve\n").diags[0]!;
+  expect(unknown.message).toBe('unknown color "mauve"');
+  expect(unknown.hint).toContain("green, blue, orange");
+  expect(vlan('vlan a 10 color "red"\n').diags[0]!.message).toBe('bad hex color "red"');
+  expect(vlan("vlan a 10 color #ff0000\n").diags[0]!.hint).toContain('color "#ff0000"');
+});

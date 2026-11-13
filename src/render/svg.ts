@@ -4,7 +4,8 @@ import { f, jumpPath, lanesFor } from "./geometry";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
-const NAMED: Record<string, string> = {
+/** The theme's named colours: the only names `vlan … color` accepts (else a quoted "#rrggbb"). */
+export const NAMED: Record<string, string> = {
   green: "#2E7D32", blue: "#1565C0", orange: "#E65100", red: "#C62828", purple: "#6A1B9A", teal: "#00838F",
   brown: "#6D4C41", pink: "#AD1457", grey: "#546E7A", gray: "#546E7A", amber: "#FF8F00", indigo: "#283593", cyan: "#0097A7",
 };

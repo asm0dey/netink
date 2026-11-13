@@ -93,3 +93,6 @@ test("render --json reports the SVG's own size, legend included", () => {
   const [, w, h] = j.svg.match(/^<svg [^>]*width="([\d.]+)" height="([\d.]+)"/);
   expect([j.width, j.height]).toEqual([Number(w), Number(h)]);
 });
+test("help lists the named colours", () => {
+  expect(run("--help").out).toMatch(/colors: green, blue, orange, .*cyan/);
+});

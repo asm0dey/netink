@@ -4,7 +4,7 @@ import { existsSync, writeFileSync } from "node:fs";
 import { loadModel } from "./model/build";
 import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
-import { renderSvg } from "./render/svg";
+import { NAMED, renderSvg } from "./render/svg";
 import type { Diag, MNode, Model } from "./types";
 
 const GRAMMAR = `DSL (line-oriented; '#' to end of line is a comment unless inside quotes; a line ending in ',' continues on the next line;
@@ -12,7 +12,7 @@ strings are "..." with \\" and \\\\ escapes):
 
   title "T"                      subtitle "T"
   imports rsc <path> as <id> (, <path> as <id>)*
-  vlan <name> (untagged | <n>(,<n>)*) [color <c>] ["subnet"]
+  vlan <name> (untagged | <n>(,<n>)*) [color <c>] ["subnet"]   c = a name below, or quoted hex "#rrggbb"
   cloud <id> ["label"]
   device <id> ["label"] [kind <role>] [model "m"] [note "n"]
   client <id> ["label"] [lease <ip>] [note "n"]
@@ -24,6 +24,7 @@ strings are "..." with \\" and \\\\ escapes):
   route <a> -> <b> ["label"]     allow <a> -> <b> ["label"]     hide <target>
 
   'link a -- b -- c.p' expands to two links (a-b, b-c.p); 'link sw -- x, y' expands to sw-x and sw-y.
+  colors: ${Object.keys(NAMED).join(", ")}
   Ids are [a-z0-9_-]+; child ids are parent/child (e.g. core/ether3, core/bridge).
   Paths in 'imports' are relative to the .net file.`;
 
