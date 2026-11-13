@@ -2,7 +2,8 @@ import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
 import { loadModel } from "../../src/model/build";
 import { renderSvg } from "../../src/render/svg";
-import type { Model, Placed } from "../../src/types";
+import { textWidth } from "../../src/layout/measure";
+import type { MNode, Model, Placed } from "../../src/types";
 
 const HOME = "examples/home/network.net";
 
@@ -61,4 +62,35 @@ test("legend add/remove and position right", async () => {
   expect(legend).toContain("Mgmt cable");
   expect(legend).not.toContain("Guest");
   expect(Number(svg.match(/width="([\d.]+)"/)![1])).toBeGreaterThan(p.width);
+});
+
+/** Text box of a 12 px label whose baseline starts at (x, y). */
+const labelRect = (x: number, y: number, s: string) => ({ x0: x, y0: y - 11, x1: x + textWidth(s, 12, true), y1: y + 3 });
+
+test("home: no cable or arrow label overlaps a box or straddles a container border", async () => {
+  const m = loadModel(HOME);
+  const p = await layout(m);
+  const svg = renderSvg(m, p);
+  const all = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...all(n.children)]);
+  const nodes = all(m.nodes);
+  const labels = [...svg.slice(0, svg.indexOf('<g class="legend"')).matchAll(/<text x="([\d.]+)" y="([\d.]+)" class="t"( text-anchor="end")?[^>]*>([^<]*)</g)];
+  expect(labels.length).toBeGreaterThanOrEqual(6);
+  const bad: string[] = [];
+  for (const [, x, y, end, s] of labels) {
+    const r = labelRect(Number(x) - (end ? textWidth(s!, 12, true) : 0), Number(y), s!);
+    for (const n of nodes) {
+      const b = p.boxes.get(n.id)!;
+      const meets = r.x1 > b.x && r.x0 < b.x + b.w && r.y1 > b.y && r.y0 < b.y + b.h;
+      const inside = r.x0 >= b.x && r.x1 <= b.x + b.w && r.y0 >= b.y && r.y1 <= b.y + b.h;
+      if (meets && (n.children.length === 0 || !inside)) bad.push(`"${s}" vs ${n.id}`);
+    }
+  }
+  expect(bad).toEqual([]);
+});
+
+test("route arrowheads are 10-12 px", () => {
+  const svg = renderSvg(...tiny("x"));
+  const [w] = svg.match(/<marker id="ap"[^>]*markerWidth="([\d.]+)"/)!.slice(1).map(Number);
+  expect(w! * 4).toBeGreaterThanOrEqual(10); // route stroke is 4 px; markerUnits = strokeWidth
+  expect(w! * 4).toBeLessThanOrEqual(12);
 });

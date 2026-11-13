@@ -15,6 +15,10 @@ const TINT: Record<string, string | undefined> & Record<"lan" | "guest" | "lte" 
 const ROUTE = "#6A1B9A", ALLOW = "#1565C0", WIRE = "#555";
 
 type Stroke = { stroke: string; w: number; dash?: string };
+/** Where along a segment a label may go: 0.05 … 0.95, nearest the middle first. */
+const STEPS = Array.from({ length: 19 }, (_, i) => (i + 1) / 20).sort((a, b) => Math.abs(a - 0.5) - Math.abs(b - 0.5) || a - b);
+type Rect = { x0: number; y0: number; x1: number; y1: number };
+const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
 
 export const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
@@ -196,7 +200,30 @@ export function renderSvg(model: Model, placed: Placed): string {
     const [a, b] = segs.reduce((best, s) => (Math.hypot(s[1].x - s[0].x, s[1].y - s[0].y) > Math.hypot(best[1].x - best[0].x, best[1].y - best[0].y) ? s : best));
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
   };
-  const label = (at: P, s: string, colour: string) => labels.push(text(at.x + 6, at.y - 6, s, `class="t" fill="${colour}" ${halo}`));
+  const containers = new Set(walk(model.nodes).filter((n) => n.children.length).map((n) => n.id));
+  /** A label must not touch a leaf box nor cross a container border (inside a container is fine). */
+  const clean = (r: Rect) => [...placed.boxes.values()].every((b) => {
+    const meets = r.x1 > b.x && r.x0 < b.x + b.w && r.y1 > b.y && r.y0 < b.y + b.h;
+    return !meets || (containers.has(b.id) && r.x0 >= b.x && r.x1 <= b.x + b.w && r.y0 >= b.y && r.y1 <= b.y + b.h);
+  });
+  /** Baseline start: the default spot (above-right of `at`), else the first clean spot beside a segment, longest segment first. */
+  const spot = (pts: P[], at: P, s: string): P & { end?: boolean } => {
+    const w = textWidth(s, 12, true), rect = (q: P): Rect => ({ x0: q.x, y0: q.y - 11, x1: q.x + w, y1: q.y + 3 });
+    const segs = pts.slice(1).map((b, i) => [pts[i]!, b] as const).sort(([a, b], [c, d]) => Math.hypot(d.x - c.x, d.y - c.y) - Math.hypot(b.x - a.x, b.y - a.y));
+    const options = [{ x: at.x + 6, y: at.y - 6 }, ...segs.flatMap(([a, b]) => STEPS.flatMap((t) => {
+      const m = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      return Math.abs(a.y - b.y) < 0.5
+        ? [{ x: m.x - w / 2, y: m.y - 6 }, { x: m.x - w / 2, y: m.y + 16 }]
+        // left of a vertical: drawn end-anchored, so a font narrower than the estimate still hugs the line
+        : [{ x: m.x + 6, y: m.y + 4 }, { x: m.x - 6 - w, y: m.y + 4, end: true }];
+    }))];
+    return options.find((q) => clean(rect(q))) ?? options[0]!;
+  };
+  const label = (pts: P[], at: P, s: string, colour: string) => {
+    const q = spot(pts, at, s);
+    labels.push(q.end ? text(q.x + textWidth(s, 12, true), q.y, s, `class="t" text-anchor="end" fill="${colour}" ${halo}`)
+      : text(q.x, q.y, s, `class="t" fill="${colour}" ${halo}`));
+  };
   for (const pl of placed.links) {
     const l = link.get(pl.id);
     if (!l || pl.points.length < 2) continue;
@@ -205,11 +232,11 @@ export function renderSvg(model: Model, placed: Placed): string {
     const vlanText = trunk ? `VLAN ${idList(ids.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))}${ids.some((v) => v.ids === "untagged") ? " + untagged" : ""}` : "";
     const s = [l.label, vlanText].filter(Boolean).join(" · ");
     const colour = trunk ? "#333" : l.lanes[0] && l.lanes[0] !== "wire" ? lanes.get(l.lanes[0])?.stroke ?? "#333" : "#333";
-    if (s) label(pl.labelAt ?? mid(pl.points), s, colour);
+    if (s) label(pl.points, pl.labelAt ?? mid(pl.points), s, colour);
   }
   for (const pa of placed.arrows) {
     const a = arrow.get(pa.id);
-    if (a?.label && pa.points.length >= 2) label(pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW);
+    if (a?.label && pa.points.length >= 2) label(pa.points, pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW);
   }
 
   const nodes = drawNodes(model, placed, lanes, laneOf);
@@ -219,8 +246,8 @@ export function renderSvg(model: Model, placed: Placed): string {
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${f(W)}" height="${f(H)}" viewBox="0 0 ${f(W)} ${f(H)}" font-family="${FONT}" font-size="14" fill="#222">`,
     "<defs>",
-    `<marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROUTE}"/></marker>`,
-    `<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${ALLOW}"/></marker>`,
+    `<marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROUTE}"/></marker>`,
+    `<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${ALLOW}"/></marker>`,
     "<style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>",
     "</defs>",
     `<rect width="${f(W)}" height="${f(H)}" fill="#fff"/>`,
