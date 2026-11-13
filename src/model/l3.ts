@@ -5,7 +5,7 @@ const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)
 
 /**
  * Routed/NAT arrows implied by one device's block (only with a `router` line), then its `allow` lines. DSL route/allow/hide are applied by buildModel.
- * `leases`: client node id → its lease address.
+ * `leases`: client node id → its lease address. An allow `to` names a client by id or by its lease address.
  */
 export function deriveArrows(d: Dev, nodes: MNode[], leases: Map<string, string>): MArrow[] {
   const all = walk(nodes), byId = new Map(all.map((n) => [n.id, n]));
@@ -30,7 +30,7 @@ export function deriveArrows(d: Dev, nodes: MNode[], leases: Map<string, string>
     }
   }
   for (const r of d.allows) {
-    const from = d.ref.get(r.from), client = all.find((n) => n.kind === "client" && leases.get(n.id) === r.to);
+    const from = d.ref.get(r.from), client = all.find((n) => n.kind === "client" && (n.id === r.to || leases.get(n.id) === r.to));
     if (from && client) add("allow", from, client.id, r.label ?? `${r.from} may reach ${client.label} (firewall)`);
   }
   return out;

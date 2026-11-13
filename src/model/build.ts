@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, isAbsolute, join } from "node:path";
 import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
+import { parseCidr } from "./addr";
 import { addressDiags, closest } from "./check";
 import { deriveArrows } from "./l3";
 import { translate } from "../rsc/translate";
@@ -91,7 +92,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       const owner = [...devs.values()].find((x) => x.leases.some((l) => l.address === s.lease));
       const lease = owner?.leases.find((l) => l.address === s.lease);
       if (owner) declaredLeases.add(`${owner.id} ${s.lease}`);
-      else diags.push({ level: "warning", file, line: s.line, message: `no imported device has a lease for ${s.lease}` });
+      else diags.push({ level: "warning", file, line: s.line, message: `no device has a lease for ${s.lease}` });
       label = s.label ?? lease?.comment ?? s.lease;
       sub.push(s.lease);
     }
@@ -121,8 +122,8 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       if (!id) { const c = closest(e.port, d.ref.keys()); err(line, `${e.node} has no interface "${e.port}"`, c && `did you mean ${e.node}.${c}?`); return undefined; }
       return { id, dev: d, iface: d.ifaceOf.get(id) ?? d.ifaces.find((i) => i.name === e.port) };
     }
-    if (!nodeType.has(e.node)) { const c = closest(e.node, [...nodeType.keys(), ...devs.keys()]); err(line, `unknown node "${e.node}"`, c ? `did you mean ${c}?` : "declare it with cloud, device or client, or import it"); return undefined; }
-    if (e.port) { err(line, `"${e.node}" is not imported, so it has no port "${e.port}"`, `link ${e.node} without a port`); return undefined; }
+    if (!nodeType.has(e.node)) { const c = closest(e.node, [...nodeType.keys(), ...devs.keys()]); err(line, `unknown node "${e.node}"`, c ? `did you mean ${c}?` : "declare it with cloud, device or client"); return undefined; }
+    if (e.port) { err(line, `"${e.node}" has no device block, so it has no port "${e.port}"`, `add a block under "device ${e.node}" listing ${e.port}, or link ${e.node} without a port`); return undefined; }
     return { id: e.node, nodeType: nodeType.get(e.node) };
   };
   const ends = links.map((l) => l.path.map((e) => resolve(e, l.line)));
@@ -316,7 +317,10 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
 
   // L3 arrows: derived per device, then DSL route/allow, then hide (arrow id or node id).
   // An allow line's `from` must name something drawn in its device; deriveArrows skips the ones that do not.
+  // Its `to` is a client id or an address; an address nobody leases draws nothing.
+  const clients = [...nodeType].filter(([, t]) => t === "client").map(([id]) => id);
   for (const d of devs.values()) for (const a of d.allows) {
+    if (!parseCidr(a.to) && !clients.includes(a.to)) { const c = closest(a.to, clients); err(a.line, `allow to unknown client "${a.to}"`, c ? `did you mean ${c}?` : "name a client id or an address"); }
     if (d.ref.has(a.from)) continue;
     if (d.hidden.has(a.from)) err(a.line, `allow from ${d.id}.${a.from}, which is not drawn`, HIDDEN_HINT);
     else { const c = closest(a.from, d.ref.keys()); err(a.line, `${d.id} has no interface "${a.from}"`, c && `did you mean ${c}?`); }

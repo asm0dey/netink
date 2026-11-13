@@ -63,3 +63,15 @@ test("an allow line from an unknown interface is an error with a did-you-mean", 
   expect(m.diags).toEqual([{ level: "error", file: "", line: 5, message: 'r has no interface "lna"', hint: "did you mean lan?" }]);
   expect(m.arrows.filter((a) => a.kind === "allow")).toEqual([]);
 });
+
+test("an allow line to a client id draws the arrow", () => {
+  const m = buildModel(parseDsl('device r\n  router\n  bridge lan address 10.0.0.1/24\n  lease 10.0.0.9\n  allow lan -> c "x"\nclient c lease 10.0.0.9\n', "t.net").stmts, new Map());
+  expect(m.diags).toEqual([]);
+  expect(m.arrows.filter((a) => a.kind === "allow")).toEqual([{ id: "allow:r/lan->c", from: "r/lan", to: "c", kind: "allow", label: "x" }]);
+});
+
+test("an allow line to an unknown id is an error at its line with a did-you-mean", () => {
+  const m = buildModel(parseDsl('device r\n  router\n  bridge lan address 10.0.0.1/24\n  lease 10.0.0.9\n  allow lan -> cc "x"\nclient c lease 10.0.0.9\n', "t.net").stmts, new Map());
+  expect(m.diags).toEqual([{ level: "error", file: "", line: 5, message: 'allow to unknown client "cc"', hint: "did you mean c?" }]);
+  expect(m.arrows.filter((a) => a.kind === "allow")).toEqual([]);
+});

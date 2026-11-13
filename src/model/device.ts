@@ -26,9 +26,17 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
   const child = (name: string) => `${id}/${esc(name)}`;
   const ref = new Map<string, string>(), ifaceOf = new Map<string, Iface>(), wanRoutes = new Map<string, number>(), table = new Set<string>();
   const ifaces: Iface[] = [], addresses: Dev["addresses"] = [], radios: Radio[] = [];
-  const wan = items.filter((i): i is Extract<DevItem, { kind: "wan" }> => i.kind === "wan");
+  // A local name is declared once; a repeat is reported at its own line and skipped, so it never doubles a node id.
+  const declared = new Map<string, number>();
+  const claim = (name: string, line: number) => {
+    const first = declared.get(name);
+    if (first === undefined) { declared.set(name, line); return true; }
+    err(line, `${id} declares "${name}" twice`, `first declared on line ${first}; give each interface one name`);
+    return false;
+  };
+  const wan = items.filter((i): i is Extract<DevItem, { kind: "wan" }> => i.kind === "wan" && claim(i.iface, i.line));
   const wanNames = new Set(wan.map((w) => w.iface));
-  const bridges = items.filter((i): i is Extract<DevItem, { kind: "bridge" }> => i.kind === "bridge");
+  const bridges: Extract<DevItem, { kind: "bridge" }>[] = [];
   const ids = (r: VlanRef, line: number): number[] => {
     if (typeof r === "number") return [r];
     const def = vlans.find((v) => v.name === r);
@@ -47,6 +55,8 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     for (const it of xs) {
       const br = bridge !== undefined ? { bridge } : {};
       if (it.kind === "bridge") {
+        if (!claim(it.name, it.line)) continue;
+        bridges.push(it);
         ifaces.push({ name: it.name, type: "bridge", ...(it.filtering ? { vlanFiltering: true } : {}) });
         for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it), line: it.line });
         lines(it.items, it.name);
@@ -54,18 +64,20 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
         const untagged = it.untagged !== undefined ? ids(it.untagged, it.line)[0] : undefined;
         const tagged = it.tagged.flatMap((r) => ids(r, it.line));
         for (const p of it.names) {
+          if (!claim(p, it.line)) continue;
           ifaces.push({ name: p, type: "ether", ...br, ...(untagged !== undefined ? { useTag: untagged } : {}), ...(it.horizon !== undefined ? { horizon: it.horizon } : {}) });
           for (const v of tagged) { ifaces.push({ name: `${p}.${v}`, type: "vlan", parent: p, vlanId: v }); table.add(`${p}.${v}`); }
         }
       } else if (it.kind === "vif") {
+        if (!claim(it.name, it.line)) continue;
         ifaces.push({ name: it.name, type: "vlan", ...(it.on !== undefined ? { parent: it.on } : {}), vlanId: it.vlan, ...br });
         for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it), line: it.line });
       } else if (it.kind === "radio") {
-        const rows: Iface[] = it.ifaces.map((n) => ({ name: n, type: "wifi", ...br, ...(it.tag !== undefined ? { useTag: it.tag } : {}) }));
+        const rows: Iface[] = it.ifaces.filter((n) => claim(n, it.line)).map((n) => ({ name: n, type: "wifi", ...br, ...(it.tag !== undefined ? { useTag: it.tag } : {}) }));
         ifaces.push(...rows);
         let r = radioItems.find((x) => x.bridge === bridge && x.tag === it.tag);
         if (!r) radioItems.push((r = { ...br, ...(it.tag !== undefined ? { tag: it.tag } : {}), names: [], ssids: [], rows: [] }));
-        for (const row of rows) if (!r.names.includes(row.name)) { r.names.push(row.name); r.rows.push(row); }
+        for (const row of rows) { r.names.push(row.name); r.rows.push(row); }
         for (const x of it.ssids) if (!r.ssids.includes(x)) r.ssids.push(x);
       } else if (it.kind === "address") for (const c of it.cidrs) addresses.push({ iface: it.iface, cidr: c, flags: flagsOf(it), line: it.line });
     }
@@ -103,7 +115,9 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     // untagged def for a plain bridge; "guest"/"lan" only when no def applies
     const untagged = vlans.find((v) => v.ids === "untagged");
     const style = def ? vlanStyle(def.name) : b.guest ? fallback("guest") : untagged ? vlanStyle(untagged.name) : fallback("lan");
-    const [cidr, ...more] = addrsOf(b.name);
+    // the first IPv4 address stays in the label, else the first address; the rest become sub-lines
+    const all = addrsOf(b.name), v4 = all.find((c) => parseCidr(c)?.v === 4) ?? all[0];
+    const [cidr, ...more] = v4 === undefined ? [] : [v4, ...all.filter((c) => c !== v4)];
     const g = mk(child(b.name), "group", style, cidr ? `${b.name} · ${cidr}` : b.name, [...more, ...(b.hotspot ? ["hotspot"] : [])], 3);
     groups.set(b.name, g);
     node.children.push(g);
