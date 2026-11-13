@@ -200,3 +200,14 @@ test("an absolute imports path is read as is", () => {
     expect(node(m, "lte")).toBeDefined();
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("a route, note or hint naming a hidden AP port is a check error that points at --all", () => {
+  const facts = new Map([["ap1", importRsc(require("node:fs").readFileSync("examples/home/ap1.rsc", "utf8"), "ap1.rsc", "ap1")]]);
+  const src = "imports rsc ap1.rsc as ap1\ndevice x\nlink x -- ap1.ether1\nroute x -> ap1.ether2\nnote ap1.ether2 \"n\"\nplace x near ap1.ether2\n";
+  const m = buildModel(parseDsl(src, "t.net").stmts, facts);
+  const hint = "unlinked ports on devices without a router are hidden; use --all";
+  expect(m.diags.filter((d) => d.level === "error").map((d) => [d.line, d.hint]).sort()).toEqual([[4, hint], [5, hint], [6, hint]]);
+  expect(m.arrows.some((a) => a.to === "ap1/ether2")).toBe(false);
+  const shown = buildModel(parseDsl(src, "t.net").stmts, facts, { all: true });
+  expect(shown.diags.filter((d) => d.level === "error")).toEqual([]);
+});

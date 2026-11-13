@@ -12,11 +12,13 @@ type LinkStmt = Extract<Stmt, { kind: "link" }>;
 /** A resolved link endpoint. `dev` is set for ends inside an imported device. */
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
 type Radio = { id: string; bridge?: string; phys: string[]; ssids: string[]; ifaces: Iface[] };
-type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean };
+type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
+  /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
 
 const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
   ({ id, kind, style, label, sub, children: [], tier });
 const ID_RE = /^[a-z0-9_-]+$/;
+const HIDDEN_HINT = "unlinked ports on devices without a router are hidden; use --all";
 const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
 const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
@@ -125,7 +127,7 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     ((r.bridge && groups.get(r.bridge)) || node).children.push(n);
     for (const i of r.ifaces) ref.set(i.name, r.id);
   }
-  return { id, f, node, ref, ifaceOf, radios, hasRouter };
+  return { id, f, node, ref, ifaceOf, radios, hasRouter, hidden: new Set() };
 }
 
 export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts: Opts = {}): Model {
@@ -194,6 +196,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (d) {
       if (!e.port) return "bare";
       const id = d.ref.get(e.port);
+      if (!id && d.hidden.has(e.port)) { err(line, `${e.node}.${e.port} is not drawn`, HIDDEN_HINT); return undefined; }
       if (!id) { const c = closest(e.port, d.ref.keys()); err(line, `${e.node} has no interface "${e.port}"`, c && `did you mean ${e.node}.${c}?`); return undefined; }
       return { id, dev: d, iface: d.ifaceOf.get(id) ?? d.f.ifaces.find((i) => i.name === e.port) };
     }
@@ -329,7 +332,10 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     }
     const spare = (p: MNode) => p.kind === "port" && !linked.has(p.id) && !!d.ifaceOf.get(p.id)?.bridge && !(d.f.lists.WAN ?? []).includes(d.ifaceOf.get(p.id)!.name);
     // A router shows its free ports as spare; on a router-less device (an AP) they are noise unless --all.
-    const prune = (n: MNode) => { n.children = n.children.filter((c) => !spare(c)); n.children.forEach(prune); };
+    const prune = (n: MNode) => {
+      n.children = n.children.filter((c) => { if (!spare(c)) return true; const name = d.ifaceOf.get(c.id)!.name; d.ref.delete(name); d.hidden.add(name); return false; });
+      n.children.forEach(prune);
+    };
     if (d.hasRouter || opts.all) for (const p of leaves(d.node)) { if (spare(p)) p.style = "spare"; }
     else prune(d.node);
   }
@@ -342,9 +348,11 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
 
   // Hints must name a known node (or a port of one)
   const known = new Set([...ids, ...nodeType.keys()]);
+  const isHidden = (n: string) => { const [d, p] = n.split(".", 2) as [string, string | undefined]; return p !== undefined && !!devs.get(d)?.hidden.has(p); };
   for (const s of of("hint")) {
     const h = s.hint, names = h.type === "near" ? [h.a, h.b] : h.type === "row" ? h.ids : [h.device];
-    for (const n of names) if (!known.has(n) && !known.has(n.split(".")[0]!)) { const c = closest(n, known); err(s.line, `${h.type === "near" ? "place" : h.type} names unknown node "${n}"`, c ? `did you mean ${c}?` : undefined); }
+    for (const n of names) if (isHidden(n)) err(s.line, `${h.type === "near" ? "place" : h.type} names ${n}, which is not drawn`, HIDDEN_HINT);
+    else if (!known.has(n) && !known.has(n.split(".")[0]!)) { const c = closest(n, known); err(s.line, `${h.type === "near" ? "place" : h.type} names unknown node "${n}"`, c ? `did you mean ${c}?` : undefined); }
   }
 
   // Notes
@@ -353,6 +361,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     const id = port ? devs.get(n)?.ref.get(port) : n;
     const target = id && walk(nodes).find((x) => x.id === id);
     if (target) target.sub.push(s.text);
+    else if (isHidden(s.target)) err(s.line, `note target "${s.target}" is not drawn`, HIDDEN_HINT);
     else err(s.line, `note target "${s.target}" not found`);
   }
 
