@@ -390,6 +390,18 @@ No package turns yargs definitions into a man page, so netdraw renders a markdow
 - [ ] **Step 3:** `mise run fmt`, then `mise run test && mise run typecheck` — Expected: PASS, golden SVG untouched (`git status test/fixtures` clean). The diff is whitespace/line-break only: `git diff -w --stat` shows only the reflow of wrapped lines; review that no comment moved away from the code it explains.
 - [ ] **Step 4: Privacy check, commit** `style: format with Biome` (one commit containing only the config, the tasks and the reflow).
 
+### Task 14b: Biome lint and import sorting (owner request, 2026-11-13)
+
+The owner enabled Biome's linter and assist; `style/noNonNullAssertion` is off (359 checked lookups like `m[1]!`; rewriting adds churn, no safety).
+
+**Files:**
+- Modify: `mise.toml`, any `src/**`/`test/**` file with findings
+
+- [ ] **Step 1:** mise: `fmt` = `bunx biome check --write src test`; `fmt-check` = `bunx biome check src test`; `test` = `bunx biome check src test && bun test`.
+- [ ] **Step 2:** `bunx biome check --write src test` (safe fixes + import sorting), then fix the rest by hand: `useTemplate`, `useIterableCallbackReturn` (forEach callbacks must not return a value — use a block body or for…of), `noAssignInExpressions`, `noExplicitAny` (real types; `unknown` + narrowing where the type is truly unknown), `noUnusedImports`, `useOptionalChain`, `noUnusedFunctionParameters`. No `biome-ignore` comments unless a rule is wrong for that line — then a one-line reason.
+- [ ] **Step 3:** `mise run test && mise run typecheck` PASS (`biome check` reports 0 errors); golden SVG untouched; behaviour unchanged.
+- [ ] **Step 4: Privacy check, commit** `style: Biome lint fixes and sorted imports`
+
 ### Task 15: Wrap-up
 
 - [ ] Update memory file `milestone2-state.md`: part C done through the last commit; next is part D (scale) / docs.
