@@ -220,6 +220,15 @@ netdraw render [-o out.svg] [--view ...] [--only ...] [--site ...]
    to reach scale. A raw `/export` style must be among the fixtures.
 3. Filters/views on the large fixture produce readable slices.
 4. An LLM given only `netdraw --help` can build the home-network DSL via commands.
+5. **DSL-only parity (owner request, 2026-11-13):** `examples/home/network-dsl-only.net`
+   describes the whole home network with no `.rsc` files. It must produce the
+   same model as `network.net` + `.rsc`: `netdraw show --json` output equal
+   and an identical SVG. The DSL in v1 cannot express a device's internals
+   (WAN group, router, bridges/groups, member ports, VLAN interfaces, radios
+   with SSIDs, hotspot, leases), so this needs DSL statements for device
+   internals, designed together with the owner after milestone 1. Every
+   fact the importer produces must have a DSL spelling. That keeps "DSL alone
+   is sufficient" true for non-MikroTik gear.
 
 ## Constraints and project conventions
 
