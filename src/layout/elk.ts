@@ -18,6 +18,15 @@ const elk = new ELK();
  * - Only cables leaving a device use its border port. Internal links and arrows attach to the chip;
  *   routing them via the border port made them leave the device and come back.
  * - `elk.layered.mergeHierarchyEdges=false`: no change in the output, so dropped.
+ * - Hints. `side` orders a device's groups in model order. `row` keeps its ids consecutive in model
+ *   order; ELK ignores `elk.layered.layering.layerChoiceConstraint` (probed on leaves and compounds),
+ *   and `layerConstraint` is ignored inside compounds, so "same layer" is best effort.
+ *   `near` is an invisible edge b → a (thickness 0, high straightness/shortness priority) that pulls
+ *   a below b and next to it horizontally. On home, lte still lands 189 px below isp, not one layer:
+ *   its NORTH border port (cable from mobile) takes a layer of its own. Aiming the edge at lte's top
+ *   leaf or at that border port gave 247 px (and centres 411 to 687 px apart). No edge gave 254 px
+ *   and 1242 px. LONGEST_PATH, LONGEST_PATH_SOURCE, COFFMAN_GRAHAM and MIN_WIDTH layering made it
+ *   worse, and STRETCH_WIDTH stalled.
  * - Same-tier ends (isp → core/ether1) kept EAST per the brief. NORTH for the downstream end
  *   straightened the WAN cable, but ELK then returned diagonal sections for the radio → client
  *   cables and the allow arrow.
@@ -39,7 +48,7 @@ const ROOT_OPTIONS: Record<string, string> = {
 
 const byId = (a: { id: string }, b: { id: string }) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 
-/** Children sorted by id, then moved per hints: `near a b` puts a right after b, `row` keeps ids consecutive, `side` orders groups. */
+/** Children sorted by id, then moved per hints: `row` keeps ids consecutive, `side` orders groups (top first, bottom last). */
 const ordered = (kids: MNode[], model: Model, parent?: string): MNode[] => {
   let out = [...kids].sort(byId);
   const move = (id: string, after: string) => {
@@ -49,7 +58,6 @@ const ordered = (kids: MNode[], model: Model, parent?: string): MNode[] => {
     out.splice(out.findIndex((k) => k.id === after) + 1, 0, n);
   };
   for (const h of model.hints) {
-    if (h.type === "near") move(h.a, h.b);
     if (h.type === "row") h.ids.slice(1).forEach((id, i) => move(id, h.ids[i]!));
   }
   // shortcut: side left/right is not expressed (DOWN layout has no in-device column control); add when a fixture needs it.
@@ -60,7 +68,12 @@ const ordered = (kids: MNode[], model: Model, parent?: string): MNode[] => {
 
 const labelWidth = (n: MNode) => Math.max(textWidth(n.label, 15, true), ...n.sub.map((s) => textWidth(s, 12.5, false)));
 
-export async function layout(model: Model): Promise<Placed> {
+/** The ELK input for a model, plus what `layout` needs to read the result back. Exported for tests. */
+export function toElkGraph(model: Model): ElkNode {
+  return build(model).graph;
+}
+
+function build(model: Model) {
   const info = new Map<string, { node: MNode; top: MNode }>();
   const index = (n: MNode, top: MNode) => { info.set(n.id, { node: n, top }); n.children.forEach((c) => index(c, top)); };
   model.nodes.forEach((n) => index(n, n));
@@ -109,9 +122,17 @@ export async function layout(model: Model): Promise<Placed> {
     ...[...border].map(([p, b]) => (b.side === "NORTH" ? edge(inner(p), bid(p), p, 4) : edge(inner(p), p, bid(p), 4))),
     ...model.links.map((l) => edge(l.id, via(l, l.from) ? bid(l.from) : l.from, via(l, l.to) ? bid(l.to) : l.to, Math.max(4, l.lanes.length * LANE_GAP))),
     ...model.arrows.map((a) => edge(a.id, a.from, a.to, 4)),
+    // `place a near b`: invisible edge b → a pulls a below b and towards it (best effort, see the note above). Never placed.
+    ...model.hints.flatMap((h) => (h.type === "near" && info.has(h.a) && info.has(h.b)
+      ? [{ ...edge(`near:${h.b}->${h.a}`, h.b, h.a, 0), layoutOptions: { "elk.edge.thickness": "0", "elk.layered.priority.straightness": "100", "elk.layered.priority.shortness": "100" } }] : [])),
   ].sort(byId);
 
   const graph: ElkNode = { id: "root", layoutOptions: ROOT_OPTIONS, children: ordered(model.nodes, model).map(toElk), edges };
+  return { graph, border, via, inner };
+}
+
+export async function layout(model: Model): Promise<Placed> {
+  const { graph, border, via, inner } = build(model);
   const out = await elk.layout(graph);
 
   const boxes = new Map<string, Box>();

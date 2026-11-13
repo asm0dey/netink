@@ -94,7 +94,7 @@ const synth = (rsc: string, dsl: string, opts = {}) => {
 const WAN = "/interface list add name=WAN\n";
 
 test("a bridged WAN member is drawn only as its WAN chip", () => {
-  const m = synth(WAN + "/interface bridge add name=br1\n/interface bridge port add bridge=br1 interface=ether1\n/interface list member add interface=br1 list=WAN\n", "imports rsc x.rsc as x\n");
+  const m = synth(WAN + "/interface bridge add name=br1\n/interface bridge port add bridge=br1 interface=ether1\n/interface list member add interface=br1 list=WAN\n", "imports rsc x.rsc as x\n", { all: true });
   expect(all(m.nodes).filter((n) => n.id === "x/br1").map((n) => n.kind)).toEqual(["port"]);
   expect(node(m, "x")!.children.map((c) => c.id)).toContain("x/ether1");
   expect(m.diags.filter((d) => d.level === "error")).toEqual([]);
@@ -162,4 +162,17 @@ test("router-on-a-stick with vlan filtering: an access port gets no tagged lane"
   expect(link(m, "r/ether2", "b/ether1")?.lanes).toEqual(["lan"]);
   expect(link(m, "r/vlan50", "r/ether1")).toBeDefined();
   expect(link(m, "r/vlan50", "r/ether2")).toBeUndefined();
+});
+
+test("router-less devices hide unlinked physical ports unless --all", () => {
+  const ports = (m: Model) => all(node(m, "ap1")!.children).filter((n) => n.kind === "port").map((n) => n.id).sort();
+  expect(ports(loadModel(HOME))).toEqual(["ap1/ether1"]);
+  expect(ports(loadModel(HOME, { all: true }))).toEqual(["ap1/ether1", "ap1/ether2", "ap1/ether3", "ap1/ether4", "ap1/ether5"]);
+  expect(node(loadModel(HOME), "core/ether5")!.style).toBe("spare");
+});
+
+test("hint references are normalised to node ids", () => {
+  const m = synth("/interface bridge add name=br1\n/interface bridge port add bridge=br1 interface=ether2\n",
+    "imports rsc x.rsc as x\ndevice y\nplace y near x.ether2\nrow x.ether2, y\nx.side br1 = top\n");
+  expect(m.hints).toEqual([{ type: "near", a: "y", b: "x/ether2" }, { type: "row", ids: ["x/ether2", "y"] }, { type: "side", device: "x", group: "x/br1", side: "top" }]);
 });

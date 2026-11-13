@@ -325,7 +325,11 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
       const lanes = [...untagged, ...vlans.filter((v) => v.ids !== "untagged" && r.ifaces.some((i) => i.useTag !== undefined && (v.ids as number[]).includes(i.useTag))).map((v) => v.name)];
       push(up.id, r.id, lanes.length ? lanes : ["wire"], line);
     }
-    for (const p of leaves(d.node)) if (p.kind === "port" && !linked.has(p.id) && d.ifaceOf.get(p.id)?.bridge && !(d.f.lists.WAN ?? []).includes(d.ifaceOf.get(p.id)!.name)) p.style = "spare";
+    const spare = (p: MNode) => p.kind === "port" && !linked.has(p.id) && !!d.ifaceOf.get(p.id)?.bridge && !(d.f.lists.WAN ?? []).includes(d.ifaceOf.get(p.id)!.name);
+    // A router shows its free ports as spare; on a router-less device (an AP) they are noise unless --all.
+    const prune = (n: MNode) => { n.children = n.children.filter((c) => !spare(c)); n.children.forEach(prune); };
+    if (d.hasRouter || opts.all) for (const p of leaves(d.node)) { if (spare(p)) p.style = "spare"; }
+    else prune(d.node);
   }
 
   const ids = new Set<string>();
@@ -403,12 +407,16 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     else if (s.op === "note") legend.notes.push(s.arg!);
     else legend.position = s.arg as LegendSpec["position"];
   }
+  // Hints reach layout in node-id form: `dev.port` → its port id, a side's group → `dev/group`.
+  const ref = (n: string) => { const [d, p] = n.split(".", 2) as [string, string | undefined]; return p === undefined ? n : devs.get(d)?.ref.get(p) ?? `${d}/${p}`; };
+  const normHint = (h: Hint): Hint => h.type === "near" ? { ...h, a: ref(h.a), b: ref(h.b) } : h.type === "row" ? { ...h, ids: h.ids.map(ref) }
+    : { ...h, group: devs.get(h.device)?.ref.get(h.group) ?? `${h.device}/${h.group}` };
   const text = (k: "title" | "subtitle") => stmts.filter((s): s is Extract<Stmt, { text: string }> => s.kind === k).at(-1)?.text;
   const subtitle = text("subtitle");
   return {
     title: text("title") ?? "", ...(subtitle !== undefined ? { subtitle } : {}),
     nodes, links: out, arrows, vlans, legend,
-    jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => s.hint), diags, ...(opts.file !== undefined ? { file: opts.file } : {}),
+    jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => normHint(s.hint)), diags, ...(opts.file !== undefined ? { file: opts.file } : {}),
   };
 }
 

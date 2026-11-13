@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { layout } from "../../src/layout/elk";
+import { layout, toElkGraph } from "../../src/layout/elk";
 import { textWidth } from "../../src/layout/measure";
 import { loadModel } from "../../src/model/build";
 import type { Box, MNode, Model, P, Placed } from "../../src/types";
@@ -94,4 +94,45 @@ test("lonely node", async () => {
   const p = await layout(m);
   expect(p.boxes.get("solo")!.w).toBeGreaterThan(0);
   expect(p.boxes.get("solo/empty")!.w).toBeGreaterThan(0);
+});
+
+test("side hint reorders the device's emitted groups", () => {
+  const g = (id: string): MNode => ({ id, kind: "group", style: "lan", label: id, sub: [], children: [], tier: 3 });
+  const dev: MNode = { id: "d", kind: "device", style: "device", label: "D", sub: [], children: [g("d/a"), g("d/b"), g("d/c")], tier: 0 };
+  const m: Model = { title: "t", nodes: [dev], links: [], arrows: [], vlans: [], diags: [], jumps: "arc",
+    hints: [{ type: "side", device: "d", group: "d/c", side: "top" }, { type: "side", device: "d", group: "d/a", side: "bottom" }],
+    legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" } };
+  expect(toElkGraph(m).children![0]!.children!.map((c) => c.id)).toEqual(["d/c", "d/b", "d/a"]);
+});
+
+const nearIsp = async () => {
+  const p = await layout(loadModel(HOME));
+  const [isp, lte] = [p.boxes.get("isp")!, p.boxes.get("lte")!];
+  return { gap: lte.y - (isp.y + isp.h), dx: Math.abs(lte.x + lte.w / 2 - (isp.x + isp.w / 2)) };
+};
+
+test("place lte near isp: lte below isp and close to it horizontally", async () => {
+  const { gap, dx } = await nearIsp();
+  expect(gap).toBeGreaterThanOrEqual(0);
+  expect(dx).toBeLessThan(400);
+});
+
+// Known gap (see the hint note in elk.ts): lte's NORTH border port costs a layer, so the gap is ~189 px.
+// test.failing turns red once ELK manages one layer, so the expectation can be promoted.
+test.failing("place lte near isp: lte within one layer step below isp", async () => {
+  expect((await nearIsp()).gap).toBeLessThanOrEqual(60);
+});
+
+test("row ap1, ap2: same top", async () => {
+  const p = await layout(loadModel(HOME));
+  expect(p.boxes.get("ap1")!.y).toBe(p.boxes.get("ap2")!.y);
+});
+
+test("hint edges are laid out but never placed", async () => {
+  const m = loadModel(HOME);
+  const hintEdges = toElkGraph(m).edges!.filter((e) => !m.links.some((l) => l.id === e.id) && !m.arrows.some((a) => a.id === e.id) && !e.id.endsWith("#inner"));
+  expect(hintEdges.length).toBeGreaterThan(0);
+  const p = await layout(m);
+  const placed = new Set([...p.links, ...p.arrows].map((l) => l.id));
+  for (const e of hintEdges) expect(placed.has(e.id)).toBe(false);
 });
