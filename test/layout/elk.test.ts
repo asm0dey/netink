@@ -178,3 +178,35 @@ test("cable thickness uses the renderer's LANE_GAP, the one definition", async (
   expect(e.layoutOptions!["elk.edge.thickness"]).toBe(String(3 * LANE_GAP));
   expect(await Bun.file("src/layout/elk.ts").text()).not.toMatch(/const LANE_GAP\b/);
 });
+
+/** Proper crossings between two orthogonal polylines (touching ends do not count). */
+const crossings = (a: P[], b: P[]) => {
+  const segs = (q: P[]) => q.slice(1).map((c, i) => [q[i]!, c] as const);
+  const flat = (s: readonly [P, P]) => Math.abs(s[0].y - s[1].y) < 0.5;
+  return segs(a).flatMap((s) => segs(b).filter((t) => {
+    const [h, v] = flat(s) && !flat(t) ? [s, t] : flat(t) && !flat(s) ? [t, s] : [];
+    if (!h || !v) return false;
+    const [x0, x1] = [Math.min(h[0].x, h[1].x), Math.max(h[0].x, h[1].x)], [y0, y1] = [Math.min(v[0].y, v[1].y), Math.max(v[0].y, v[1].y)];
+    return v[0].x > x0 + 0.5 && v[0].x < x1 - 0.5 && h[0].y > y0 + 0.5 && h[0].y < y1 - 0.5;
+  })).length;
+};
+
+test("internal edges between stacked chips run straight; the core's internal edges barely cross", async () => {
+  const m = loadModel(HOME);
+  const p = await layout(m);
+  const dev = (id: string) => id.split("/")[0]!;
+  const leaf = new Set(all(m.nodes).filter((n) => !n.children.length).map((n) => n.id));
+  const internal = m.links.filter((l) => l.from.includes("/") && dev(l.from) === dev(l.to) && leaf.has(l.from) && leaf.has(l.to));
+  const pts = (id: string) => p.links.find((x) => x.id === id)!.points;
+  // a chip directly above (or below) the other, overlapping it horizontally by at least 20 px: one straight vertical
+  const stacked = internal.filter((l) => {
+    const [a, b] = [p.boxes.get(l.from)!, p.boxes.get(l.to)!];
+    return Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) >= 20;
+  });
+  expect(stacked.map((l) => l.id)).toEqual(expect.arrayContaining(["core/ether3--core/vlan50-guest", "core/ether4--core/vlan51-guest", "ap2/ether1--ap2/vlan51-guest"]));
+  expect(stacked.filter((l) => pts(l.id).length !== 2 || pts(l.id)[0]!.x !== pts(l.id)[1]!.x).map((l) => l.id)).toEqual([]);
+  const core = internal.filter((l) => dev(l.from) === "core").concat(m.links.filter((l) => dev(l.from) === "core" && dev(l.to) === "core" && !leaf.has(l.to)));
+  let n = 0;
+  core.forEach((a, i) => core.slice(i + 1).forEach((b) => { n += crossings(pts(a.id), pts(b.id)); }));
+  expect(n).toBeLessThanOrEqual(2);
+});

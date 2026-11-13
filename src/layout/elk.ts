@@ -175,17 +175,49 @@ export async function layout(model: Model): Promise<Placed> {
     return label === undefined ? { id, points } : { id, points, labelAt: labelPoint(points) };
   };
 
-  return {
-    width: out.width ?? 0,
-    height: out.height ?? 0,
-    boxes,
-    links: model.links.map((l) => placed(l.id, l.from, l.to, l.label, true)),
-    arrows: model.arrows.map((a) => {
-      if (!up(a)) return placed(a.id, a.from, a.to, a.label, false);
-      const p = placed(a.id, a.to, a.from, a.label, false);
-      return { ...p, points: p.points.reverse() };
-    }),
-  };
+  const links = model.links.map((l) => placed(l.id, l.from, l.to, l.label, true));
+  const arrows = model.arrows.map((a) => {
+    if (!up(a)) return placed(a.id, a.from, a.to, a.label, false);
+    const p = placed(a.id, a.to, a.from, a.label, false);
+    return { ...p, points: p.points.reverse() };
+  });
+  straighten(model, boxes, links, arrows);
+  return { width: out.width ?? 0, height: out.height ?? 0, boxes, links, arrows };
+}
+
+/**
+ * ELK bends a short device-internal edge between two stacked chips (a vif above the port it rides on) into a jog when
+ * their centres differ, and those jogs tangle with neighbouring edges. Where the chips overlap horizontally, the edge
+ * becomes one vertical in the overlap, unless that vertical would cut another box or run along another line.
+ */
+function straighten(model: Model, boxes: Map<string, Box>, links: Placed["links"], arrows: Placed["arrows"]) {
+  const parent = new Map<string, string>(), leaf = new Set<string>();
+  const index = (n: MNode, up?: string) => { if (up) parent.set(n.id, up); if (!n.children.length) leaf.add(n.id); n.children.forEach((c) => index(c, n.id)); };
+  model.nodes.forEach((n) => index(n));
+  const chain = (id: string): string[] => (parent.has(id) ? [id, ...chain(parent.get(id)!)] : [id]);
+  const top = (id: string) => chain(id).at(-1);
+  const MARGIN = 6, NEAR = 8;
+  for (const l of model.links) {
+    if (!leaf.has(l.from) || !leaf.has(l.to) || top(l.from) !== top(l.to)) continue;
+    const [a, b] = [boxes.get(l.from)!, boxes.get(l.to)!];
+    const half = (l.lanes.length * LANE_GAP) / 2 + MARGIN;
+    const [x0, x1] = [Math.max(a.x, b.x) + half, Math.min(a.x + a.w, b.x + b.w) - half];
+    const down = a.y + a.h <= b.y, upw = b.y + b.h <= a.y;
+    if (x0 > x1 || (!down && !upw)) continue;
+    const [y0, y1] = down ? [a.y + a.h, b.y] : [a.y, b.y + b.h];
+    const pl = links.find((p) => p.id === l.id)!;
+    const own = new Set([...chain(l.from), ...chain(l.to)]);
+    const others = [...links, ...arrows].filter((p) => p !== pl);
+    const [lo, hi] = [Math.min(y0, y1), Math.max(y0, y1)];
+    const free = (x: number) => [...boxes.values()].every((q) => own.has(q.id) || q.x > x + half || q.x + q.w < x - half || q.y >= hi || q.y + q.h <= lo)
+      && others.every((o) => o.points.slice(1).every((c, i) => {
+        const p = o.points[i]!;
+        return Math.abs(p.x - c.x) > 0.5 || Math.abs(p.x - x) >= NEAR + half || Math.max(p.y, c.y) <= lo || Math.min(p.y, c.y) >= hi;
+      }));
+    const ends = [pl.points.at(-1)!.x, pl.points[0]!.x].filter((x) => x >= x0 && x <= x1);
+    const x = [...ends, (x0 + x1) / 2].find(free);
+    if (x !== undefined) pl.points = [{ x, y: y0 }, { x, y: y1 }];
+  }
 }
 
 const near = (a: P, b: P) => Math.abs(a.x - b.x) < 0.01 && Math.abs(a.y - b.y) < 0.01;
