@@ -1,0 +1,12 @@
+{
+  "name": "netdraw",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "^1.4.4",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "elkjs": "^0.12.1"
+  }
+}

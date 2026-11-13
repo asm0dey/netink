@@ -1,0 +1,7 @@
+[tools]
+bun = "1.4.4"
+
+[tasks]
+test = "bun test"
+typecheck = "bunx tsc --noEmit"
+render-home = "bun src/cli.ts render --file examples/home/network.net -o examples/home/network.svg"
