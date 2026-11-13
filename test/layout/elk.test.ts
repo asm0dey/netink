@@ -170,3 +170,11 @@ test("an upward allow arrow ends on its `to` box (the arrowhead end)", async () 
   expect(on(pts.at(-1)!, p.boxes.get("c")!)).toBe(true);
   expect(on(pts[0]!, p.boxes.get("d")!)).toBe(true);
 });
+
+test("cable thickness uses the renderer's LANE_GAP, the one definition", async () => {
+  const { LANE_GAP } = await import("../../src/render/geometry");
+  const m = loadModel(HOME), l = m.links.find((x) => x.lanes.length === 3)!;
+  const e = toElkGraph(m).edges!.find((x) => x.id === l.id)!;
+  expect(e.layoutOptions!["elk.edge.thickness"]).toBe(String(3 * LANE_GAP));
+  expect(await Bun.file("src/layout/elk.ts").text()).not.toMatch(/const LANE_GAP\b/);
+});

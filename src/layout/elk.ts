@@ -1,9 +1,8 @@
 import ELK from "elkjs/lib/elk.bundled.js";
 import type { ElkExtendedEdge, ElkNode, ElkPort } from "elkjs/lib/elk-api";
 import type { Box, MNode, Model, P, Placed } from "../types";
+import { LANE_GAP } from "../render/geometry";
 import { textWidth } from "./measure";
-
-const LANE_GAP = 7;
 
 const elk = new ELK();
 // elk-worker sees Bun's global `self` and installs `self.onmessage` while ELK is constructed; that listener keeps Bun's event loop alive forever.
