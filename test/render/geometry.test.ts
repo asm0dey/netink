@@ -37,16 +37,16 @@ test("jumpPath arcs a horizontal segment over a vertical crosser", () => {
   expect(jumpPath(h, [{ x: 50, y1: 0, y2: 100 }], 5, "none")).toBe("M0,50 L100,50");
 });
 
-test("no jump over a vertical that ends 6 px past the horizontal", () => {
+test("no jump over a vertical that ends 12 px past the horizontal", () => {
   const h = [{ x: 0, y: 100 }, { x: 200, y: 100 }];
-  expect(jumpPath(h, [{ x: 100, y1: 0, y2: 106 }], 5, "arc")).not.toContain("A");
-  expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 106 }], 5)).toEqual([]);
+  expect(jumpPath(h, [{ x: 100, y1: 0, y2: 112 }], 5, "arc")).not.toContain("A");
+  expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 112 }], 5)).toEqual([]);
 });
 
-test("jump over a vertical that extends 12 px past", () => {
+test("jump over a vertical that extends 16 px past", () => {
   const h = [{ x: 0, y: 100 }, { x: 200, y: 100 }];
-  expect(jumpPath(h, [{ x: 100, y1: 0, y2: 112 }], 5, "arc")).toContain("A");
-  expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 112 }], 5)).toHaveLength(1);
+  expect(jumpPath(h, [{ x: 100, y1: 0, y2: 116 }], 5, "arc")).toContain("A");
+  expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 116 }], 5)).toHaveLength(1);
 });
 
 test("jumpPath right-to-left sweeps the other way and rounds to 0.1 px", () => {
