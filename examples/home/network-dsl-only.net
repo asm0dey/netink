@@ -1,4 +1,7 @@
 # network-dsl-only.net — the same home network, described entirely in the DSL
+# The no-RouterOS-export twin of network.net: the device blocks below came from `netdraw import`
+# and may be hand-edited, since the text file is the source of truth for edits.
+# test/acceptance/dsl-only.test.ts requires this to load to the same model as network.net and render an identical SVG.
 title "Home network"
 
 # Devices (device facts, written out)
