@@ -168,9 +168,11 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
         else if (c.isWord("label")) { c.i++; label = c.str("label"); }
         else throw new DslError(`unexpected "${c.peek()!.v}"`, "link options: vlans <name>,..., label \"text\"");
       }
-      const mk = (p: Endpoint[]): Stmt => ({ line, kind: "link", path: p, vlans, label });
+      const mk = (p: Endpoint[], lbl?: string): Stmt => ({ line, kind: "link", path: p, vlans, label: lbl });
       const last = path[path.length - 1]!;
-      return [...pairs(path), ...fan.map((f) => [last, ep(f)])].map(mk);
+      // a chain's label belongs to its last pair; each fan-out pair keeps it
+      const chain = pairs(path).map((p, i, a) => mk(p, fan.length || i < a.length - 1 ? undefined : label));
+      return [...chain, ...fan.map((f) => mk([last, ep(f)], label))];
     }
     case "note": {
       const target = c.word("target"), text = c.str("text"); c.end();

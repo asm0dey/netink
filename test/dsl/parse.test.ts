@@ -69,3 +69,8 @@ test("side hint", () => {
   const { stmts } = parseDsl("core.side wan = top", "f");
   expect(stmts[0]).toMatchObject({ kind: "hint", hint: { type: "side", device: "core", group: "wan", side: "top" } });
 });
+
+test("chained link label goes on the last pair only", () => {
+  const { stmts } = parseDsl('link a -- b -- c label "x"', "f");
+  expect(stmts.map((s) => (s.kind === "link" ? s.label : "?"))).toEqual([undefined, "x"]);
+});

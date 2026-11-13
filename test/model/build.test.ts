@@ -60,3 +60,12 @@ test("home builds without errors; only the unmatched cap-wifi2 warns", () => {
   expect(link(m, "mobile", "lte/lte1")?.lanes).toEqual(["wire"]);
   expect(node(m, "ap2")!.label).toBe("AP2 · hAP ac2 · RouterOS 7.25");
 });
+
+test("a plain device end carries only the untagged lane", () => {
+  const m = loadModel(HOME);
+  expect(link(m, "core/ether2", "switch")?.lanes).toEqual(["lan"]);
+  expect(m.links.some((l) => l.from === "core/ether2" || l.to === "core/ether2" ? l.lanes.some((x) => x !== "lan") : false)).toBe(false);
+  expect(link(m, "switch", "hub")?.lanes).toEqual(["wire"]);
+  expect(link(m, "isp", "core/ether1")?.label).toBe("primary uplink");
+  expect(link(m, "internet", "isp")?.label).toBeUndefined();
+});

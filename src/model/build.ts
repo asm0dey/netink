@@ -207,9 +207,9 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
       }
     }
   });
-  /** VLAN ids tagged on an end; undefined = unknown (no facts). Clients are hosts and carry none. */
-  const carried = (e: End): Set<number> | undefined => {
-    if (!e.dev) return e.nodeType === "client" ? new Set() : undefined;
+  /** VLAN ids tagged on an end; an end without facts carries none (tagged lanes to it need explicit `vlans`). */
+  const carried = (e: End): Set<number> => {
+    if (!e.dev) return new Set();
     const f = e.dev.f, i = e.iface;
     if (!i) return new Set();
     // a radio end carries the use-tag ids of its SSID ifaces
@@ -225,9 +225,8 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     const ca = carried(a), cb = carried(b);
     const lanes = vlans.filter((v) => {
       if (v.ids === "untagged") return member(a) && member(b);
-      const has = (c?: Set<number>) => (c ? (v.ids as number[]).some((id) => c.has(id)) : undefined);
-      const ha = has(ca), hb = has(cb);
-      return (ha && hb !== false) || (hb && ha !== false);
+      const has = (c: Set<number>) => (v.ids as number[]).some((id) => c.has(id));
+      return has(ca) && has(cb);
     }).map((v) => v.name);
     return lanes.length ? lanes : ["wire"];
   };
