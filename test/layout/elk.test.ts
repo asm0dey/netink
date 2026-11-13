@@ -210,3 +210,20 @@ test("internal edges between stacked chips run straight; the core's internal edg
   core.forEach((a, i) => core.slice(i + 1).forEach((b) => { n += crossings(pts(a.id), pts(b.id)); }));
   expect(n).toBeLessThanOrEqual(2);
 });
+
+test("cables between two same-tier devices run straight down, whichever way they are written", async () => {
+  const { parseDsl } = await import("../../src/dsl/parse");
+  const { buildModel } = await import("../../src/model/build");
+  const src = "device a\n  ports eth0, eth1\ndevice b\n  ports eth0, eth1\nlink a.eth0 -- b.eth0\nlink b.eth1 -- a.eth1\n";
+  const m = buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
+  const p = await layout(m);
+  expect(p.boxes.get("a")!.y).toBeLessThan(p.boxes.get("b")!.y);
+  for (const l of p.links) {
+    const xs = new Set(l.points.map((q) => Math.round(q.x)));
+    expect(xs.size).toBe(1); // one vertical, no detour
+  }
+  // each line starts at its `from` end
+  const [down, up] = p.links;
+  expect(down!.points[0]!.y).toBeLessThan(down!.points.at(-1)!.y);
+  expect(up!.points[0]!.y).toBeGreaterThan(up!.points.at(-1)!.y);
+});

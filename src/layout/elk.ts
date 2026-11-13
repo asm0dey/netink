@@ -26,7 +26,8 @@ const elk = new ELK();
  *   leaf or at that border port gave 247 px (and centres 411 to 687 px apart). No edge gave 254 px
  *   and 1242 px. LONGEST_PATH, LONGEST_PATH_SOURCE, COFFMAN_GRAHAM and MIN_WIDTH layering made it
  *   worse, and STRETCH_WIDTH stalled.
- * - Same-tier ends stay EAST per the brief. isp is no longer same-tier as core/ether1 (upstream nodes
+ * - Same-tier devices stack: the first cable between them puts its `from` device on top (SOUTH/NORTH border ports, the ELK
+ *   edge flipped for cables written the other way). isp is no longer same-tier as core/ether1 (upstream nodes
  *   now tier below the WAN chips), so ether1's port is NORTH and the uplink enters core from the top.
  *   ELK then returns a diagonal section for the allow arrow (hierarchy-crossing, no ports); `orthogonal`
  *   bends any such section at a right angle.
@@ -96,14 +97,24 @@ function build(model: Model) {
 
   // Border ports: one per physical port that has a cable leaving its device.
   const border = new Map<string, { device: string; side: string }>();
+  // same-tier devices: the first cable between them decides which one sits above
+  const above = new Map<string, string>();
+  for (const l of model.links) {
+    const [a, b] = [top(l.from).id, top(l.to).id], key = [a, b].sort().join("\n");
+    if (a !== b && !above.has(key)) above.set(key, a);
+  }
   for (const l of model.links) {
     for (const [end, far] of [[l.from, l.to], [l.to, l.from]] as const) {
       const n = info.get(end)!.node;
       if ((n.kind !== "port" && n.kind !== "radio") || border.has(end) || top(end) === top(far)) continue;
       const [mine, theirs] = [top(end).tier, top(far).tier];
-      border.set(end, { device: top(end).id, side: theirs < mine ? "NORTH" : theirs > mine ? "SOUTH" : "EAST" });
+      const lower = theirs === mine && above.get([top(end).id, top(far).id].sort().join("\n")) !== top(end).id;
+      border.set(end, { device: top(end).id, side: theirs < mine || lower ? "NORTH" : "SOUTH" });
     }
   }
+  /** A same-tier cable written lower → upper: its ELK edge is flipped so layering agrees with the port sides. */
+  const flip = (l: { from: string; to: string }) => top(l.from) !== top(l.to) && top(l.from).tier === top(l.to).tier
+    && above.get([top(l.from).id, top(l.to).id].sort().join("\n")) !== top(l.from).id;
   const bid = (port: string) => `${port}#border`;
   const portsOf = new Map<string, ElkPort[]>();
   for (const [port, b] of [...border].sort(([a], [c]) => (a < c ? -1 : 1))) {
@@ -136,7 +147,10 @@ function build(model: Model) {
   const edges: ElkExtendedEdge[] = [
     // NORTH border port: cable comes from above, so the inner edge flows border → chip; otherwise chip → border.
     ...[...border].map(([p, b]) => (b.side === "NORTH" ? edge(inner(p), bid(p), p, 4) : edge(inner(p), p, bid(p), 4))),
-    ...model.links.map((l) => edge(l.id, via(l, l.from) ? bid(l.from) : l.from, via(l, l.to) ? bid(l.to) : l.to, Math.max(4, l.lanes.length * LANE_GAP))),
+    ...model.links.map((l) => {
+      const [s, t] = [via(l, l.from) ? bid(l.from) : l.from, via(l, l.to) ? bid(l.to) : l.to];
+      return flip(l) ? edge(l.id, t, s, Math.max(4, l.lanes.length * LANE_GAP)) : edge(l.id, s, t, Math.max(4, l.lanes.length * LANE_GAP));
+    }),
     // ELK runs every arrow down the tiers; `layout` reverses the points of the ones it flipped
     ...model.arrows.map((a) => (up(a) ? edge(a.id, a.to, a.from, 4) : edge(a.id, a.from, a.to, 4))),
     // `place a near b`: invisible edge b → a pulls a below b and towards it (best effort, see the note above). Never placed.
@@ -145,11 +159,11 @@ function build(model: Model) {
   ].sort(byId);
 
   const graph: ElkNode = { id: "root", layoutOptions: ROOT_OPTIONS, children: ordered(model.nodes, model).map(toElk), edges };
-  return { graph, border, via, inner, up };
+  return { graph, border, via, inner, up, flip };
 }
 
 export async function layout(model: Model): Promise<Placed> {
-  const { graph, border, via, inner, up } = build(model);
+  const { graph, border, via, inner, up, flip } = build(model);
   const out = await elk.layout(graph);
 
   const boxes = new Map<string, Box>();
@@ -175,7 +189,11 @@ export async function layout(model: Model): Promise<Placed> {
     return label === undefined ? { id, points } : { id, points, labelAt: labelPoint(points) };
   };
 
-  const links = model.links.map((l) => placed(l.id, l.from, l.to, l.label, true));
+  const links = model.links.map((l) => {
+    if (!flip(l)) return placed(l.id, l.from, l.to, l.label, true);
+    const p = placed(l.id, l.to, l.from, l.label, true);
+    return { ...p, points: p.points.reverse() };
+  });
   const arrows = model.arrows.map((a) => {
     if (!up(a)) return placed(a.id, a.from, a.to, a.label, false);
     const p = placed(a.id, a.to, a.from, a.label, false);
