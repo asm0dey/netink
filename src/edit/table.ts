@@ -2,7 +2,7 @@ import type { DevItem, Stmt, VlanRef } from "../types";
 
 export type Verb = "add" | "set" | "rm";
 export type Complete = "node" | "parent" | "port" | "vlan" | "color" | "path" | "jumps" | "side" | "legend-mode" | "legend-position";
-export type Arg = { name: string; optional?: true; complete?: Complete };
+export type Arg = { name: string; optional?: true; variadic?: true; complete?: Complete }; // variadic: the rest of the words (row)
 export type Flag = { name: string; type: "string" | "boolean"; clearable?: true; complete?: Complete; help: string };
 export type Args = { verb?: Verb; parent?: string; pos: string[]; flags: Record<string, string | boolean | undefined> };
 export type Target = Stmt | DevItem;
@@ -213,7 +213,7 @@ const rowIds = (xs: string[]) => {
   return ids;
 };
 const row: Noun = {
-  name: "row", block: false, covers: ["hint:row"], verbs: ["add", "set", "rm"], args: [{ name: "ids", complete: "node" }],
+  name: "row", block: false, covers: ["hint:row"], verbs: ["add", "set", "rm"], args: [{ name: "ids", variadic: true, complete: "node" }],
   flags: [], help: "row add <ids...> | row set <first-id> <new ids...> | row rm <first-id>",
   match: (t, a) => t.kind === "hint" && t.hint.type === "row" && t.hint.ids[0] === flat(a.pos)[0],
   make: (a) => ({ line: 0, kind: "hint", hint: { type: "row", ids: rowIds(a.pos) } }),

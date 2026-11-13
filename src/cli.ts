@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
-import yargs, { type Argv } from "yargs";
+import type { Argv } from "yargs";
 import { hideBin } from "yargs/helpers";
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { loadModel } from "./load";
 import { parseDsl } from "./dsl/parse";
@@ -12,6 +12,8 @@ import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
 import { NAMED } from "./model/style";
 import { renderSvg } from "./render/svg";
+import { base, registerEditCommands, usageMessage } from "./edit/command";
+import { edit, type Candidate, type EditRequest } from "./edit/edit";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
 
 const GRAMMAR = `DSL (line-oriented; '#' to end of line is a comment unless inside quotes; a line ending in ',' continues on the next line;
@@ -62,7 +64,18 @@ Usage:
       With --file (default ./network.net) present, all its imports are translated together and the block of the one
       resolving to <file.rsc> is printed; otherwise the .rsc is translated alone, id = --as or its basename.
       --json  print {ok, stmt, diags}.
+  netdraw init [file]
+      Create an empty DSL file (default ./network.net); refuses (exit 1) if it exists.
   netdraw --help | <command> --help
+
+Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
+  Block nouns (wan, bridge, ports, ...) take the parent first: netdraw ports add core/bridge ether2,ether3 --untagged home.
+  allow --in <device> edits the line inside that device's block. Lists are one comma-separated argument.
+  --after <key> / --before <key> place a new statement next to a sibling (default: end of file or block);
+  --select-text <s> picks one of several matches; --no-<flag> clears an optional value.
+  The written lines go to stdout, then check runs and prints its diagnostics (exit 0 once written).
+  --json  print {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous.
+  netdraw <noun> --help lists its verbs and flags.
 
 Common options:
   --file <f>   the DSL file (default ./network.net)
@@ -71,16 +84,19 @@ Common options:
 Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
 Errors in --json mode: {"error": string, "file": string, "line": number, "hint"?: string}; diagnostics use
 {"level": "error"|"warning", "file", "line", "message", "hint"?}.
-No command prompts interactively. Editing commands come in a later version.`;
+No command prompts interactively.`;
 
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
 const err = (s: string) => process.stderr.write(s + "\n");
 const fmt = (d: Diag) => `${d.file}:${d.line}: ${d.level}: ${d.message}${d.hint ? ` (${d.hint})` : ""}`;
 
-function fail(json: boolean, code: number, e: { error: string; file?: string; line?: number; hint?: string }): number {
-  const body = { error: e.error, file: e.file ?? "", line: e.line ?? 0, ...(e.hint ? { hint: e.hint } : {}) };
+function fail(json: boolean, code: number, e: { error: string; file?: string; line?: number; hint?: string; candidates?: Candidate[] }): number {
+  const body = { error: e.error, file: e.file ?? "", line: e.line ?? 0, ...(e.hint ? { hint: e.hint } : {}), ...(e.candidates ? { candidates: e.candidates } : {}) };
   if (json) out(JSON.stringify(body));
-  else err(`error: ${e.error}${e.hint ? ` (${e.hint})` : ""}`);
+  else {
+    err(`error: ${e.error}${e.hint ? ` (${e.hint})` : ""}`);
+    e.candidates?.forEach((c) => err(`${body.file}:${c.line}: ${c.text}`));
+  }
   return code;
 }
 
@@ -144,7 +160,7 @@ function importCmd(rsc: string | undefined, as: string | undefined, file: string
   return 0;
 }
 
-type Args = { file: string; json: boolean; as?: string; all?: boolean; o?: string; what?: string; rsc?: string };
+type Args = { file: string; json: boolean; as?: string; all?: boolean; o?: string; what?: string; rsc?: string; path?: string };
 class Usage extends Error {}
 let crash: unknown; // an error a handler threw, rethrown to run()
 let exit = 0; // the running command's exit code, set by its handler
@@ -155,39 +171,62 @@ export function cli(argv: string[]): Argv {
   const go = (f: (a: Args) => number | Promise<number>) => async (a: unknown) => {
     try { exit = await f(a as Args); } catch (e) { crash = e; } // a rejection would escape to the runtime as unhandled
   };
-  return yargs(argv)
-    .scriptName("netdraw").usage(HELP).epilogue(GRAMMAR).wrap(null)
-    .strict().exitProcess(false).version(false).alias("h", "help")
-    .option("file", { type: "string", default: "./network.net", requiresArg: true, global: true })
-    .option("json", { type: "boolean", default: false, global: true })
-    .option("as", { type: "string", requiresArg: true, global: true })
-    .option("all", { type: "boolean", global: true })
-    .option("o", { type: "string", requiresArg: true, global: true })
-    .demandCommand(1)
+  const all = { type: "boolean", describe: "include spare/unused parts" } as const;
+  const y = base(argv)
+    .scriptName("netdraw").usage(HELP).epilogue(GRAMMAR).alias("h", "help")
+    .demandCommand(1, "missing command")
     .fail((msg, e) => {
-      msg = msg || e?.message || "usage error";
-      let m: RegExpExecArray | null;
-      if (msg.startsWith("Not enough non-option arguments")) { err(HELP); msg = "missing command"; }
-      else if ((m = /^Unknown arguments?: (.*)$/.exec(msg))) {
-        const names = m[1]!.split(", ");
-        const isFlag = (n: string) => argv.some((x) => x === `--${n}` || x === `-${n}` || x.startsWith(`--${n}=`));
-        const flags = names.filter(isFlag);
-        const first = argv.find((x) => !x.startsWith("-"));
-        msg = flags.length ? `unknown flag${flags.length > 1 ? "s" : ""} ${flags.map((n) => (n.length > 1 ? "--" : "-") + n).join(", ")}`
-          : names[0] === first ? `unknown command ${first}` : `unexpected argument ${names[0]}`;
-      }
+      msg = usageMessage(msg || e?.message || "usage error", argv);
+      if (msg === "missing command") err(HELP);
       exit = fail(json, 2, { error: msg, hint: "run netdraw --help" });
       throw new Usage(msg);
     })
-    .command("render", false, {}, go((a) => render(a, "render")))
-    .command("check", false, {}, go((a) => render(a, "check")))
-    .command("show [what]", false, (y) => y.positional("what", { type: "string" }), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
-    .command("import [rsc]", false, (y) => y.positional("rsc", { type: "string" }), go((a) => importCmd(a.rsc, a.as, a.file, a.json)));
+    .command("render", false, (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file" }), go((a) => render(a, "render")))
+    .command("check", false, (y) => y.option("all", all), go((a) => render(a, "check")))
+    .command("show [what]", false, (y) => y.positional("what", { type: "string" }).option("all", all), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
+    .command("init [path]", false, (y) => y.positional("path", { type: "string" }), go((a) => init(a.path ?? a.file, a.json)));
+  return registerEditCommands(y, (req, a) => go((x) => editCmd(req, x.file, x.json))(a), {
+    import: {
+      cmd: "import [rsc]",
+      builder: (y) => y.option("as", { type: "string", requiresArg: true, describe: "the id of the printed device" }),
+      handler: go((a) => importCmd(a.rsc, a.as, a.file, a.json)),
+    },
+  });
+}
+
+function init(file: string, json: boolean): number {
+  try { writeFileSync(file, "", { flag: "wx" }); }
+  catch (e) {
+    const exists = (e as NodeJS.ErrnoException).code === "EEXIST";
+    return fail(json, 1, { error: exists ? `${file} exists` : `cannot create ${file}: ${(e as Error).message.split("\n")[0]}`, file, ...(exists ? { hint: "edit it with netdraw <noun> add ..." } : {}) });
+  }
+  if (json) out(JSON.stringify({ ok: true, file }));
+  return 0;
+}
+
+/** Edit `file` in place (atomic temp + rename), then check what was written; check's findings never undo the write. */
+function editCmd(req: EditRequest, file: string, json: boolean): number {
+  let text: string;
+  try { text = readFileSync(file, "utf8"); }
+  catch { return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file, or create it with netdraw init" }); }
+  const r = edit(text, file, req);
+  if (!r.ok) return fail(json, 1, { error: r.error, file, line: r.line, hint: r.hint, candidates: r.candidates });
+  const tmp = join(dirname(file), `.${basename(file)}.${process.pid}.tmp`);
+  try { writeFileSync(tmp, r.text); renameSync(tmp, file); }
+  catch (e) {
+    rmSync(tmp, { force: true });
+    return fail(json, 1, { error: `cannot write ${file}: ${(e as Error).message.split("\n")[0]}`, file, hint: "check the file's directory is writable" });
+  }
+  let diags: Diag[];
+  try { diags = checkModel(loadModel(file)); }
+  catch (e) { diags = [{ level: "error", file, line: 0, message: `cannot load ${file}: ${(e as Error).message.split("\n")[0]!.slice(0, 200)}` }]; }
+  if (json) out(JSON.stringify({ ok: true, file, line: r.line, text: r.written, diags }));
+  else { if (r.written) out(r.written); diags.forEach((d) => err(fmt(d))); }
+  return 0;
 }
 
 function withModel(a: Args, f: (m: Model) => number | Promise<number>): number | Promise<number> {
   const { file, json } = a;
-  if (a.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
   if (!existsSync(file)) return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file or create ./network.net" });
   let model: Model;
   try { model = loadModel(file, { all: a.all ?? false }); }

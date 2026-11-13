@@ -180,3 +180,106 @@ test("import without a path says what is missing", () => {
   expect(r.code).toBe(2);
   expect(JSON.parse(r.out).error).toBe("missing argument: <file.rsc>");
 });
+
+// ---- editing commands ----
+const fresh = (name: string, text?: string) => {
+  const f = join(dir, name);
+  rmSync(f, { force: true });
+  if (text !== undefined) writeFileSync(f, text);
+  return f;
+};
+test("init then add", () => {
+  const f = fresh("init.net");
+  expect(run("init", f).code).toBe(0);
+  expect(readFileSync(f, "utf8")).toBe("");
+  const r = run("device", "add", "d", "--label", "D", "--file", f, "--json");
+  expect(r.code).toBe(0);
+  expect(JSON.parse(r.out)).toMatchObject({ ok: true, file: f, line: 1, text: 'device d "D"', diags: [] });
+  expect(readFileSync(f, "utf8")).toBe('device d "D"\n');
+  // human mode: the written lines on stdout
+  expect(run("vlan", "add", "home", "10", "--file", f).out).toBe("vlan home 10\n");
+});
+test("init refuses existing", () => {
+  const f = fresh("twice.net");
+  expect(run("init", f).code).toBe(0);
+  const r = run("init", f, "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out).error).toBe(`${f} exists`);
+});
+test("editing a missing file is exit 1 with a hint to init", () => {
+  const r = run("vlan", "add", "a", "10", "--file", join(dir, "none.net"), "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out).hint).toContain("netdraw init");
+});
+test("edit with missing import still writes", () => {
+  const f = fresh("gone.net", "imports rsc gone.rsc as g\n");
+  const r = run("vlan", "add", "a", "10", "--file", f, "--json");
+  expect(r.code).toBe(0);
+  expect(readFileSync(f, "utf8")).toBe("imports rsc gone.rsc as g\nvlan a 10\n");
+  const j = JSON.parse(r.out);
+  expect(j.diags.some((d: { level: string; message: string }) => d.level === "error" && d.message.includes("gone.rsc"))).toBe(true);
+  expect(run("vlan", "add", "b", "20", "--file", f).err).toContain("gone.rsc");
+});
+test("usage errors exit 2, file untouched", () => {
+  const f = fresh("usage.net", "vlan b 20\n");
+  for (const a of [["frob", "add", "x"], ["vlan", "add", "a", "10", "--colour", "red"], ["vlan", "add", "a", "10", "--near", "b"], ["vlan", "add"], ["vlan"], ["vlan", "add", "a", "10", "extra"]]) {
+    const r = run(...a, "--file", f, "--json");
+    expect([a, r.code]).toEqual([a, 2]);
+    expect(JSON.parse(r.out).hint).toBeString();
+  }
+  expect(JSON.parse(run("vlan", "add", "a", "10", "--colour", "red", "--file", f, "--json").out).error).toBe("unknown flag --colour");
+  expect(readFileSync(f, "utf8")).toBe("vlan b 20\n");
+});
+test("--no-color clears; numbers stay strings", () => {
+  const f = fresh("clear.net", "vlan a 10 color red\n");
+  expect(run("vlan", "set", "a", "--no-color", "--file", f).code).toBe(0);
+  expect(readFileSync(f, "utf8")).toBe("vlan a 10\n");
+  expect(run("vlan", "set", "a", "010,20", "--subnet", "10.0.0.0/24,10.1.0.0/24", "--file", f).code).toBe(0);
+  expect(readFileSync(f, "utf8")).toBe("vlan a 10, 20 subnet 10.0.0.0/24, 10.1.0.0/24\n");
+});
+test("ambiguous lists candidates", () => {
+  const f = fresh("amb.net", "device a\ndevice b\nlink a -- b\nlink a -- b label \"x\"\n");
+  const r = run("link", "rm", "a", "b", "--file", f, "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out).candidates.length).toBe(2);
+  expect(run("link", "rm", "a", "b", "--file", f).err).toContain(`${f}:4: link a -- b`);
+});
+test("block nouns, allow --in, legend subnouns, row, import noun", () => {
+  const f = fresh("block.net", "device r\n");
+  expect(run("ports", "add", "r", "ether2,ether3", "--tagged", "10,20", "--file", f).code).toBe(0);
+  expect(run("allow", "add", "ether1", "10.0.0.9", "--in", "r", "--file", f).code).toBe(0);
+  expect(run("legend", "entry", "add", "dashed", "trunk", "--file", f).code).toBe(0);
+  expect(run("legend", "set", "--mode", "off", "--file", f).code).toBe(0);
+  expect(run("row", "add", "r", "x", "--file", f).code).toBe(0);
+  expect(run("import", "add", "core.rsc", "--as", "core", "--file", f).code).toBe(0);
+  expect(run("vlan", "add", "b", "2", "--file", f).code).toBe(0);
+  expect(run("vlan", "add", "a", "1", "--before", "b", "--file", f).code).toBe(0);
+  expect(readFileSync(f, "utf8")).toBe('device r\n  ports ether2, ether3 tagged 10, 20\n  allow ether1 -> 10.0.0.9\nlegend add dashed "trunk"\nlegend off\nrow r, x\nimports rsc core.rsc as core\nvlan a 1\nvlan b 2\n');
+  expect(run("vlan", "add", "c", "3", "--before", "b", "--after", "a", "--file", f).code).toBe(2);
+});
+test("help lists every noun", async () => {
+  const { NOUNS } = await import("../src/edit/table");
+  const r = run("--help");
+  expect(r.out).not.toContain("Editing commands come in a later version");
+  for (const n of NOUNS) expect(r.out).toContain(n.name);
+  const v = run("vlan", "--help");
+  expect(v.code).toBe(0);
+  expect(v.out).toContain("add");
+  expect(run("vlan", "add", "--help").out).toContain("--color");
+});
+test("parseEditArgv returns a request or a usage message, printing nothing", async () => {
+  const { parseEditArgv } = await import("../src/edit/command");
+  const r = parseEditArgv(["ports", "add", "core/bridge", "ether2,ether3", "--untagged", "10", "--no-horizon"]);
+  expect("req" in r && { noun: r.req.noun.name, verb: r.req.verb, args: r.req.args }).toEqual({
+    noun: "ports", verb: "add", args: { parent: "core/bridge", pos: ["ether2,ether3"], flags: { untagged: "10", horizon: false } } });
+  const a = parseEditArgv(["allow", "set", "x", "y", "--in", "r", "--label", "l", "--after", "x z"]);
+  expect("req" in a && a.req.args).toEqual({ parent: "r", pos: ["x", "y"], flags: { label: "l", after: "x z" } });
+  expect(parseEditArgv(["legend", "note", "add", "hi"])).toMatchObject({ req: { verb: "add", args: { pos: ["hi"] } } });
+  expect(parseEditArgv(["vlan", "add", "a", "--colour", "x"])).toEqual({ usage: "unknown flag --colour" });
+  expect(parseEditArgv(["render"])).toHaveProperty("usage");
+  expect(parseEditArgv(["vlan", "add", "a", "--help"])).toHaveProperty("usage");
+});
+test("a repeated flag: the last one wins", async () => {
+  const { parseEditArgv } = await import("../src/edit/command");
+  expect(parseEditArgv(["vlan", "set", "a", "--color", "red", "--color", "blue"])).toMatchObject({ req: { args: { flags: { color: "blue" } } } });
+});
