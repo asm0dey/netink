@@ -95,13 +95,13 @@ class Cur {
   }
   word(what: string): string {
     const t = this.toks[this.i];
-    if (!t || t.t !== "w") throw new DslError(`expected ${what}`);
+    if (t?.t !== "w") throw new DslError(`expected ${what}`);
     this.i++;
     return t.v;
   }
   str(what: string): string {
     const t = this.toks[this.i];
-    if (!t || t.t !== "s") throw new DslError(`expected quoted ${what}`);
+    if (t?.t !== "s") throw new DslError(`expected quoted ${what}`);
     this.i++;
     return t.v;
   }
@@ -149,7 +149,7 @@ function color(c: Cur): string {
     const v = c.str("color"),
       m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(v);
     if (!m) throw new DslError(`bad hex color "${v}"`, 'use "#rrggbb", or a name without quotes');
-    return m[1]!.length === 3 ? "#" + [...m[1]!].map((x) => x + x).join("") : v;
+    return m[1]!.length === 3 ? `#${[...m[1]!].map((x) => x + x).join("")}` : v;
   }
   if (c.done()) throw new DslError("expected color", 'quote hex colours: color "#ff0000"');
   const v = c.word("color");
@@ -565,7 +565,7 @@ export function parseDsl(
     const lead = /^[ \t]*/.exec(lines[n]!)![0];
     let src = stripComment(lines[n]!);
     // shortcut: a comment-only line after a trailing comma ends the continuation (it reads as empty), upgrade if that bites
-    while (src.endsWith(",") && n + 1 < lines.length) src += " " + stripComment(lines[++n]!).trim();
+    while (src.endsWith(",") && n + 1 < lines.length) src += ` ${stripComment(lines[++n]!).trim()}`;
     if (!src.trim()) continue;
     const head = n + 1;
     try {
@@ -592,9 +592,11 @@ export function parseDsl(
       if (!dev) throw new DslError(`${kw} must be inside a device block`, "indent it under a device line");
       if (level === 1) {
         const it = parseItem(kw, c, line);
-        (dev.items ??= []).push(it);
+        dev.items ??= [];
+        dev.items.push(it);
         bridge = it.kind === "bridge" ? it : undefined;
-        spans.set(it, (bridgeSpan = { line, head, end: head }));
+        bridgeSpan = { line, head, end: head };
+        spans.set(it, bridgeSpan);
         devSpan!.end = head;
       } else {
         if (!bridge)

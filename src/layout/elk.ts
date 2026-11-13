@@ -1,7 +1,7 @@
 import ELK from "elkjs/lib/elk.bundled.js";
 import type { ElkExtendedEdge, ElkNode, ElkPort } from "elkjs/lib/elk-api";
-import type { Box, MNode, Model, P, Placed } from "../types";
 import { LANE_GAP } from "../render/geometry";
+import type { Box, MNode, Model, P, Placed } from "../types";
 import { textWidth } from "./measure";
 
 const elk = new ELK();
@@ -72,7 +72,10 @@ const ordered = (kids: MNode[], model: Model, parent?: string): MNode[] => {
     out.splice(out.findIndex((k) => k.id === after) + 1, 0, n);
   };
   for (const h of model.hints) {
-    if (h.type === "row") h.ids.slice(1).forEach((id, i) => move(id, h.ids[i]!));
+    if (h.type === "row")
+      h.ids.slice(1).forEach((id, i) => {
+        move(id, h.ids[i]!);
+      });
   }
   // shortcut: side left/right is not expressed (DOWN layout has no in-device column control); add when a fixture needs it.
   const sides = new Map(
@@ -96,9 +99,13 @@ function build(model: Model) {
   const info = new Map<string, { node: MNode; top: MNode }>();
   const index = (n: MNode, top: MNode) => {
     info.set(n.id, { node: n, top });
-    n.children.forEach((c) => index(c, top));
+    n.children.forEach((c) => {
+      index(c, top);
+    });
   };
-  model.nodes.forEach((n) => index(n, n));
+  model.nodes.forEach((n) => {
+    index(n, n);
+  });
   const top = (id: string) => info.get(id)!.top;
   /** An arrow pointing up the tiers: its ELK edge is flipped so layering still flows down. */
   const up = (a: { from: string; to: string }) => (info.get(a.from)?.node.tier ?? 0) > (info.get(a.to)?.node.tier ?? 0);
@@ -263,9 +270,13 @@ function straighten(model: Model, boxes: Map<string, Box>, links: Placed["links"
   const index = (n: MNode, up?: string) => {
     if (up) parent.set(n.id, up);
     if (!n.children.length) leaf.add(n.id);
-    n.children.forEach((c) => index(c, n.id));
+    n.children.forEach((c) => {
+      index(c, n.id);
+    });
   };
-  model.nodes.forEach((n) => index(n));
+  model.nodes.forEach((n) => {
+    index(n);
+  });
   const chain = (id: string): string[] => (parent.has(id) ? [id, ...chain(parent.get(id)!)] : [id]);
   const top = (id: string) => chain(id).at(-1);
   const MARGIN = 6,

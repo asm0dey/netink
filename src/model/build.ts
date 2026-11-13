@@ -1,22 +1,8 @@
+import type { Diag, Endpoint, Hint, Iface, LegendSpec, MArrow, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 import { parseCidr } from "./addr";
 import { addressDiags, closest } from "./check";
+import { buildDevice, type Dev, mk, type Radio } from "./device";
 import { deriveArrows } from "./l3";
-import { fallbackIn, laneOfStyle, vlanStyle } from "./style";
-import { buildDevice, mk, type Dev, type Radio } from "./device";
-import type {
-  DeviceFacts,
-  Diag,
-  MArrow,
-  Endpoint,
-  Hint,
-  Iface,
-  LegendSpec,
-  MLink,
-  MNode,
-  Model,
-  Stmt,
-  VlanDef,
-} from "../types";
 
 export type Opts = { all?: boolean; file?: string };
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
@@ -161,7 +147,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       .filter((e): e is End => typeof e === "object")
       .map((e) => e.id),
   );
-  ends.forEach((pair, k) =>
+  ends.forEach((pair, k) => {
     pair.forEach((e, j) => {
       if (e !== "bare") return;
       const name = links[k]!.path[j]!.node,
@@ -178,8 +164,8 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       }
       linked.add(free[0]!.id);
       pair[j] = { id: free[0]!.id, dev: d, iface: d.ifaceOf.get(free[0]!.id) };
-    }),
-  );
+    });
+  });
 
   for (const l of links)
     for (const name of l.vlans ?? [])
@@ -418,11 +404,17 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   const bfs = (seed: string[], start: number) => {
     let front = seed.filter((id) => !tier.has(id));
     for (let t = start; front.length; t++) {
-      front.forEach((id) => tier.set(id, t));
+      front.forEach((id) => {
+        tier.set(id, t);
+      });
       front = [...new Set(front.flatMap(nbrs))].filter((id) => !tier.has(id) && nodeType.get(id) !== "cloud").sort();
     }
   };
-  free.filter((n) => n.kind === "cloud").forEach((n) => tier.set(n.id, 0));
+  free
+    .filter((n) => n.kind === "cloud")
+    .forEach((n) => {
+      tier.set(n.id, 0);
+    });
   bfs(
     free
       .filter(
@@ -434,7 +426,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   const before = new Set(tier.keys());
   bfs([...new Set(free.filter((n) => n.kind === "cloud").flatMap((n) => nbrs(n.id)))].sort(), 1);
   // Upstream nodes (reached from clouds) sit strictly between the clouds (0) and the WAN chips (1): hop h of H becomes h/(H+1).
-  const up = [...tier].filter(([id, t]) => !before.has(id));
+  const up = [...tier].filter(([id]) => !before.has(id));
   const hops = Math.max(0, ...up.map(([, t]) => t));
   for (const [id, t] of up) tier.set(id, t / (hops + 1));
   for (const n of free) n.tier = tier.get(n.id) ?? 5;

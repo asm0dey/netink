@@ -1,7 +1,7 @@
 import type { Diag, Model, VlanDef } from "../types";
 import { addrKey, inPrefix, parseCidr } from "./addr";
-import { laneOfStyle } from "./style";
 import type { Dev } from "./device";
+import { laneOfStyle } from "./style";
 
 function dist(a: string, b: string): number {
   let prev = Array.from({ length: b.length + 1 }, (_, j) => j);

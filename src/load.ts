@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, isAbsolute, join } from "node:path";
 import { parseDsl } from "./dsl/parse";
-import { buildFromStmts, vlanDefs, type Opts } from "./model/build";
+import { buildFromStmts, type Opts, vlanDefs } from "./model/build";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
 import type { DeviceFacts, Diag, Model, Stmt } from "./types";

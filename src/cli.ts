@@ -1,6 +1,4 @@
 #!/usr/bin/env bun
-import type { Argv } from "yargs";
-import { hideBin } from "yargs/helpers";
 import {
   chmodSync,
   existsSync,
@@ -12,24 +10,26 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
-import { loadModel } from "./load";
+import type { Argv } from "yargs";
+import { hideBin } from "yargs/helpers";
+import { complete } from "./complete";
 import { parseDsl } from "./dsl/parse";
 import { printStmts } from "./dsl/print";
+import { base, registerEditCommands, usageMessage } from "./edit/command";
+import { type Candidate, type EditRequest, edit } from "./edit/edit";
+import { NOUNS } from "./edit/table";
+import { DESC, EPILOGUE } from "./help";
+import { layout } from "./layout/elk";
+import { loadModel } from "./load";
+import { manPage } from "./man";
+import { checkModel } from "./model/check";
+import { renderSvg } from "./render/svg";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
-import { checkModel } from "./model/check";
-import { layout } from "./layout/elk";
-import { complete } from "./complete";
-import { DESC, EPILOGUE } from "./help";
-import { manPage } from "./man";
-import { renderSvg } from "./render/svg";
-import { NOUNS } from "./edit/table";
-import { base, registerEditCommands, usageMessage } from "./edit/command";
-import { edit, type Candidate, type EditRequest } from "./edit/edit";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
 
-const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
-const err = (s: string) => process.stderr.write(s + "\n");
+const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : `${s}\n`);
+const err = (s: string) => process.stderr.write(`${s}\n`);
 const fmt = (d: Diag) => `${d.file}:${d.line}: ${d.level}: ${d.message}${d.hint ? ` (${d.hint})` : ""}`;
 
 function fail(
@@ -49,7 +49,9 @@ function fail(
     err(
       `${body.file && body.line ? `${body.file}:${body.line}: ` : ""}error: ${e.error}${e.hint ? ` (${e.hint})` : ""}`,
     );
-    e.candidates?.forEach((c) => err(`${body.file}:${c.line}: ${c.text}`));
+    e.candidates?.forEach((c) => {
+      err(`${body.file}:${c.line}: ${c.text}`);
+    });
   }
   return code;
 }
@@ -139,7 +141,9 @@ function importCmd(rsc: string | undefined, as: string | undefined, file: string
   const stmt = { ...t.stmts[target]!, ...(as ? { id: as } : {}) };
   if (json) out(JSON.stringify({ ok: true, stmt, diags: t.diags }));
   else {
-    t.diags.forEach((d) => err(fmt(d)));
+    t.diags.forEach((d) => {
+      err(fmt(d));
+    });
     out(printStmts([stmt]));
   }
   return 0;
@@ -296,7 +300,9 @@ function editCmd(req: EditRequest, file: string, json: boolean): number {
   if (json) out(JSON.stringify({ ok: true, file, line: r.line, text: r.written, diags }));
   else {
     if (r.written) out(r.written);
-    diags.forEach((d) => err(fmt(d)));
+    diags.forEach((d) => {
+      err(fmt(d));
+    });
   }
   return 0;
 }
@@ -325,7 +331,10 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
     const errors = diags.filter((d) => d.level === "error");
     if (cmd === "check" || errors.length) {
       if (json) out(JSON.stringify({ ok: errors.length === 0, diags }));
-      else diags.forEach((d) => err(fmt(d)));
+      else
+        diags.forEach((d) => {
+          err(fmt(d));
+        });
       return errors.length ? 1 : 0;
     }
     let svg: string, width: number, height: number;
@@ -367,7 +376,9 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
         }),
       );
     else {
-      warnings.forEach((d) => err(fmt(d)));
+      warnings.forEach((d) => {
+        err(fmt(d));
+      });
       if (a.o === undefined) process.stdout.write(svg);
     }
     return 0;

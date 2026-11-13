@@ -1,7 +1,7 @@
-import { COMPLETION, DESC, EDITING, EXIT, GRAMMAR, JSON_OUT } from "./help";
 import { NOUNS } from "./edit/table";
+import { COMPLETION, DESC, EDITING, EXIT, GRAMMAR, JSON_OUT } from "./help";
 
-const code = (s: string) => "```\n" + s + "\n```";
+const code = (s: string) => `\`\`\`\n${s}\n\`\`\``;
 
 /** The man page as marked-man markdown, built from the same definitions --help uses. */
 export function manPage(): string {
@@ -10,7 +10,7 @@ export function manPage(): string {
     .join("\n");
   const editing = NOUNS.map((n) => {
     const flags = n.flags.map((f) => `  * \`--${f.name}\`: ${f.help}`).join("\n");
-    return `* \`${n.help}\`${flags ? "\n" + flags : ""}`;
+    return `* \`${n.help}\`${flags ? `\n${flags}` : ""}`;
   }).join("\n");
   return `netdraw(1) -- render network diagrams from a DSL
 ==================================================

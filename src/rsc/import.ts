@@ -127,7 +127,8 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         break;
       case "/interface list member":
         if (c.verb === "add" && p.list && p.interface) {
-          (f.lists[p.list] ??= []).push(p.interface);
+          f.lists[p.list] ??= [];
+          f.lists[p.list]!.push(p.interface);
           touch(p.interface);
         }
         break;

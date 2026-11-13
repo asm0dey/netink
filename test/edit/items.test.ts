@@ -1,9 +1,21 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { edit, type EditResult } from "../../src/edit/edit";
-import { NOUNS, type Args, type Verb } from "../../src/edit/table";
 import { parseDsl } from "../../src/dsl/parse";
 import { printItems } from "../../src/dsl/print";
+import { type EditResult, edit } from "../../src/edit/edit";
+import { type Args, NOUNS, type Verb } from "../../src/edit/table";
+import type { DevItem } from "../../src/types";
+
+/** Every DevItem field, so one function can read any kind (test-only: fields of other kinds are absent at runtime). */
+type Row = {
+  [K in DevItem extends infer U ? (U extends unknown ? keyof U : never) : never]-?: DevItem extends infer U
+    ? U extends unknown
+      ? K extends keyof U
+        ? U[K]
+        : never
+      : never
+    : never;
+};
 
 const run = (
   text: string,
@@ -109,9 +121,9 @@ test("vlan-iface needs --vlan", () => {
 test("replays the home example's device blocks", () => {
   const src = readFileSync("examples/home/network-dsl-only.net", "utf8");
   const { stmts } = parseDsl(src, "h.net");
-  const flagsOf = (it: any): Args["flags"] => {
+  const flagsOf = (it: Row): Args["flags"] => {
     const f: Args["flags"] = {};
-    for (const k of ["lan", "guest", "hotspot", "filtering", "nat"]) if (it[k]) f[k] = true;
+    for (const k of ["lan", "guest", "hotspot", "filtering", "nat"]) if (it[k as keyof Row]) f[k] = true;
     if (it.addresses?.length) f.address = it.addresses.join(",");
     if (it.on) f.on = it.on;
     if (it.vlan !== undefined) f.vlan = String(it.vlan);
@@ -126,7 +138,7 @@ test("replays the home example's device blocks", () => {
     if (it.horizon !== undefined) f.horizon = String(it.horizon);
     return f;
   };
-  const posOf = (it: any): string[] => {
+  const posOf = (it: Row): string[] => {
     switch (it.kind) {
       case "wan":
         return [it.iface];
@@ -147,7 +159,7 @@ test("replays the home example's device blocks", () => {
         return [it.from, it.to];
     }
   };
-  const flagsFor = (it: any) =>
+  const flagsFor = (it: Row) =>
     it.kind === "address"
       ? { ...flagsOf(it), address: undefined }
       : it.kind === "allow"
@@ -158,9 +170,10 @@ test("replays the home example's device blocks", () => {
   for (const s of stmts) {
     if (s.kind !== "node" || !s.items) continue;
     let t = `device ${s.id}\n`;
-    const feed = (items: any[], parent: string) => {
+    const feed = (items: DevItem[], parent: string) => {
       for (const it of items) {
-        t = ok(run(t, it.kind, "add", parent, posOf(it), flagsFor(it)));
+        const row = it as Row;
+        t = ok(run(t, it.kind, "add", parent, posOf(row), flagsFor(row)));
         if (it.kind === "bridge") feed(it.items, `${s.id}/${it.name}`);
       }
     };

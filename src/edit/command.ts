@@ -1,6 +1,6 @@
 import yargs, { type Argv } from "yargs";
 import type { EditRequest } from "./edit";
-import { NOUNS, type Args, type Noun, type Verb } from "./table";
+import { type Args, NOUNS, type Noun, type Verb } from "./table";
 
 /** Parser settings the CLI and parseEditArgv share: values stay the strings typed (`--vlan 10` is "10", `010` keeps its zero);
  * words after `--` are kept as positionals, and `-dash` is one unknown flag, not `-d -a -s -h` (which would print help, exit 0). */

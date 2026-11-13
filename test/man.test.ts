@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
-import { manPage } from "../src/man";
 import { NOUNS } from "../src/edit/table";
 import { GRAMMAR } from "../src/help";
+import { manPage } from "../src/man";
 
 const run = (...a: string[]) => {
   const r = Bun.spawnSync(["bun", "src/cli.ts", ...a]);

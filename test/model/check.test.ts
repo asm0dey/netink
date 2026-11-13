@@ -23,19 +23,19 @@ test("home example has no errors", () => {
 });
 
 test("missing port gets a did-you-mean hint, reported once", () => {
-  const d = check(HEAD + "link core.ether9 -- ap1.ether1\n").filter((x) => x.level === "error");
+  const d = check(`${HEAD}link core.ether9 -- ap1.ether1\n`).filter((x) => x.level === "error");
   expect(d).toHaveLength(1);
   expect(d[0]).toMatchObject({ line: 4, file: "t.net" });
   expect(d[0]!.hint).toMatch(/did you mean core\.ether\d/);
 });
 
 test("unknown node suggests the closest id", () => {
-  const d = check(HEAD + "cloud internet\nlink internet -- core.ether1\nlink internat -- ap1.ether1\n");
+  const d = check(`${HEAD}cloud internet\nlink internet -- core.ether1\nlink internat -- ap1.ether1\n`);
   expect(d.filter((x) => x.level === "error").map((x) => x.hint)).toEqual(["did you mean internet?"]);
 });
 
 test("port on two links is an error", () => {
-  const d = check(HEAD + "client a\nclient b\nlink core.ether3 -- a\nlink core.ether3 -- b\n").filter(
+  const d = check(`${HEAD}client a\nclient b\nlink core.ether3 -- a\nlink core.ether3 -- b\n`).filter(
     (x) => x.level === "error",
   );
   expect(d).toHaveLength(1);
@@ -43,26 +43,26 @@ test("port on two links is an error", () => {
 });
 
 test("hint naming an unknown node is an error", () => {
-  const d = check(HEAD + "place ghost near core\n").filter((x) => x.level === "error");
+  const d = check(`${HEAD}place ghost near core\n`).filter((x) => x.level === "error");
   expect(d).toHaveLength(1);
   expect(d[0]).toMatchObject({ line: 4 });
   expect(d[0]!.message).toContain("ghost");
 });
 
 test("bad node id is an error on its line", () => {
-  const d = check(HEAD + "client Bad_Id\n").filter((x) => x.level === "error");
+  const d = check(`${HEAD}client Bad_Id\n`).filter((x) => x.level === "error");
   expect(d.map((x) => x.line)).toEqual([4]);
 });
 
 test("explicit vlans the imported end doesn't carry warn, naming both sets", () => {
-  const d = check(HEAD + "link core.ether2 -- ap1.ether1 vlans guest\n").filter((x) => x.level === "warning");
+  const d = check(`${HEAD}link core.ether2 -- ap1.ether1 vlans guest\n`).filter((x) => x.level === "warning");
   expect(d).toHaveLength(1);
   expect(d[0]!.message).toContain("[guest]");
   expect(d[0]!.message).toContain("inferred [lan]");
 });
 
 test("output is sorted by line", () => {
-  const d = check(HEAD + "place ghost near core\nlink core.ether9 -- ap1.ether1\nclient Bad\n");
+  const d = check(`${HEAD}place ghost near core\nlink core.ether9 -- ap1.ether1\nclient Bad\n`);
   expect(d.map((x) => x.line)).toEqual([...d.map((x) => x.line)].sort((a, b) => a - b));
 });
 
@@ -73,7 +73,7 @@ test("home check: only the cap-wifi2 warning, no errors", () => {
 });
 
 test("check takes the file from the model", () => {
-  const d = check(HEAD + "link core.ether2 -- ap1.ether1 vlans guest\n").filter((x) => x.level === "warning");
+  const d = check(`${HEAD}link core.ether2 -- ap1.ether1 vlans guest\n`).filter((x) => x.level === "warning");
   expect(d[0]!.file).toBe("t.net");
 });
 

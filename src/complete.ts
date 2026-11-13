@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
+import { type Complete, NOUNS, type Noun } from "./edit/table";
 import { loadModel } from "./load";
 import { NAMED } from "./model/style";
-import { NOUNS, type Complete, type Noun } from "./edit/table";
 import type { MNode } from "./types";
 
 const COMMANDS = ["render", "check", "show", "import", "init", "completion"];
@@ -85,7 +85,7 @@ function run(all: string[]): string[] {
   if (pos.length === 0 && !pending) return cur.startsWith("-") ? [] : out([...COMMANDS, ...first]);
   const w0 = pos[0]!;
   if (!first.includes(w0)) return [];
-  const second = NOUNS.filter((n) => n.name.startsWith(w0 + " ")).map((n) => n.name.split(" ")[1]!);
+  const second = NOUNS.filter((n) => n.name.startsWith(`${w0} `)).map((n) => n.name.split(" ")[1]!);
   let noun: Noun | undefined = NOUNS.find((n) => n.name === w0);
   let rest = pos.slice(1);
   if (!noun || (second.length && (rest.length === 0 || second.includes(rest[0]!)))) {

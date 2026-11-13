@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { parseDsl } from "../../src/dsl/parse";
-import { edit, type EditResult } from "../../src/edit/edit";
-import { NOUNS, nounOf, type Args, type Verb } from "../../src/edit/table";
+import { type EditResult, edit } from "../../src/edit/edit";
+import { type Args, NOUNS, nounOf, type Verb } from "../../src/edit/table";
 
 const run = (text: string, noun: string, verb: Verb, pos: string[] = [], flags: Args["flags"] = {}): EditResult => {
   const n = NOUNS.find((x) => x.name === noun);
@@ -80,9 +80,9 @@ test("place, row, side", () => {
 });
 test("legend settings", () => {
   const off = ok(run(B, "legend", "set", [], { mode: "off" }));
-  expect(off).toBe(B + "legend off\n");
-  expect(ok(run(off, "legend", "set", [], { mode: "auto" }))).toBe(B + "legend auto\n");
-  expect(ok(run(off, "legend", "set", [], { position: "right" }))).toBe(off + "legend position right\n");
+  expect(off).toBe(`${B}legend off\n`);
+  expect(ok(run(off, "legend", "set", [], { mode: "auto" }))).toBe(`${B}legend auto\n`);
+  expect(ok(run(off, "legend", "set", [], { position: "right" }))).toBe(`${off}legend position right\n`);
   expect(ok(run(off, "legend", "rm", ["mode"]))).toBe(B);
   expect(run(off, "legend", "set", [], { mode: "x" }).ok).toBe(false);
 });
@@ -98,7 +98,7 @@ test("legend entry, hide, note", () => {
 });
 test("style", () => {
   round("style", B, [["jumps", "arc"]], [["jumps", "gap"]], [["jumps"]]);
-  expect(ok(run(B, "style", "set", ["jumps", "none"]))).toBe(B + "style jumps none\n");
+  expect(ok(run(B, "style", "set", ["jumps", "none"]))).toBe(`${B}style jumps none\n`);
   expect(run(B, "style", "add", ["jumps", "zig"]).ok).toBe(false);
 });
 test("route, allow, hide", () => {
@@ -166,7 +166,7 @@ test("legend set takes --mode and --position together", () => {
     "legend off\nlegend position right\n",
   );
   expect(ok(run(B, "legend", "set", [], { mode: "off", position: "right" }))).toBe(
-    B + "legend off\nlegend position right\n",
+    `${B}legend off\nlegend position right\n`,
   );
 });
 test("link add refuses an empty port", () => {

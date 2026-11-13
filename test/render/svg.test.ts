@@ -1,8 +1,8 @@
 import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
+import { textWidth } from "../../src/layout/measure";
 import { loadModel } from "../../src/load";
 import { renderSvg } from "../../src/render/svg";
-import { textWidth } from "../../src/layout/measure";
 import type { MNode, Model, Placed } from "../../src/types";
 
 const HOME = "examples/home/network.net";

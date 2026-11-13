@@ -1,4 +1,4 @@
-import type { DevItem, IfFlags, Iface, MNode, Stmt, VlanDef, VlanRef } from "../types";
+import type { DevItem, Iface, IfFlags, MNode, Stmt, VlanDef, VlanRef } from "../types";
 import { parseCidr } from "./addr";
 import { fallbackIn, physOf, vlanStyle } from "./style";
 
@@ -135,10 +135,10 @@ export function buildDevice(
           .map((n) => ({ name: n, type: "wifi", ...br, ...(it.tag !== undefined ? { useTag: it.tag } : {}) }));
         ifaces.push(...rows);
         let r = radioItems.find((x) => x.bridge === bridge && x.tag === it.tag);
-        if (!r)
-          radioItems.push(
-            (r = { ...br, ...(it.tag !== undefined ? { tag: it.tag } : {}), names: [], ssids: [], rows: [] }),
-          );
+        if (!r) {
+          r = { ...br, ...(it.tag !== undefined ? { tag: it.tag } : {}), names: [], ssids: [], rows: [] };
+          radioItems.push(r);
+        }
         for (const row of rows) {
           r.names.push(row.name);
           r.rows.push(row);
@@ -256,7 +256,7 @@ export function buildDevice(
   }
   for (const { bridge, tag, names, ssids, rows } of radioItems) {
     const r: Radio = {
-      id: `${id}/radio${bridge !== undefined ? "-" + esc(bridge) : ""}${tag !== undefined ? "-tag" + tag : ""}`,
+      id: `${id}/radio${bridge !== undefined ? `-${esc(bridge)}` : ""}${tag !== undefined ? `-tag${tag}` : ""}`,
       ...(bridge !== undefined ? { bridge } : {}),
       ...(tag !== undefined ? { tag } : {}),
       ifaces: rows,

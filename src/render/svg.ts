@@ -1,7 +1,7 @@
 import { textWidth } from "../layout/measure";
+import { laneOfStyle, NAMED } from "../model/style";
 import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
 import { f, jumpArcs, jumpPath, lanesFor } from "./geometry";
-import { NAMED, laneOfStyle } from "../model/style";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
@@ -166,7 +166,9 @@ function drawNodes(
     const ty = n.kind === "cloud" ? y + h / 2 + 5 - 8 * n.sub.length : y + (n.kind === "router" ? h / 2 + 5 : 24);
     const h2 = ` stroke="${bg}" stroke-width="3" stroke-linejoin="round" paint-order="stroke"`;
     texts.push(text(tx, ty, n.label, `class="h"${anchor}${labelFill}${h2}`));
-    n.sub.forEach((s, i) => texts.push(text(tx, ty + 17 * (i + 1), s, `class="s"${anchor}${h2}`)));
+    n.sub.forEach((s, i) => {
+      texts.push(text(tx, ty + 17 * (i + 1), s, `class="s"${anchor}${h2}`));
+    });
     n.children.forEach(draw);
   };
   model.nodes.forEach(draw);
@@ -242,7 +244,9 @@ function drawLegend(
       `<text x="${f(ex + 56)}" y="${f(ey + 4.5)}" class="t">${esc(e.label)}${e.sub ? ` <tspan class="s">${esc(e.sub)}</tspan>` : ""}</text>`,
     );
   });
-  notes.forEach((n, i) => out.push(text(x + 16, y + top + rows * rowH + 6 + i * 18, n, 'class="s"')));
+  notes.forEach((n, i) => {
+    out.push(text(x + 16, y + top + rows * rowH + 6 + i * 18, n, 'class="s"'));
+  });
   out.push("</g>");
   return { svg: out.join("\n"), w: x + w, h: y + h };
 }

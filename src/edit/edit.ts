@@ -1,8 +1,8 @@
 import { parseDsl, type Span } from "../dsl/parse";
 import { printItems, printStmts } from "../dsl/print";
 import type { DevItem, Stmt } from "../types";
-import { insertAfter, replaceLines } from "./text";
 import type { Args, Noun, Target, Verb } from "./table";
+import { insertAfter, replaceLines } from "./text";
 
 export type EditRequest = { noun: Noun; verb: Verb; args: Args };
 export type Candidate = { line: number; text: string };
@@ -107,7 +107,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
       return {
         ok: false,
         error: `no ${key}`,
-        hint: `run netdraw show${noun.show ? " " + noun.show : ""} to list them`,
+        hint: `run netdraw show${noun.show ? ` ${noun.show}` : ""} to list them`,
       };
     if (noun.last) return { t: ms[ms.length - 1]!, sp: spans.get(ms[ms.length - 1]!)! };
     const same = verb === "rm" && new Set(ms.map((t) => print([t], level, false).join("\n"))).size === 1;
@@ -194,7 +194,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
 
 /** Whether `s` names node `id`, or something inside it (`id.port`, `id/child`). */
 function refersTo(s: Target, id: string): boolean {
-  const hit = (v: string) => v === id || v.startsWith(id + ".") || v.startsWith(id + "/");
+  const hit = (v: string) => v === id || v.startsWith(`${id}.`) || v.startsWith(`${id}/`);
   switch (s.kind) {
     case "link":
       return s.path.some((e) => hit(e.node));

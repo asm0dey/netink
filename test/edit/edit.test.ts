@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { edit, type EditResult } from "../../src/edit/edit";
-import { NOUNS, nounOf, type Args, type Noun, type Verb } from "../../src/edit/table";
+import { type EditResult, edit } from "../../src/edit/edit";
+import { type Args, NOUNS, type Noun, nounOf, type Verb } from "../../src/edit/table";
 import type { DevItem } from "../../src/types";
 
 const vlan = NOUNS.find((n) => n.name === "vlan")!;

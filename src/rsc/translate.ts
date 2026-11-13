@@ -1,5 +1,5 @@
 import { physOf } from "../model/style";
-import type { DevItem, DeviceFacts, Diag, IfFlags, Iface, Stmt, VlanDef } from "../types";
+import type { DevItem, DeviceFacts, Diag, Iface, IfFlags, Stmt, VlanDef } from "../types";
 
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type Route = DeviceFacts["routes"][number];
@@ -20,8 +20,10 @@ function collectRadios(f: DeviceFacts): Radio[] {
   for (const i of f.ifaces) {
     if (!isRadio(i) || i.name.startsWith("cap-") || (f.lists.WAN ?? []).includes(i.name)) continue;
     let r = out.find((x) => x.bridge === i.bridge && x.tag === i.useTag);
-    if (!r)
-      out.push((r = { bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), ssids: [], ifaces: [] }));
+    if (!r) {
+      r = { bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), ssids: [], ifaces: [] };
+      out.push(r);
+    }
     r.ifaces.push(i);
     if (i.ssid && !r.ssids.includes(i.ssid)) r.ssids.push(i.ssid);
   }

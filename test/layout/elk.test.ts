@@ -283,11 +283,11 @@ test("internal edges between stacked chips run straight; the core's internal edg
     .filter((l) => dev(l.from) === "core")
     .concat(m.links.filter((l) => dev(l.from) === "core" && dev(l.to) === "core" && !leaf.has(l.to)));
   let n = 0;
-  core.forEach((a, i) =>
+  core.forEach((a, i) => {
     core.slice(i + 1).forEach((b) => {
       n += crossings(pts(a.id), pts(b.id));
-    }),
-  );
+    });
+  });
   expect(n).toBeLessThanOrEqual(2);
 });
 

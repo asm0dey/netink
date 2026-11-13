@@ -5,7 +5,7 @@ import type { Model } from "../../src/types";
 
 const HOME = "examples/home/network.net";
 const mine = (m: Model, dev: string) =>
-  m.arrows.filter((a) => a.from.startsWith(dev + "/") || a.to.startsWith(dev + "/"));
+  m.arrows.filter((a) => a.from.startsWith(`${dev}/`) || a.to.startsWith(`${dev}/`));
 
 test("core: 4 route arrows + 1 allow arrow", () => {
   const m = loadModel(HOME);

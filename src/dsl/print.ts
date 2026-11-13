@@ -143,7 +143,7 @@ function stmt(s: Stmt): string[] {
       return [`style ${s.key} ${s.value}`];
     case "route":
     case "allow":
-      return [`${s.kind} ${s.from} -> ${s.to}${s.label !== undefined ? " " + q(s.label) : ""}`];
+      return [`${s.kind} ${s.from} -> ${s.to}${s.label !== undefined ? ` ${q(s.label)}` : ""}`];
     case "hide":
       return [`hide ${s.target}`];
   }
@@ -153,6 +153,6 @@ function stmt(s: Stmt): string[] {
 export function printStmts(stmts: Stmt[]): string {
   return stmts
     .flatMap(stmt)
-    .map((l) => l + "\n")
+    .map((l) => `${l}\n`)
     .join("");
 }

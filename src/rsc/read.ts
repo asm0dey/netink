@@ -32,7 +32,7 @@ function tokenize(s: string): Tok[] {
         while (i < s.length && s[i] !== '"') {
           if (s[i] === "\\" && i + 1 < s.length) {
             const n = s[i + 1]!;
-            buf += n in ESC ? ESC[n]! : "\\" + n;
+            buf += n in ESC ? ESC[n]! : `\\${n}`;
             i += 2;
           } else buf += s[i++]!;
         }
@@ -65,15 +65,14 @@ export function readRsc(
     const start = n + 1;
     let ln = lines[n]!.trim();
     if (ln.startsWith("#")) {
-      let m: RegExpMatchArray | null;
-      if (header.version === undefined && (m = ln.match(/by RouterOS (\d\S*)/))) header.version = m[1];
-      if (header.model === undefined && (m = ln.match(/^#\s*model\s*=\s*(.+)$/))) header.model = m[1]!.trim();
-      if (
-        (header.model === undefined || header.version === undefined) &&
-        (m = ln.match(/^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d\S*)/))
-      ) {
-        header.model ??= m[1]!;
-        header.version ??= m[2];
+      const ver = ln.match(/by RouterOS (\d\S*)/);
+      if (header.version === undefined && ver) header.version = ver[1];
+      const model = ln.match(/^#\s*model\s*=\s*(.+)$/);
+      if (header.model === undefined && model) header.model = model[1]!.trim();
+      const both = ln.match(/^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d\S*)/);
+      if ((header.model === undefined || header.version === undefined) && both) {
+        header.model ??= both[1]!;
+        header.version ??= both[2];
       }
       continue;
     }
@@ -103,7 +102,7 @@ export function readRsc(
       continue;
     }
     const verb = VERBS[tk(i++).val]!;
-    const cmd: RscCommand = { path: "/" + words.join(" "), verb, props: {}, line: start };
+    const cmd: RscCommand = { path: `/${words.join(" ")}`, verb, props: {}, line: start };
     const put = (t: Tok) => {
       let { key, val } = t;
       if (key !== undefined) {
