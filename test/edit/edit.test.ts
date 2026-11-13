@@ -155,3 +155,59 @@ test("block: missing parent", () => {
   expect(r.ok).toBe(false);
   if (!r.ok) expect(r.hint).toContain("netdraw show devices");
 });
+
+// review round 1
+test("rm device refused while another device's allow item names it", () => {
+  const r = run("device x\ndevice y\n  allow x -> 10.0.0.1\n", "rm", ["x"], {}, node);
+  expect(r.ok).toBe(false);
+  if (!r.ok) expect(r.candidates).toEqual([{ line: 3, text: "allow x -> 10.0.0.1" }]);
+  // its own block's allow does not block it
+  expect(ok(run("device x\n  allow x -> 10.0.0.1\n", "rm", ["x"], {}, node)).text).toBe("");
+});
+const bridge: Noun = {
+  name: "bridge", block: true, covers: ["item:bridge"], verbs: ["rm"], args: [{ name: "name" }], flags: [], help: "",
+  match: (t, a) => t.kind === "bridge" && t.name === a.pos[0],
+  make: () => { throw new Error("unused"); },
+  apply: (t) => [t],
+};
+test("rm of a nested block keeps a sibling-level comment after it", () => {
+  expect(ok(run("device d\n  bridge br\n    ports e1\n    # inner\n  # uplink\n  router\n", "rm", ["br"], {}, bridge, "d")).text)
+    .toBe("device d\n  # uplink\n  router\n");
+});
+test("remove drops part of a statement; an empty result deletes the line", () => {
+  const p: Noun = { ...ports, verbs: ["rm"],
+    remove: (t, a) => (t.kind === "ports" ? [{ ...t, names: t.names.filter((n) => n !== a.pos[0]) }].filter((x) => x.names.length) : [t]) };
+  const r = ok(run("device d\n  ports e1, e2 untagged 10  # c\n", "rm", ["e2"], {}, p, "d"));
+  expect(r.text).toBe("device d\n  ports e1 untagged 10  # c\n");
+  expect(ok(run("device d\n  ports e2\n  router\n", "rm", ["e2"], {}, p, "d")).text).toBe("device d\n  router\n");
+});
+test("last: set and rm act on the final match", () => {
+  const title: Noun = { name: "title", block: false, covers: ["title"], verbs: ["add", "set", "rm"], args: [{ name: "text", optional: true }], flags: [], last: true, help: "",
+    match: (t) => t.kind === "title", make: (a) => ({ line: 0, kind: "title", text: a.pos[0]! }),
+    apply: (t, a) => (t.kind === "title" ? [{ ...t, text: a.pos[0]! }] : [t]) };
+  const text = 'title "A"\ntitle "B"\n';
+  expect(ok(run(text, "set", ["C"], {}, title)).text).toBe('title "A"\ntitle "C"\n');
+  expect(ok(run(text, "rm", [], {}, title)).text).toBe('title "A"\n');
+});
+test("parent picks the pool: one noun serves top level and --in", () => {
+  const allow: Noun = { name: "allow", block: false, covers: ["allow", "item:allow"], verbs: ["add"], args: [{ name: "from" }, { name: "to" }], flags: [], help: "",
+    match: (t, a) => t.kind === "allow" && t.from === a.pos[0] && t.to === a.pos[1],
+    make: (a) => ({ line: 0, kind: "allow", from: a.pos[0]!, to: a.pos[1]! }), apply: (t) => [t] };
+  const text = "device r\nvlan x 1\n";
+  expect(ok(run(text, "add", ["e1", "h"], {}, allow, "r")).text).toBe("device r\n  allow e1 -> h\nvlan x 1\n");
+  expect(ok(run(text, "add", ["e1", "h"], {}, allow)).text).toBe("device r\nvlan x 1\nallow e1 -> h\n");
+  expect(run(text, "add", [], {}, router).ok).toBe(false); // a block noun still requires a parent
+});
+test("upsert: set with no match adds", () => {
+  const style: Noun = { name: "style", block: false, covers: ["style"], verbs: ["set"], args: [{ name: "key" }, { name: "value" }], flags: [], upsert: true, help: "",
+    match: (t, a) => t.kind === "style" && t.key === a.pos[0],
+    make: (a) => ({ line: 0, kind: "style", key: "jumps", value: a.pos[1] as "arc" }),
+    apply: (t, a) => (t.kind === "style" ? [{ ...t, value: a.pos[1] as "arc" }] : [t]) };
+  expect(ok(run("vlan a 1\n", "set", ["jumps", "gap"], {}, style)).text).toBe("vlan a 1\nstyle jumps gap\n");
+  expect(ok(run("style jumps arc\n", "set", ["jumps", "gap"], {}, style)).text).toBe("style jumps gap\n");
+});
+test("--after with --before is refused", () => {
+  const r = run("vlan a 1\nvlan b 2\n", "add", ["c", "3"], { after: "a", before: "b" });
+  expect(r.ok).toBe(false);
+  if (!r.ok) expect(r.error).toBe("use either --after or --before");
+});

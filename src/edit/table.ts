@@ -8,7 +8,7 @@ export type Args = { parent?: string; pos: string[]; flags: Record<string, strin
 export type Target = Stmt | DevItem;
 export type Noun = {
   name: string;            // "vlan", "legend entry"
-  block: boolean;          // true: first positional is the parent path (device or device/bridge)
+  block: boolean;          // true: requires a parent (device or device/bridge); any noun given `parent` edits that block's items
   covers: string[];        // kinds it edits, e.g. "vlan", "node:device", "hint:near", "legend:add", "item:ports"
   verbs: Verb[];
   args: Arg[];             // positionals after the parent
@@ -16,9 +16,12 @@ export type Noun = {
   repeatable?: true;       // several statements may share a key (see spec "Kinds that can repeat")
   help: string;            // one usage line for --help
   show?: string;           // the `netdraw show` slice that lists candidates, e.g. "vlans"
+  last?: true;             // set/rm act on the last of several matches (title, subtitle: the one the model uses)
+  upsert?: true;           // set with no match adds `make(a)` (settings: legend, style)
   match(t: Target, a: Args): boolean;
   make(a: Args): Target;                 // add; throws an Error with a user-facing message on bad input
   apply(t: Target, a: Args): Target[];   // set; may return 2 (ports split); a cleared flag arrives as flags[name] === false
+  remove?(t: Target, a: Args): Target[]; // rm of part of a statement (one port off a ports line); [] or absent deletes it
 };
 
 /** `10,20` or `untagged`. */
