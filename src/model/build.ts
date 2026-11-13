@@ -209,36 +209,61 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     pair[j] = { id: free[0]!.id, dev: d, iface: d.ifaceOf.get(free[0]!.id) };
   }));
 
-  // VLAN ids a bridge carries because a DSL link with explicit `vlans` lands on one of its ports.
-  const extra = new Map<string, Set<number>>();
+  for (const l of links) for (const name of l.vlans ?? [])
+    if (!vlans.some((x) => x.name === name)) err(l.line, `unknown vlan "${name}"`, `declare it with vlan ${name} <ids>`);
+
+  // Tagged-VLAN reachability. A link carries v iff, with that link removed, a consumer of v is reachable from
+  // each end, walking other links and bridges that forward v. Ends without facts neither consume nor forward.
+  const adj = new Map<string, { k: number; to: End }[]>();
   ends.forEach((pair, k) => {
-    for (const name of links[k]!.vlans ?? []) {
-      const v = vlans.find((x) => x.name === name);
-      if (!v) { err(links[k]!.line, `unknown vlan "${name}"`, `declare it with vlan ${name} <ids>`); continue; }
-      for (const e of pair) if (typeof e === "object" && e?.dev && e.iface?.bridge && v.ids !== "untagged") {
-        const key = `${e.dev.id} ${e.iface.bridge}`;
-        extra.set(key, new Set([...(extra.get(key) ?? []), ...v.ids]));
-      }
-    }
+    const [a, b] = pair as (End | undefined)[];
+    if (a && b) for (const [x, y] of [[a, b], [b, a]] as const) adj.set(x.id, [...(adj.get(x.id) ?? []), { k, to: y }]);
   });
-  /** VLAN ids tagged on an end; an end without facts carries none (tagged lanes to it need explicit `vlans`). */
-  const carried = (e: End, withExtra = true): Set<number> => {
-    if (!e.dev) return new Set();
-    const f = e.dev.f, i = e.iface;
-    if (!i) return new Set();
-    // a radio end carries the use-tag ids of its SSID ifaces
-    if (isRadio(i)) return new Set(e.dev.radios.find((r) => r.id === e.id)!.ifaces.flatMap((x) => (x.useTag !== undefined ? [x.useTag] : [])));
-    if (i.type === "vlan") return new Set(i.vlanId !== undefined ? [i.vlanId] : []);
-    const ids = f.ifaces.filter((x) => x.type === "vlan" && x.vlanId !== undefined && (x.parent === i.name || (i.bridge && x.parent === i.bridge))).map((x) => x.vlanId!);
-    if (i.bridge) ids.push(...f.ifaces.filter((x) => isRadio(x) && x.bridge === i.bridge && x.useTag !== undefined).map((x) => x.useTag!), ...(withExtra ? extra.get(`${e.dev.id} ${i.bridge}`) ?? [] : []));
-    return new Set(ids);
+  const radioOf = (e: End) => e.dev?.radios.find((r) => r.id === e.id);
+  const bridgeOf = (e: End) => radioOf(e)?.bridge ?? (e.iface?.type === "vlan" ? undefined : e.iface?.bridge);
+  const byName = (d: Dev, n: string) => d.f.ifaces.find((x) => x.name === n);
+  // shortcut: `/interface bridge vlan` rows are imported as `<port>.<id>` vlan ifaces; on a bridge port they are VLAN-table rows, not consumers. Upgrade if facts keep the table separately.
+  const isTable = (d: Dev, x: Iface) => x.parent !== undefined && x.name === `${x.parent}.${x.vlanId}` && !!byName(d, x.parent)?.bridge;
+  const consumes = (e: End, v: number): boolean => {
+    const d = e.dev, i = e.iface;
+    if (!d) return false;
+    if (i?.type === "vlan") return i.vlanId === v;
+    const r = radioOf(e), br = bridgeOf(e), port = r ? undefined : i?.name;
+    if (r?.ifaces.some((x) => x.useTag === v)) return true;
+    return d.f.ifaces.some((x) => (x.type === "vlan" && x.vlanId === v && !isTable(d, x) && (x.parent === port || (br !== undefined && x.parent === br)))
+      || (br !== undefined && isRadio(x) && x.bridge === br && x.useTag === v));
   };
-  const member = (e: End) => !e.dev || !!e.iface?.bridge || e.dev.radios.some((r) => r.id === e.id);
-  /** Lanes of a link without `vlans`, and the tagged ids both ends carry (which vlan ifaces a trunk port feeds). */
-  const infer = (a: End, b: End): { lanes: string[]; ids: number[] } => {
+  const listed = (e: End, v: number) => {
+    const r = radioOf(e);
+    if (r) return r.ifaces.some((x) => x.useTag === v);
+    const n = e.iface!.name;
+    return e.iface!.useTag === v || e.dev!.f.ifaces.some((x) => x.type === "vlan" && x.parent === n && x.vlanId === v);
+  };
+  const siblings = (e: End, v: number): End[] => {
+    const d = e.dev, br = bridgeOf(e);
+    if (!d || br === undefined) return [];
+    const filtering = byName(d, br)?.vlanFiltering;
+    if (filtering && !listed(e, v)) return [];
+    const ports = leaves(d.node).filter((n) => n.kind === "port" && d.ifaceOf.get(n.id)?.bridge === br).map((n) => ({ id: n.id, dev: d, iface: d.ifaceOf.get(n.id) }));
+    const radios = d.radios.filter((r) => r.bridge === br).map((r) => ({ id: r.id, dev: d, iface: r.ifaces[0] }));
+    return [...ports, ...radios].filter((x) => x.id !== e.id && (!filtering || listed(x, v)));
+  };
+  const reaches = (start: End, v: number, skip: number): boolean => {
+    const seen = new Set([start.id]), queue = [start];
+    for (let e = queue.shift(); e; e = queue.shift()) {
+      if (!e.dev) continue;
+      if (consumes(e, v)) return true;
+      for (const n of [...siblings(e, v), ...(adj.get(e.id) ?? []).filter((x) => x.k !== skip).map((x) => x.to)])
+        if (!seen.has(n.id)) { seen.add(n.id); queue.push(n); }
+    }
+    return false;
+  };
+  const member = (e: End) => !e.dev || !!e.iface?.bridge || !!radioOf(e);
+  /** Lanes the facts imply for link k, and the tagged ids it carries (which vlan ifaces a trunk port feeds). */
+  const infer = (a: End, b: End, k: number): { lanes: string[]; ids: number[] } => {
     if (!a.dev && !b.dev) return { lanes: ["wire"], ids: [] };
-    const ca = carried(a), cb = carried(b);
-    const ids = [...ca].filter((id) => cb.has(id));
+    const all = [...new Set(vlans.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))].sort((x, y) => x - y);
+    const ids = all.filter((v) => reaches(a, v, k) && reaches(b, v, k));
     const lanes = vlans.filter((v) => (v.ids === "untagged" ? member(a) && member(b) : v.ids.some((id) => ids.includes(id)))).map((v) => v.name);
     return { lanes: lanes.length ? lanes : ["wire"], ids };
   };
@@ -251,25 +276,18 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   };
   const push = (from: string, to: string, lanes: string[], line: number, label?: string) =>
     out.push({ id: linkId(from, to), from, to, lanes, ...(label ? { label } : {}), line });
-  /** Lanes the imported ends' facts imply for a link with explicit `vlans`; ends without facts are ignored. Own explicit vlans don't count as carried. */
-  const inferExplicit = (a: End, b: End): string[] | undefined => {
-    const imp = [a, b].filter((e) => e.dev);
-    if (!imp.length) return undefined;
-    const lanes = vlans.filter((v) => (v.ids === "untagged" ? member(a) && member(b) : imp.every((e) => (v.ids as number[]).some((id) => carried(e, false).has(id))))).map((v) => v.name);
-    return lanes.length ? lanes : ["wire"];
-  };
   const trunkIds = new Map<string, Set<number>>();
   const portUse = new Map<string, number>();
   ends.forEach((pair, k) => {
     const [a, b] = pair as (End | undefined)[], l: LinkStmt = links[k]!;
     if (!a || !b) return;
-    let r = infer(a, b), inferred: string[] | undefined;
+    let r = infer(a, b, k), inferred: string[] | undefined;
     for (const e of [a, b]) if (e.dev && e.iface && !isRadio(e.iface)) { // radios legitimately take many client links
       if (portUse.has(e.id)) err(l.line, `${e.id} is already linked on line ${portUse.get(e.id)}`, "a port takes one link; use a switch or another port");
       else portUse.set(e.id, l.line);
     }
     if (l.vlans) {
-      inferred = inferExplicit(a, b);
+      if (a.dev || b.dev) inferred = r.lanes;
       const defs = vlans.filter((v) => l.vlans!.includes(v.name)); // unknown names were reported above
       r = { lanes: defs.length ? defs.map((v) => v.name) : ["wire"], ids: defs.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)) };
     }
@@ -361,7 +379,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   return {
     title: text("title") ?? "", ...(subtitle !== undefined ? { subtitle } : {}),
     nodes, links: out, arrows: [], vlans, legend,
-    jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => s.hint), diags,
+    jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => s.hint), diags, ...(opts.file !== undefined ? { file: opts.file } : {}),
   };
 }
 

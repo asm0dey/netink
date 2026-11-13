@@ -3,3 +3,5 @@
 /interface bridge vlan
 add bridge=bridge tagged=ether1,bridge \
     untagged=ether4 vlan-ids=10
+/interface bridge
+add name=bridge vlan-filtering=yes

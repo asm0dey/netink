@@ -10,7 +10,7 @@ test("reads one-liner", () => {
 });
 test("reads raw export with continuation", () => {
   const { cmds, header } = r(readFileSync("test/fixtures/raw-export.rsc", "utf8"));
-  expect(cmds).toHaveLength(1);
+  expect(cmds).toHaveLength(2);
   expect(cmds[0]!.path).toBe("/interface bridge vlan");
   expect(cmds[0]!.props["vlan-ids"]).toBe("10");
   expect(cmds[0]!.props.untagged).toBe("ether4");

@@ -24,7 +24,8 @@ export function closest(name: string, candidates: Iterable<string>): string | un
  * Model.diags (endpoint/port/hint/id errors are raised by buildModel, which still knows the DSL lines)
  * plus explicit-`vlans` vs inferred-lanes warnings; sorted by file, line, message.
  */
-export function checkModel(model: Model, file = ""): Diag[] {
+export function checkModel(model: Model): Diag[] {
+  const file = model.file ?? "";
   const out = [...model.diags];
   for (const l of model.links) {
     if (!l.inferred) continue;

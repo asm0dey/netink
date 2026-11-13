@@ -49,7 +49,7 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         if (c.verb === "set" && p.name) f.identity = p.name;
         break;
       case "/interface bridge":
-        if (c.verb === "add" && p.name) iface(p.name, "bridge");
+        if (c.verb === "add" && p.name) { const b = iface(p.name, "bridge"); if (p["vlan-filtering"] === "yes") b.vlanFiltering = true; }
         break;
       case "/interface bridge port":
         if (c.verb === "add" && p.interface) {

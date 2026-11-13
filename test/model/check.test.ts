@@ -8,7 +8,7 @@ const RSC = () => [1, 2, 3].map((n) => `/interface bridge port add bridge=bridge
 function check(dsl: string) {
   const { stmts } = parseDsl(dsl, "t.net");
   const facts = new Map(stmts.filter((s) => s.kind === "import").map((s) => [s.as, importRsc(RSC(), `${s.as}.rsc`, s.as)] as const));
-  return checkModel(buildModel(stmts, facts, { file: "t.net" }), "t.net");
+  return checkModel(buildModel(stmts, facts, { file: "t.net" }));
 }
 const HEAD = `imports rsc core.rsc as core, ap1.rsc as ap1\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\n`;
 
@@ -56,4 +56,24 @@ test("explicit vlans the imported end doesn't carry warn, naming both sets", () 
 test("output is sorted by line", () => {
   const d = check(HEAD + "place ghost near core\nlink core.ether9 -- ap1.ether1\nclient Bad\n");
   expect(d.map((x) => x.line)).toEqual([...d.map((x) => x.line)].sort((a, b) => a - b));
+});
+
+test("home check: only the cap-wifi2 warning, no errors", () => {
+  const d = checkModel(loadModel("examples/home/network.net"));
+  expect(d.filter((x) => x.level === "error")).toEqual([]);
+  expect(d.filter((x) => x.level === "warning").map((x) => x.message)).toEqual([expect.stringContaining("cap-wifi2")]);
+});
+
+test("check takes the file from the model", () => {
+  const d = check(HEAD + "link core.ether2 -- ap1.ether1 vlans guest\n").filter((x) => x.level === "warning");
+  expect(d[0]!.file).toBe("t.net");
+});
+
+test("explicit vlans on a radio link through a transparent bridge do not warn", () => {
+  const rsc = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n/interface wifi set [ find default-name=wifi1 ] datapath.bridge=bridge\n";
+  const { stmts } = parseDsl('imports rsc x.rsc as x, y.rsc as y\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nlink x.wifi1 -- y.ether1 vlans lan,guest\n', "t.net");
+  const facts = new Map(["x", "y"].map((n) => [n, importRsc(rsc, `${n}.rsc`, n)] as const));
+  const m = buildModel(stmts, facts, { file: "t.net" });
+  expect(m.links[0]!.inferred).toEqual(["lan", "guest"]);
+  expect(checkModel(m).filter((x) => x.level === "warning")).toEqual([]);
 });

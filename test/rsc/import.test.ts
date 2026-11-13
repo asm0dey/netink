@@ -44,6 +44,7 @@ test("filtering bridge", () => {
   const f = load("test/fixtures/raw-export.rsc", "raw");
   expect(get(f, "ether1.10")).toMatchObject({ type: "vlan", parent: "ether1", vlanId: 10 });
   expect(get(f, "ether4")?.useTag).toBe(10);
+  expect(get(f, "bridge")?.vlanFiltering).toBe(true);
 });
 
 test("passes reader warnings through", () => {

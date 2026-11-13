@@ -18,7 +18,7 @@ export type Stmt = { line: number } & (
   | { kind: "hide"; target: string });
 export type RscCommand = { path: string; verb: "add" | "set" | "remove" | "other"; find?: Record<string, string>; props: Record<string, string>; line: number };
 export type Iface = { name: string; type: "ether" | "bridge" | "vlan" | "wifi" | "wireless" | "other";
-  parent?: string; vlanId?: number; bridge?: string; ssid?: string; mac?: string; radioMac?: string; useTag?: number; horizon?: number; comment?: string };
+  parent?: string; vlanId?: number; bridge?: string; ssid?: string; mac?: string; radioMac?: string; useTag?: number; horizon?: number; comment?: string; vlanFiltering?: boolean };
 export type DeviceFacts = { name: string; file: string; identity?: string; model?: string; version?: string;
   ifaces: Iface[]; lists: Record<string, string[]>; addresses: { iface: string; cidr: string }[];
   dhcpClients: { iface: string; address?: string }[];
@@ -35,7 +35,7 @@ export type MArrow = { id: string; from: string; to: string; kind: "route" | "al
 export type VlanDef = { name: string; ids: number[] | "untagged"; color: string; subnet?: string };
 export type LegendSpec = { mode: "auto" | "off"; add: { style: string; text: string }[]; remove: string[]; notes: string[]; position: "bottom" | "right" };
 export type Model = { title: string; subtitle?: string; nodes: MNode[]; links: MLink[]; arrows: MArrow[]; vlans: VlanDef[];
-  legend: LegendSpec; jumps: "arc" | "gap" | "none"; hints: Hint[]; diags: Diag[] };
+  legend: LegendSpec; jumps: "arc" | "gap" | "none"; hints: Hint[]; diags: Diag[]; /** the DSL file, for diagnostics */ file?: string };
 export type P = { x: number; y: number };
 export type Box = { id: string; x: number; y: number; w: number; h: number };
 export type Placed = { width: number; height: number; boxes: Map<string, Box>; links: { id: string; points: P[]; labelAt?: P }[]; arrows: { id: string; points: P[]; labelAt?: P }[] };

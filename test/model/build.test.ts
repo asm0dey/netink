@@ -128,3 +128,26 @@ test("an unknown explicit vlan is an error, never a lane", () => {
   expect(m.links[0]!.lanes).toEqual(["wire"]);
   expect(m.diags).toContainEqual(expect.objectContaining({ level: "error", message: expect.stringContaining("nope") }));
 });
+
+test("lanes follow consumers reachable through transparent bridges", () => {
+  const m = loadModel(HOME);
+  expect(link(m, "core/ether3", "ap1/ether1")?.lanes).toEqual(["lan", "guest"]);
+  expect(link(m, "core/ether4", "ap2/ether1")?.lanes).toEqual(["lan", "guest", "lte"]);
+  expect(link(m, "core/ether2", "switch")?.lanes).toEqual(["lan"]);
+  const t = link(m, "lte/ether1", "ap2/ether2")!;
+  expect([t.lanes, t.inferred]).toEqual([["lte"], ["lte"]]);
+  expect(link(m, "core/vlan50-guest", "core/ether3")).toBeDefined();
+  expect(link(m, "core/vlan51-guest", "core/ether4")).toBeDefined();
+  expect(link(m, "core/vlan60-lte", "core/ether4")).toBeDefined();
+  expect(m.file).toBe(HOME);
+});
+
+test("a vlan-filtering bridge forwards a VLAN only between ports listed for it", () => {
+  const sw = "/interface bridge add name=bridge vlan-filtering=yes\n" + [1, 2, 3].map((n) => `/interface bridge port add bridge=bridge interface=ether${n}`).join("\n")
+    + "\n/interface bridge vlan add bridge=bridge tagged=ether1,ether2 vlan-ids=50\n";
+  const up = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n";
+  const { stmts } = parseDsl('imports rsc s.rsc as s, a.rsc as a, b.rsc as b, c.rsc as c\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nlink a.ether1 -- s.ether1\nlink b.ether1 -- s.ether2\nlink c.ether1 -- s.ether3\n', "t.net");
+  const m = buildModel(stmts, new Map([["s", importRsc(sw, "s.rsc", "s")], ...["a", "b", "c"].map((n) => [n, importRsc(up, `${n}.rsc`, n)] as const)]));
+  expect(link(m, "a/ether1", "s/ether1")?.lanes).toEqual(["lan", "guest"]);
+  expect(link(m, "c/ether1", "s/ether3")?.lanes).toEqual(["lan"]);
+});
