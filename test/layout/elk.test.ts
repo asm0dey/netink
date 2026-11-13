@@ -18,8 +18,18 @@ const segmentHitsBox = (a: P, c: P, b: Box): boolean => {
 const json = (p: Placed) => JSON.stringify({ ...p, boxes: [...p.boxes.entries()].sort(([a], [b]) => a.localeCompare(b)) });
 
 test("textWidth heuristic", () => {
-  expect(textWidth("abcd", 10, false)).toBeCloseTo(22);
-  expect(textWidth("abcd", 10, true)).toBeCloseTo(24);
+  expect(textWidth("abcd", 10, false)).toBeCloseTo(24);
+  expect(textWidth("abcd", 10, true)).toBeCloseTo(26);
+});
+
+test("every box is wide enough for its label and sub lines", async () => {
+  const m = loadModel(HOME);
+  const p = await layout(m);
+  const narrow = all(m.nodes).flatMap((n) => {
+    const need = Math.max(textWidth(n.label, 15, true), ...n.sub.map((s) => textWidth(s, 12.5, false))) + 24;
+    return p.boxes.get(n.id)!.w < need ? [`${n.id} ${Math.round(p.boxes.get(n.id)!.w)} < ${Math.round(need)}`] : [];
+  });
+  expect(narrow).toEqual([]);
 });
 
 test("home places WAN group above bridge", async () => {

@@ -102,7 +102,8 @@ function build(model: Model) {
       e.children = ordered(n.children, model, n.id).map(toElk);
       e.layoutOptions!["elk.padding"] = `[top=${36 + 16 * n.sub.length},left=12,bottom=12,right=12]`;
       e.layoutOptions!["elk.nodeSize.constraints"] = "MINIMUM_SIZE";
-      e.layoutOptions!["elk.nodeSize.minimum"] = `(${w + 24},40)`;
+      // (height, width): with direction DOWN + INCLUDE_CHILDREN, ELK (elkjs 0.12) applies a compound's minimum transposed.
+      e.layoutOptions!["elk.nodeSize.minimum"] = `(40,${w + 24})`;
     } else {
       e.width = Math.max(n.kind === "cloud" ? 150 : 70, w + 28);
       e.height = n.kind === "cloud" ? 80 : 38 + 16 * n.sub.length;
