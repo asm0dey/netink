@@ -49,6 +49,11 @@ no hidden state. Hand-editing stays equally valid.
    quoting and an ad-hoc unset syntax; and flags generated from a grammar
    schema (most cost, keeps two spellings).
 3. **zsh completion is required**, with names from the file.
+6. **yargs** parses the whole CLI (owner choice after the plan): strict
+   flags, nested commands, generated help, built-in bash/zsh completion with a
+   callback for names. `netdraw completion` (shell picked from `$SHELL`)
+   replaces `completion zsh` + `__complete` below; `--no-<flag>` is yargs
+   negation.
 4. The rest of the "proposal" below was played back and approved ("lgtm").
 5. **Insert position: end of file**, with optional `--after <key>` /
    `--before <key>` (rejected: grouping by kind — statement order sets drawing
@@ -142,8 +147,9 @@ statement; with `--in core` it is the line inside core's block.
 - Links: `link rm a.p b` matches a link whose endpoints are that pair (either
   order; a bare id matches any port of it only if unambiguous). A source line
   that expanded to several links (chain `a -- b -- c`, fan-out `sw -- x, y`)
-  is rewritten as the remaining links in the same compact form where possible,
-  otherwise as one `link` line each.
+  is rewritten as one canonical line per remaining statement (same model; the
+  compact form is not reconstructed — plan-time simplification). The same holds
+  for an `imports rsc a as x, b as y` line.
 - `rm device x` (and cloud/client) is refused while links, notes, hints,
   routes, allows or hides refer to x; the error lists them.
 
