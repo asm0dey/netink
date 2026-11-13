@@ -1,0 +1,93 @@
+# network-dsl-only.net — the same home network, described entirely in the DSL
+title "Home network"
+
+# Devices (device facts, written out)
+
+# core: router, bridges, Wi-Fi radios, DHCP leases
+device core model "hAP ax3" os "RouterOS 7.25.1"
+  wan ether1 route wan1-main distance 1 dhcp nat
+  wan vlan60-lte on bridge vlan 60 route wan2-lte distance 2 dhcp nat
+  router
+  bridge bridge address 192.168.0.1/24 lan
+    ports ether2, ether3, ether4, ether5
+    radio wifi1, wifi2, wifi1-iot, wifi1-5g, wifi2-iot ssid HomeNet, HomeNet-IoT, HomeNet-5
+  bridge br-guest address 10.50.0.1/24 guest hotspot
+    vif vlan50-guest on bridge vlan 50
+    vif vlan51-guest on bridge vlan 51
+    radio wifi1-guest, wifi2-guest ssid HomeNet-Guest
+  lease 192.168.0.28 "TV"
+  lease 192.168.0.101 "AP ap1"
+  lease 192.168.0.102 "AP ap2"
+  lease 192.168.0.120 "Printer 2"
+  lease 192.168.0.130 "Hub"
+  lease 192.168.0.132 "Light 1"
+  lease 192.168.0.133 "Light 2"
+  lease 192.168.0.153 "DNS server"
+  lease 192.168.0.196 "LED strip"
+  lease 192.168.0.200 "Printer"
+  lease 192.168.0.227 "media-server"
+  allow br-guest -> 192.168.0.200 "printer"
+
+# ap1: access point, guest radios tagged 50
+device ap1 model "hAP ac lite" os "RouterOS 7.25"
+  bridge bridgeLocal
+    ports ether1, ether2, ether3, ether4, ether5
+    radio wlan1, wlan2, wlan1-iot, wlan2-iot ssid HomeNet, HomeNet-IoT
+    radio wlan1-guest, wlan2-guest tag 50 ssid HomeNet-Guest
+
+# ap2: access point
+device ap2 model "hAP ac2" os "RouterOS 7.25"
+  bridge bridge lan
+    ports ether1, ether2, ether3, ether4, ether5
+    radio wifi1, wifi2, wifi1-iot, wifi2-iot ssid HomeNet, HomeNet-IoT
+  bridge br-guest
+    vif vlan51-guest on bridge vlan 51
+    radio wifi1-guest, wifi2-guest ssid HomeNet-Guest
+  address wg1 192.168.19.1/24
+  lease 192.168.1.200
+  lease 192.168.1.2
+  lease 192.168.1.130
+  lease 192.168.1.201
+  lease 192.168.1.202
+  lease 192.168.1.132
+
+# lte: LTE failover router
+device lte model "LtAP mini LTE" os "RouterOS 7.25.1"
+  wan lte1 nat
+  router
+  bridge bridge lan
+    radio wlan1 ssid MikroTik-000020
+  ports ether1
+  vif vlan60 on ether1 vlan 60 address 192.168.88.1/24 lan
+
+
+vlan lan   untagged color green  "192.168.0.0/24"
+vlan guest 50,51    color blue   "10.50.0.0/24"
+vlan lte   60       color orange "192.168.88.0/24"
+
+cloud internet "Internet"
+device isp "ISP box"
+cloud mobile "Mobile network"
+device switch "Switch" kind switch
+client hub "Hub .130" lease 192.168.0.130
+client pi2 "Pi 2 .153" lease 192.168.0.153 note "DNS server"
+client printer lease 192.168.0.200
+client media lease 192.168.0.227
+client tv lease 192.168.0.28
+
+link internet -- isp -- core.ether1  label "primary uplink"
+link mobile -- lte
+link core.ether2 -- switch
+link switch -- hub, pi2
+link core.ether3 -- ap1.ether1       # VLANs inferred from the device blocks
+link core.ether4 -- ap2.ether1
+link lte.ether1  -- ap2.ether2       vlans lte  label "tagged 60"
+link core.wifi1 -- printer, media, tv
+
+note core.ether1 "CAKE shaping"
+note mobile "Mobile ISP"
+place lte near isp
+row ap1, ap2
+
+legend auto
+legend note "Failover: when 9.9.9.9 stops answering via ether1, wan2-lte takes over."
