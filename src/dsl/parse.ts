@@ -298,8 +298,8 @@ function parseItem(kw: string, c: Cur, line: number): DevItem {
       }
       return it;
     }
-    case "vif": {
-      const it: Extract<DevItem, { kind: "vif" }> = { line, kind: "vif", name: nm(c, "interface"), vlan: -1, addresses: [] };
+    case "vlan-iface": {
+      const it: Extract<DevItem, { kind: "vlan-iface" }> = { line, kind: "vlan-iface", name: nm(c, "interface"), vlan: -1, addresses: [] };
       let seen = false;
       while (!c.done()) {
         if (c.isWord("on")) { c.i++; it.on = nm(c, "parent"); }
@@ -307,7 +307,7 @@ function parseItem(kw: string, c: Cur, line: number): DevItem {
         else if (c.isWord("address")) { c.i++; it.addresses.push(...c.list("address")); }
         else if (!flag()) throw bad();
       }
-      if (!seen) throw new DslError("vif needs a vlan", "vif <name> [on <parent>] vlan <n>");
+      if (!seen) throw new DslError("vlan-iface needs a vlan", "vlan-iface <name> [on <parent>] vlan <n>");
       return Object.assign(it, flags);
     }
     case "radio": {
@@ -339,8 +339,8 @@ function parseItem(kw: string, c: Cur, line: number): DevItem {
   }
 }
 
-const BLOCK = ["wan", "router", "bridge", "ports", "vif", "radio", "address", "lease", "allow"];
-const NESTED = ["ports", "vif", "radio"];
+const BLOCK = ["wan", "router", "bridge", "ports", "vlan-iface", "radio", "address", "lease", "allow"];
+const NESTED = ["ports", "vlan-iface", "radio"];
 
 /** Consecutive endpoint pairs of a chain. */
 const pairs = (path: Endpoint[]): Endpoint[][] => path.slice(1).map((e, i) => [path[i]!, e]);
@@ -380,7 +380,7 @@ export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Di
         bridge = it.kind === "bridge" ? it : undefined;
       } else {
         if (!bridge) throw new DslError(`${kw} is indented under something that is not a bridge`, "only bridge lines take indented children");
-        if (!NESTED.includes(kw)) throw new DslError(`${kw} cannot be inside a bridge`, "a bridge holds ports, vif and radio lines");
+        if (!NESTED.includes(kw)) throw new DslError(`${kw} cannot be inside a bridge`, "a bridge holds ports, vlan-iface and radio lines");
         bridge.items.push(parseItem(kw, c, line));
       }
     } catch (e) {

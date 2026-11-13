@@ -25,7 +25,7 @@ const items: DevItem[] = [
   { line: L, kind: "wan", iface: "wan2", dhcp: true },
   { line: L, kind: "bridge", name: "bridge main", addresses: ["192.168.0.1/24", "2001:db8::1/64"], filtering: true, lan: true, guest: true, hotspot: true, items: [
     { line: L, kind: "ports", names: ["ether2", "ether 3"], untagged: "lan", tagged: ["guest", 60], horizon: 5 },
-    { line: L, kind: "vif", name: "vlan50", on: "bridge main", vlan: 50, addresses: ["10.50.0.1/24"], guest: true },
+    { line: L, kind: "vlan-iface", name: "vlan50", on: "bridge main", vlan: 50, addresses: ["10.50.0.1/24"], guest: true },
     { line: L, kind: "radio", ifaces: ["wifi1", "wifi2"], tag: 50, ssids: ["Home Net", "guest"] },
   ] },
   { line: L, kind: "ports", names: ["ether5"], tagged: [] },

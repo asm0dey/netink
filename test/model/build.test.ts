@@ -77,7 +77,7 @@ test("a plain device end carries only the untagged lane", () => {
   expect(link(m, "internet", "isp")?.label).toBeUndefined();
 });
 
-test("internal vif edges follow the ids both link ends carry", () => {
+test("internal vlan-iface edges follow the ids both link ends carry", () => {
   const m = loadModel(HOME);
   expect(link(m, "core/vlan51-guest", "core/ether3")).toBeUndefined();
   expect(link(m, "core/vlan50-guest", "core/ether4")).toBeUndefined();
@@ -284,13 +284,13 @@ test("second address becomes a sub-line", () => {
   expect(node(m, "d/br")).toMatchObject({ label: "br · 192.168.0.1/24", sub: ["2001:db8::1/64"] });
 });
 test("IPv6-only bridge and vlan", () => {
-  const m = dslModel("vlan g 50 subnet 2001:db8:50::/64\ndevice d model \"X\"\n  bridge br lan address 2001:db8:50::1/64\n    vif v50 vlan 50 address 2001:db8:50::2/64\n");
+  const m = dslModel("vlan g 50 subnet 2001:db8:50::/64\ndevice d model \"X\"\n  bridge br lan address 2001:db8:50::1/64\n    vlan-iface v50 vlan 50 address 2001:db8:50::2/64\n");
   expect(node(m, "d/br")!.label).toBe("br · 2001:db8:50::1/64");
   expect(node(m, "d")!.label).toBe("D · X");
   expect(m.diags).toEqual([]);
 });
 test("a name declared twice in a block is an error at its second line", () => {
-  const m = dslModel("device d\n  ports ether1\n  vif ether1 vlan 5\n");
+  const m = dslModel("device d\n  ports ether1\n  vlan-iface ether1 vlan 5\n");
   expect(m.diags).toEqual([{ level: "error", file: "t.net", line: 3, message: 'd declares "ether1" twice', hint: "first declared on line 2; give each interface one name" }]);
 });
 test("a bridge label takes its first IPv4 address", () => {

@@ -23,7 +23,7 @@ function item(it: DevItem): string {
       p.push(list(it.names, nm), it.untagged !== undefined ? `untagged ${ref(it.untagged)}` : undefined,
         it.tagged.length ? `tagged ${list(it.tagged, (v) => ref(v))}` : undefined, it.horizon !== undefined ? `horizon ${it.horizon}` : undefined);
       break;
-    case "vif":
+    case "vlan-iface":
       p.push(nm(it.name), it.on && `on ${nm(it.on)}`, `vlan ${it.vlan}`, it.addresses.length ? `address ${list(it.addresses)}` : undefined, ...flags(it));
       break;
     case "radio":

@@ -12,8 +12,8 @@ device core model "hAP ax3" os "RouterOS 7.25.1"
     ports ether2, ether3, ether4, ether5
     radio wifi1, wifi2, wifi1-iot, wifi1-5g, wifi2-iot ssid HomeNet, HomeNet-IoT, HomeNet-5
   bridge br-guest address 10.50.0.1/24 guest hotspot
-    vif vlan50-guest on bridge vlan 50
-    vif vlan51-guest on bridge vlan 51
+    vlan-iface vlan50-guest on bridge vlan 50
+    vlan-iface vlan51-guest on bridge vlan 51
     radio wifi1-guest, wifi2-guest ssid HomeNet-Guest
   lease 192.168.0.28 "TV"
   lease 192.168.0.101 "AP ap1"
@@ -41,7 +41,7 @@ device ap2 model "hAP ac2" os "RouterOS 7.25"
     ports ether1, ether2, ether3, ether4, ether5
     radio wifi1, wifi2, wifi1-iot, wifi2-iot ssid HomeNet, HomeNet-IoT
   bridge br-guest
-    vif vlan51-guest on bridge vlan 51
+    vlan-iface vlan51-guest on bridge vlan 51
     radio wifi1-guest, wifi2-guest ssid HomeNet-Guest
   address wg1 192.168.19.1/24
   lease 192.168.1.200
@@ -58,7 +58,7 @@ device lte model "LtAP mini LTE" os "RouterOS 7.25.1"
   bridge bridge lan
     radio wlan1 ssid MikroTik-000020
   ports ether1
-  vif vlan60 on ether1 vlan 60 address 192.168.88.1/24 lan
+  vlan-iface vlan60 on ether1 vlan 60 address 192.168.88.1/24 lan
 
 
 vlan lan   untagged color green  "192.168.0.0/24"

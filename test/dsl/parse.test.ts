@@ -99,7 +99,7 @@ device core model "hAP ax3" os "RouterOS 7.16"
   # a comment keeps the block open
 
   bridge br-guest address 10.50.0.1/24 guest hotspot
-    vif vlan50 on bridge vlan 50
+    vlan-iface vlan50 on bridge vlan 50
     radio wifi1-guest, wifi2-guest ssid Guest
   address vlan50 2001:db8:50::1
   lease 192.168.0.200 "Printer"

@@ -36,8 +36,8 @@ test("core: bridge radio lists member interfaces and SSIDs", () => {
   expect(of(b.items, "ports")[0]).toMatchObject({ names: ["ether2", "ether3", "ether4", "ether5"], tagged: [] });
   expect(of(b.items, "radio")).toEqual([{ line: 3, kind: "radio", ifaces: ["wifi1", "wifi2", "wifi1-iot", "wifi1-5g", "wifi2-iot"], ssids: ["HomeNet", "HomeNet-IoT", "HomeNet-5"] }]);
   const g = bridge("core", "br-guest");
-  expect(g.items.map((i) => i.kind)).toEqual(["vif", "vif", "radio"]);
-  expect(of(g.items, "vif")[0]).toMatchObject({ name: "vlan50-guest", on: "bridge", vlan: 50, addresses: [] });
+  expect(g.items.map((i) => i.kind)).toEqual(["vlan-iface", "vlan-iface", "radio"]);
+  expect(of(g.items, "vlan-iface")[0]).toMatchObject({ name: "vlan50-guest", on: "bridge", vlan: 50, addresses: [] });
 });
 
 test("ap1: tagged radio chip", () => {
@@ -45,8 +45,8 @@ test("ap1: tagged radio chip", () => {
   expect(of(items("ap1"), "router")).toEqual([]);
 });
 
-test("lte: lan flag on a non-bridge vif", () => {
-  expect(of(items("lte"), "vif")).toEqual([{ line: 6, kind: "vif", name: "vlan60", on: "ether1", vlan: 60, addresses: ["192.168.88.1/24"], lan: true }]);
+test("lte: lan flag on a non-bridge vlan-iface", () => {
+  expect(of(items("lte"), "vlan-iface")).toEqual([{ line: 6, kind: "vlan-iface", name: "vlan60", on: "ether1", vlan: 60, addresses: ["192.168.88.1/24"], lan: true }]);
   expect(of(items("lte"), "wan")).toEqual([{ line: 6, kind: "wan", iface: "lte1", nat: true }]);
   expect(of(items("lte"), "ports")).toEqual([{ line: 6, kind: "ports", names: ["ether1"], tagged: [] }]);
 });
@@ -77,7 +77,7 @@ test("raw-export translates with no new warnings", () => {
   expect(stmts[0]!.items).toEqual([
     { line: 1, kind: "bridge", name: "bridge", addresses: [], filtering: true, items: [] },
     { line: 1, kind: "ports", names: ["ether4"], untagged: 10, tagged: [] },
-    { line: 1, kind: "vif", name: "ether1.10", on: "ether1", vlan: 10, addresses: [] },
+    { line: 1, kind: "vlan-iface", name: "ether1.10", on: "ether1", vlan: 10, addresses: [] },
   ]);
 });
 
@@ -98,7 +98,7 @@ test("core translation prints as a parseable block", () => {
   expect(parseDsl(printStmts(stmts), "t").diags).toEqual([]);
 });
 
-test("a vlan iface without a vlan-id is not emitted as a vif", () => {
+test("a vlan iface without a vlan-id is not emitted as a vlan-iface", () => {
   const { stmts } = translate([{ id: "x", line: 1, f: importRsc("/interface vlan add interface=ether1 name=v0\n", "x.rsc", "x") }], []);
   expect(JSON.stringify(stmts[0]!.items)).not.toContain('"v0"');
 });

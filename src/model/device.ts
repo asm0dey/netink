@@ -68,7 +68,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
           ifaces.push({ name: p, type: "ether", ...br, ...(untagged !== undefined ? { useTag: untagged } : {}), ...(it.horizon !== undefined ? { horizon: it.horizon } : {}) });
           for (const v of tagged) { ifaces.push({ name: `${p}.${v}`, type: "vlan", parent: p, vlanId: v }); table.add(`${p}.${v}`); }
         }
-      } else if (it.kind === "vif") {
+      } else if (it.kind === "vlan-iface") {
         if (!claim(it.name, it.line)) continue;
         ifaces.push({ name: it.name, type: "vlan", ...(it.on !== undefined ? { parent: it.on } : {}), vlanId: it.vlan, ...br });
         for (const c of it.addresses) addresses.push({ iface: it.name, cidr: c, flags: flagsOf(it), line: it.line });

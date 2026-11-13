@@ -95,7 +95,7 @@ device core model "hAP ax3" os "RouterOS 7.16"
     ports ether3, ether4 tagged 50, 60
     radio wifi1, wifi2, wifi1-iot, wifi1-5g, wifi2-iot ssid HomeNet, HomeNet-IoT, HomeNet-5
   bridge br-guest address 10.50.0.1/24 guest hotspot
-    vif vlan50 on bridge vlan 50
+    vlan-iface vlan50 on bridge vlan 50
     radio wifi1-guest, wifi2-guest ssid Guest
   address vlan50 2001:db8:50::1
   lease 192.168.0.200 "Printer"
@@ -116,7 +116,7 @@ Existing `vlan` keeps its bare-string subnet form (`vlan lan untagged
 | `router` | device | The "routing · NAT · firewall" box. Explicit; no inference. |
 | `bridge <name> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot] [filtering]` | device | A bridge group. `address` → label + router→group arrow; `lan` → arrow label "LAN"; `hotspot` → sub-line + "guests, after hotspot login"; `guest` → guest style when no VLAN def applies; `filtering` = VLAN-filtering bridge (lane inference). |
 | `ports <p>(, <p>)* [untagged <v>] [tagged <v>(, <v>)*] [horizon <n>]` | device or bridge | Port chips. Under a bridge = bridge members; directly under the device = standalone ports. `<v>` is a VLAN-def name or a numeric id (the translator always emits numeric ids, since table rows can list a subset of a def's ids or ids with no def). `tagged` keeps today's behaviour exactly: on a port it also draws the `<port>.<id>` table-row chip with its internal link, and those chips are not VLAN consumers. |
-| `vif <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]` | device or bridge | VLAN-interface chip. Under a bridge = member of that bridge; `on` = parent interface it is stacked on. |
+| `vlan-iface <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]` | device or bridge | VLAN-interface chip. Under a bridge = member of that bridge; `on` = parent interface it is stacked on. |
 | `radio <iface>(, <iface>)* [tag <n>] [ssid <s>(, <s>)*]` | device or bridge | One radio chip. The listed names are the member interfaces, physical and virtual (`wifi1, wifi2, wifi1-iot, wifi1-5g, wifi2-iot`). Each stays linkable (`core.wifi1-iot`) and resolves to this chip, as today. The label is computed as today: physical radio names (`wifi1 / wifi2`) for an untagged chip, member names plus `· use-tag N` for a tagged one. Two chips on the same physical radio (bridge and br-guest in `core`) are two `radio` lines with different members. CAPsMAN radios are written in the AP's own block. |
 | `address <iface> <cidr>(, <cidr>)* [lan] [guest] [hotspot]` | device | Addresses (IPv4 or IPv6) and flags on any named interface, including one that isn't drawn (ap2 `wg1`): the translator emits every `/ip address`, and the builder ignores interfaces with no chip, as today. |
 | `lease <addr> ["comment"]` | device | DHCP lease served by this device: label source for `client … lease <addr>` and the set `render --all` draws. |
@@ -182,7 +182,7 @@ forward-accept arrow).
 
 From the builder check (2026-11-13):
 
-- **`lan`/`guest`/`hotspot` are interface flags**, allowed on `bridge`, `vif`
+- **`lan`/`guest`/`hotspot` are interface flags**, allowed on `bridge`, `vlan-iface`
   and `address`, because `lte.rsc` has a non-bridge LAN interface (`vlan60`,
   `192.168.88.1/24`). The computed device label takes the first address, in
   block order, on a `lan`-flagged interface. The translator emits block order

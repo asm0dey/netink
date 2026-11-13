@@ -23,9 +23,9 @@ strings are "..." with \\" and \\\\ escapes):
     indented blocks (two spaces per level) under a device; names are local, "quoted" allowed:
       wan <if> [on <parent> vlan <n>] [route "name"] [distance <n>] [dhcp [<addr>]] [nat]
       router
-      bridge <name> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot] [filtering]   (children indented again: ports, vif, radio)
+      bridge <name> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot] [filtering]   (children indented again: ports, vlan-iface, radio)
       ports <p>(, <p>)* [untagged <vlan>] [tagged <vlan>(, <vlan>)*] [horizon <n>]     <vlan> = name or id
-      vif <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]
+      vlan-iface <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]
       radio <if>(, <if>)* [tag <n>] [ssid <s>(, <s>)*]
       address <if> <cidr>(, <cidr>)* [lan] [guest] [hotspot]
       lease <addr> ["comment"]

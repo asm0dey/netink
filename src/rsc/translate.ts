@@ -107,7 +107,7 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
     return lines;
   };
   // shortcut: horizon on a vif or radio has no spelling and is dropped (the builder reads horizon only on ports); upgrade if lane inference starts to use it there.
-  const vifLine = (i: Iface): DevItem => ({ line, kind: "vif", name: i.name, ...(i.parent !== undefined ? { on: i.parent } : {}), vlan: i.vlanId!, addresses: cidrs(i.name), ...flags(i.name) });
+  const vifLine = (i: Iface): DevItem => ({ line, kind: "vlan-iface", name: i.name, ...(i.parent !== undefined ? { on: i.parent } : {}), vlan: i.vlanId!, addresses: cidrs(i.name), ...flags(i.name) });
   const radioLine = (r: Radio): DevItem => ({ line, kind: "radio", ifaces: r.ifaces.map((i) => i.name), ...(r.tag !== undefined ? { tag: r.tag } : {}), ssids: r.ssids });
   const inside = (b?: string) => <T extends { bridge?: string }>(x: T) => (b === undefined ? !isBridge(x.bridge) : x.bridge === b);
 

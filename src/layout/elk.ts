@@ -186,7 +186,7 @@ export async function layout(model: Model): Promise<Placed> {
 }
 
 /**
- * ELK bends a short device-internal edge between two stacked chips (a vif above the port it rides on) into a jog when
+ * ELK bends a short device-internal edge between two stacked chips (a vlan-iface above the port it rides on) into a jog when
  * their centres differ, and those jogs tangle with neighbouring edges. Where the chips overlap horizontally, the edge
  * becomes one vertical in the overlap, unless that vertical would cut another box or run along another line.
  */

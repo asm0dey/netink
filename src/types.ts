@@ -11,7 +11,7 @@ export type DevItem = { line: number } & (
   | { kind: "router" }
   | ({ kind: "bridge"; name: string; addresses: string[]; filtering?: true; items: DevItem[] } & IfFlags)
   | { kind: "ports"; names: string[]; untagged?: VlanRef; tagged: VlanRef[]; horizon?: number }
-  | ({ kind: "vif"; name: string; on?: string; vlan: number; addresses: string[] } & IfFlags)
+  | ({ kind: "vlan-iface"; name: string; on?: string; vlan: number; addresses: string[] } & IfFlags)
   | { kind: "radio"; ifaces: string[]; tag?: number; ssids: string[] }
   | ({ kind: "address"; iface: string; cidrs: string[] } & IfFlags)
   | { kind: "lease"; address: string; comment?: string }
