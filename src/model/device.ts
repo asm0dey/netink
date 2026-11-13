@@ -96,7 +96,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
   const add = (parent: MNode, n: MNode, i?: Iface) => { parent.children.push(n); if (i) { ref.set(i.name, n.id); ifaceOf.set(n.id, i); } };
 
   if (wan.length) {
-    const g = mk(`${id}/wan`, "group", "wan", "WAN list", [], 1);
+    const g = mk(`${id}/wan`, "group", "wan", "WAN", [], 1);
     for (const w of wan) {
       const sub = [w.route !== undefined || w.distance !== undefined ? [w.route, w.distance !== undefined && `distance ${w.distance}`].filter(Boolean).join(" · ") : undefined,
         w.dhcp !== undefined ? `DHCP ${w.dhcp === true ? "client" : w.dhcp}` : undefined, ...chipAddrs(w.iface)].filter((x): x is string => !!x);

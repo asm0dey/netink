@@ -35,7 +35,7 @@
 <rect x="1534" y="1342" width="178.8" height="102" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
 <rect x="1546" y="1378" width="154.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="1491.5" y="474.7" width="531" height="324" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="1688" y="518.7" width="102" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="1688" y="518.7" width="94" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
 <rect x="1700" y="554.7" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <polygon points="1604,651.7 1624,632.7 1846,632.7 1866,651.7 1846,670.7 1624,670.7" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="1503.5" y="510.7" width="164.5" height="102" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
@@ -95,7 +95,7 @@
 <path d="M635.1,737 A5,5 0 0 1 645.1,737" fill="none" stroke="#1565C0" stroke-width="3"/>
 <path d="M1314.1,1015 A5,5 0 0 1 1324.1,1015" fill="none" stroke="#E65100" stroke-width="4"/>
 <text x="58.8" y="404" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">CORE · hAP ax3 · 192.168.0.1 · RouterOS 7.25.1</text>
-<text x="523.9" y="445" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN list</text>
+<text x="523.9" y="445" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="741.4" y="481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
 <text x="741.4" y="498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wan1-main · distance 1</text>
 <text x="741.4" y="515" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DHCP client</text>
@@ -135,7 +135,7 @@
 <text x="1560" y="1402" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
 <text x="1560" y="1419" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
 <text x="1505.5" y="498.7" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">LTE · LtAP mini LTE · 192.168.88.1 · RouterOS 7.25.1</text>
-<text x="1702" y="542.7" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN list</text>
+<text x="1702" y="542.7" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="1735" y="578.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">lte1</text>
 <text x="1735" y="656.7" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
 <text x="1517.5" y="534.7" class="h" stroke="#E8F5E9" stroke-width="3" stroke-linejoin="round" paint-order="stroke">bridge</text>
