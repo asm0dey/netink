@@ -11,67 +11,13 @@ import { translate } from "./rsc/translate";
 import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
 import { complete } from "./complete";
-import { NAMED } from "./model/style";
+import { DESC, EPILOGUE } from "./help";
+import { manPage } from "./man";
 import { renderSvg } from "./render/svg";
 import { NOUNS } from "./edit/table";
 import { base, registerEditCommands, usageMessage } from "./edit/command";
 import { edit, type Candidate, type EditRequest } from "./edit/edit";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
-
-const GRAMMAR = `DSL (line-oriented; '#' to end of line is a comment unless inside quotes; a line ending in ',' continues on the next line;
-strings are "..." with \\" and \\\\ escapes):
-
-  title "T"                      subtitle "T"
-  imports rsc <path> as <id> (, <path> as <id>)*
-  vlan <name> (untagged | <n>(,<n>)*) [color <c>] [subnet <cidr>(, <cidr>)*]   c = a name below, or quoted hex "#rrggbb"
-  cloud <id> ["label"]
-  device <id> ["label"] [kind <role>] [model "m"] [os "o"] [note "n"]
-    indented blocks (two spaces per level) under a device; names are local, "quoted" allowed:
-      wan <if> [on <parent> vlan <n>] [route "name"] [distance <n>] [dhcp [<addr>]] [nat]
-      router
-      bridge <name> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot] [filtering]   (children indented again: ports, vlan-iface, radio)
-      ports <p>(, <p>)* [untagged <vlan>] [tagged <vlan>(, <vlan>)*] [horizon <n>]     <vlan> = name or id
-      vlan-iface <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]
-      radio <if>(, <if>)* [tag <n>] [ssid <s>(, <s>)*]
-      address <if> <cidr>(, <cidr>)* [lan] [guest] [hotspot]
-      lease <addr> ["comment"]
-      allow <if> -> <addr-or-id> ["label"]
-  client <id> ["label"] [lease <ip>] [note "n"]
-  link <ep> (-- <ep>)+ [vlans <name>(,<name>)*] [label "l"]     ep = id | id.port ; final ep may be id(, id)* (fan-out)
-  note <target> "text"           place <a> near <b>      row <a>(, <b>)+
-  <device>.side <group> = top|bottom|left|right
-  legend auto|off | legend add <style> "text" | legend remove <entry> | legend note "text" | legend position bottom|right
-  style jumps arc|gap|none
-  route <a> -> <b> ["label"]     allow <a> -> <b> ["label"]     hide <target>
-
-  'link a -- b -- c.p' expands to two links (a-b, b-c.p); 'link sw -- x, y' expands to sw-x and sw-y.
-  colors: ${Object.keys(NAMED).join(", ")}
-  Ids are [a-z0-9_-]+; child ids are parent/child (e.g. core/ether3, core/bridge).
-  Paths in 'imports' are relative to the .net file.`;
-
-const EPILOGUE = `Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
-  Block nouns (wan, bridge, ports, ...) take the parent first: netdraw ports add core/bridge ether2,ether3 --untagged home.
-  allow --in <device> edits the line inside that device's block. Lists are one comma-separated argument.
-  --after <key> / --before <key> place a new statement next to a sibling (default: end of file or block);
-  --select-text <s> picks one of several matches; --no-<flag> clears an optional value.
-  The written lines go to stdout, then check runs and prints its diagnostics (exit 0 once written).
-  netdraw <noun> --help lists its verbs and flags. netdraw init creates the empty file to start from.
-
---json output:
-  render  {ok, output, width, height, warnings} (plus "svg" when no -o); on refusal {ok:false, diags}
-  check   {ok, diags}
-  show    the raw model objects
-  import  {ok, stmt, diags}
-  editing {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous
-
-Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
-Errors in --json mode: {"error": string, "file": string, "line": number, "hint"?: string}; diagnostics use
-{"level": "error"|"warning", "file", "line", "message", "hint"?}.
-No command prompts interactively.
-
-Shell completion: netdraw completion >> ~/.zshrc  (zsh or bash, from $SHELL; completes commands, nouns, verbs, flags and the ids and vlan names in the --file)
-
-${GRAMMAR}`;
 
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
 const err = (s: string) => process.stderr.write(s + "\n");
@@ -172,18 +118,19 @@ export function cli(argv: string[]): Argv {
       throw new Usage(msg);
     })
     // yargs's script calls back with `--get-yargs-completions <words>`; the first word is the program name
-    .completion("completion", "print a shell completion script (zsh or bash, from $SHELL)", () => {
+    .completion("completion", DESC.completion, () => {
       const w = argv.slice(argv.indexOf("--get-yargs-completions") + 1);
       return complete(w.length > 1 && !COMPLETE_FIRST.has(w[0]!) ? w.slice(1) : w);
     })
-    .command("render", "write the SVG to -o, or to stdout; refuses (exit 1) when check reports errors, warnings do not block", (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" }), go((a) => render(a, "render")))
-    .command("check", "exit 0 with no errors, 1 otherwise; diagnostics file:line: level: message (hint) on stderr", (y) => y.option("all", all), go((a) => render(a, "check")))
-    .command("show [what]", "print the merged model slice: devices, links, vlans, or one <id> (node subtree, link or arrow)", (y) => y.positional("what", { type: "string", describe: "devices | links | vlans | an id" }).option("all", all), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
-    .command("init [path]", "create an empty DSL file (default ./network.net); exit 1 if it exists", (y) => y.positional("path", { type: "string", describe: "the file to create" }), go((a) => init(a.path ?? a.file, a.json)));
+    .command("render", DESC.render, (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" }), go((a) => render(a, "render")))
+    .command("check", DESC.check, (y) => y.option("all", all), go((a) => render(a, "check")))
+    .command("show [what]", DESC.show, (y) => y.positional("what", { type: "string", describe: "devices | links | vlans | an id" }).option("all", all), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
+    .command("init [path]", DESC.init, (y) => y.positional("path", { type: "string", describe: "the file to create" }), go((a) => init(a.path ?? a.file, a.json)))
+    .command("__man", false, {}, () => { out(manPage()); }); // hidden: the man page source, see the man task
   return registerEditCommands(y, (req, a) => go((x) => editCmd(req, x.file, x.json))(a), {
     import: {
       cmd: "import [rsc]",
-      desc: "print the device block for a router .rsc export, ready to paste in place of its import",
+      desc: DESC.import,
       builder: (y) => y.option("as", { type: "string", requiresArg: true, describe: "the id of the printed device" }),
       handler: go((a) => importCmd(a.rsc, a.as, a.file, a.json)),
     },

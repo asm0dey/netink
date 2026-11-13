@@ -5,9 +5,15 @@ bun = "1.4.4"
 test = "bun test"
 typecheck = "bunx tsc --noEmit"
 render-home = "bun src/cli.ts render --file examples/home/network.net -o examples/home/network.svg"
-build = "bun build src/cli.ts --compile --outfile dist/netdraw"
-build-all = """
-for t in linux-x64 linux-arm64 linux-x64-musl linux-arm64-musl darwin-x64 darwin-arm64 windows-x64 windows-arm64; do
+man = "mkdir -p dist && bun src/cli.ts __man > dist/netdraw.md && bunx marked-man dist/netdraw.md > dist/netdraw.1"
+
+[tasks.build]
+depends = ["man"]
+run = "bun build src/cli.ts --compile --outfile dist/netdraw"
+
+[tasks.build-all]
+depends = ["man"]
+run = """for t in linux-x64 linux-arm64 linux-x64-musl linux-arm64-musl darwin-x64 darwin-arm64 windows-x64 windows-arm64; do
   bun build src/cli.ts --compile --target=bun-$t --outfile dist/netdraw-$t || exit 1
 done
 """
