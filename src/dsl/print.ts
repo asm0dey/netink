@@ -105,12 +105,15 @@ function stmt(s: Stmt): string[] {
       ];
       return [[s.type, nm(s.id), ...o].filter(Boolean).join(" "), ...printItems(s.items ?? [], 1)];
     }
+    case "trunk":
+      return [`trunk ${nm(s.name)} vlans ${list(s.vlans)}`];
     case "link":
       return [
         [
           "link",
           s.path.map((e) => (e.port ? `${e.node}.${e.port}` : e.node)).join(" -- "),
           s.vlans?.length ? `vlans ${list(s.vlans)}` : undefined,
+          s.trunk && `trunk ${nm(s.trunk)}`,
           s.label !== undefined ? `label ${q(s.label)}` : undefined,
         ]
           .filter(Boolean)

@@ -17,6 +17,7 @@ const KEYWORDS = [
   "subtitle",
   "imports",
   "vlan",
+  "trunk",
   "cloud",
   "device",
   "client",
@@ -222,6 +223,13 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
       }
       return [s];
     }
+    case "trunk": {
+      const name = c.word("trunk name");
+      c.expectWord("vlans");
+      const vlans = c.list("vlan name");
+      c.end();
+      return [{ line, kind: "trunk", name, vlans }];
+    }
     case "cloud":
     case "device":
     case "client": {
@@ -269,17 +277,25 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
         if (c.isWord("--")) c.i++;
         else break;
       }
-      let vlans: string[] | undefined, label: string | undefined;
+      let vlans: string[] | undefined, trunk: string | undefined, label: string | undefined;
       while (!c.done()) {
         if (c.isWord("vlans")) {
           c.i++;
           vlans = c.list("vlan name");
+        } else if (c.isWord("trunk")) {
+          c.i++;
+          trunk = c.word("trunk name");
         } else if (c.isWord("label")) {
           c.i++;
           label = c.str("label");
-        } else throw new DslError(`unexpected "${c.peek()!.v}"`, 'link options: vlans <name>,..., label "text"');
+        } else
+          throw new DslError(
+            `unexpected "${c.peek()!.v}"`,
+            'link options: vlans <name>,... | trunk <name>, label "text"',
+          );
       }
-      const mk = (p: Endpoint[], lbl?: string): Stmt => ({ line, kind: "link", path: p, vlans, label: lbl });
+      if (vlans && trunk) throw new DslError("a link has both vlans and trunk", "use either vlans or trunk");
+      const mk = (p: Endpoint[], lbl?: string): Stmt => ({ line, kind: "link", path: p, vlans, trunk, label: lbl });
       const last = path[path.length - 1]!;
       // a chain's label belongs to its last pair; each fan-out pair keeps it
       const chain = pairs(path).map((p, i, a) => mk(p, fan.length || i < a.length - 1 ? undefined : label));

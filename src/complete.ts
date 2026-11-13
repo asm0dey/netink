@@ -23,12 +23,12 @@ const VALUE_FLAGS = new Set([
 const COMMON = ["file", "json", "after", "before", "select-text"];
 
 /** Names the .net file defines; any failure to read it gives none. */
-function names(file: string): { nodes: MNode[]; vlans: string[] } {
+function names(file: string): { nodes: MNode[]; vlans: string[]; trunks: string[] } {
   try {
     const m = loadModel(file, { all: true });
-    return { nodes: m.nodes, vlans: m.vlans.map((v) => v.name) };
+    return { nodes: m.nodes, vlans: m.vlans.map((v) => v.name), trunks: m.trunks.map((t) => t.name) };
   } catch {
-    return { nodes: [], vlans: [] };
+    return { nodes: [], vlans: [], trunks: [] };
   }
 }
 function find(ns: MNode[], id: string): MNode | undefined {
@@ -113,8 +113,9 @@ function run(all: string[]): string[] {
   if (src === "path") return [];
   const fixed = FIXED[src];
   if (fixed) return out(fixed);
-  const { nodes, vlans } = names(file);
+  const { nodes, vlans, trunks } = names(file);
   if (src === "vlan") return out(vlans);
+  if (src === "trunk") return out(trunks);
   if (src === "node") return out(nodes.map((n) => n.id));
   if (src === "parent")
     return out(nodes.flatMap((n) => [n.id, ...n.children.filter((c) => c.kind === "group").map((c) => c.id)]));

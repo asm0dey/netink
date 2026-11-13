@@ -149,3 +149,11 @@ test("links print one per statement, imports one per line", () => {
   ]);
   expect(text).toBe("link a -- b\nlink a -- c\nimports rsc x.rsc as x\nimports rsc y.rsc as y\n");
 });
+
+test("trunk statements round-trip", () => {
+  const s: Stmt[] = [
+    { line: L, kind: "trunk", name: "up", vlans: ["a", "b"] },
+    { line: L, kind: "link", path: [{ node: "x" }, { node: "y" }], trunk: "up" },
+  ];
+  expect(roundTrip(s)).toBe("trunk up vlans a, b\nlink x -- y trunk up\n");
+});

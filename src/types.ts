@@ -42,7 +42,8 @@ export type Stmt = { line: number } & (
       os?: string;
       items?: DevItem[];
     }
-  | { kind: "link"; path: Endpoint[]; vlans?: string[]; label?: string }
+  | { kind: "trunk"; name: string; vlans: string[] }
+  | { kind: "link"; path: Endpoint[]; vlans?: string[]; trunk?: string; label?: string }
   | { kind: "note"; target: string; text: string }
   | { kind: "hint"; hint: Hint }
   | { kind: "legend"; op: "auto" | "off" | "add" | "remove" | "note" | "position"; arg?: string; style?: string }
@@ -104,6 +105,7 @@ export type MLink = {
   to: string;
   lanes: string[];
   label?: string;
+  /** Named trunk set the link was declared with; its VLANs are in `lanes`. */ trunk?: string;
   line: number;
   /** Set only for links with explicit `vlans`: lanes the imported ends' facts imply, for `check`. */ inferred?: string[];
 };
@@ -123,6 +125,7 @@ export type Model = {
   links: MLink[];
   arrows: MArrow[];
   vlans: VlanDef[];
+  trunks: { name: string; vlans: string[] }[];
   legend: LegendSpec;
   jumps: "arc" | "gap" | "none";
   hints: Hint[];

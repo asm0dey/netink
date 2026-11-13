@@ -33,8 +33,8 @@ export function laneOffset(points: P[], d: number): P[] {
 }
 
 /** One polyline per lane, centred on the cable and LANE_GAP apart; more than TRUNK_AT lanes collapse into one trunk. */
-export function lanesFor(points: P[], lanes: string[]): { lane: string; points: P[] }[] {
-  if (lanes.length > TRUNK_AT) return [{ lane: "trunk", points }];
+export function lanesFor(points: P[], lanes: string[], trunk = false): { lane: string; points: P[] }[] {
+  if (trunk || lanes.length > TRUNK_AT) return [{ lane: "trunk", points }];
   return lanes.map((lane, i) => ({ lane, points: laneOffset(points, (i - (lanes.length - 1) / 2) * LANE_GAP) }));
 }
 

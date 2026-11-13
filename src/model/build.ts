@@ -167,6 +167,26 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     });
   });
 
+  const trunks = of("trunk").map((t) => ({ name: t.name, vlans: t.vlans, line: t.line }));
+  for (const t of trunks) {
+    if (vlans.some((v) => v.name === t.name))
+      err(t.line, `trunk "${t.name}" clashes with vlan "${t.name}"`, "use a different name");
+    for (const name of t.vlans)
+      if (!vlans.some((x) => x.name === name))
+        err(t.line, `unknown vlan "${name}"`, `declare it with vlan ${name} <ids>`);
+  }
+  for (const l of links)
+    if (l.trunk && !trunks.some((t) => t.name === l.trunk)) {
+      const c = closest(
+        l.trunk,
+        trunks.map((t) => t.name),
+      );
+      err(
+        l.line,
+        `unknown trunk "${l.trunk}"`,
+        c ? `did you mean ${c}?` : `declare it with trunk ${l.trunk} vlans <name>, ...`,
+      );
+    }
   for (const l of links)
     for (const name of l.vlans ?? [])
       if (!vlans.some((x) => x.name === name))
@@ -260,8 +280,8 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     for (let n = 2; out.some((l) => l.id === id); n++) id = `${from}--${to}#${n}`;
     return id;
   };
-  const push = (from: string, to: string, lanes: string[], line: number, label?: string) =>
-    out.push({ id: linkId(from, to), from, to, lanes, ...(label ? { label } : {}), line });
+  const push = (from: string, to: string, lanes: string[], line: number, label?: string, trunk?: string) =>
+    out.push({ id: linkId(from, to), from, to, lanes, ...(label ? { label } : {}), ...(trunk ? { trunk } : {}), line });
   const trunkIds = new Map<string, Set<number>>();
   const portUse = new Map<string, number>();
   ends.forEach((pair, k) => {
@@ -281,16 +301,17 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
           );
         else portUse.set(e.id, l.line);
       }
-    if (l.vlans) {
+    const explicit = l.vlans ?? trunks.find((t) => t.name === l.trunk)?.vlans;
+    if (explicit) {
       if (a.dev || b.dev) inferred = infer(a, b, k, true).lanes;
-      const defs = vlans.filter((v) => l.vlans!.includes(v.name)); // unknown names were reported above
+      const defs = vlans.filter((v) => explicit.includes(v.name)); // unknown names were reported above
       r = {
         lanes: defs.length ? defs.map((v) => v.name) : ["wire"],
         ids: defs.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)),
       };
     }
     for (const e of [a, b]) trunkIds.set(e.id, new Set([...(trunkIds.get(e.id) ?? []), ...r.ids]));
-    push(a.id, b.id, r.lanes, l.line, l.label);
+    push(a.id, b.id, r.lanes, l.line, l.label, l.trunk);
     if (inferred) out.at(-1)!.inferred = inferred;
   });
 
@@ -513,6 +534,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     links: out,
     arrows,
     vlans,
+    trunks: trunks.map(({ name, vlans }) => ({ name, vlans })),
     legend,
     jumps: of("style").at(-1)?.value ?? "arc",
     hints: of("hint").map((s): Hint => normHint(s.hint)),

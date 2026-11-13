@@ -173,3 +173,20 @@ test("link add refuses an empty port", () => {
   expect(run("", "link", "add", ["a.", "b"]).ok).toBe(false);
   expect(run("", "link", "add", ["a", ".p"]).ok).toBe(false);
 });
+test("trunk", () => {
+  round("trunk", B, [["up"], { vlans: "a,b" }], [["up"], { vlans: "a" }], [["up"]]);
+  expect(ok(run(B, "trunk", "add", ["up"], { vlans: "a,b" }))).toBe(`${B}trunk up vlans a, b\n`);
+  const r = run(B, "trunk", "add", ["up"]);
+  expect(r.ok ? "" : r.error).toContain("trunk add needs --vlans");
+});
+test("link --trunk and --vlans replace each other; both at once is refused untouched", () => {
+  const T = "device x\ndevice y\n";
+  expect(ok(run(`${T}link x -- y vlans a\n`, "link", "set", ["x", "y"], { trunk: "up" }))).toBe(
+    `${T}link x -- y trunk up\n`,
+  );
+  expect(ok(run(`${T}link x -- y trunk up\n`, "link", "set", ["x", "y"], { vlans: "a" }))).toBe(
+    `${T}link x -- y vlans a\n`,
+  );
+  const r = run(T, "link", "add", ["x", "y"], { vlans: "a", trunk: "up" });
+  expect(r.ok ? "" : r.error).toContain("use either --vlans or --trunk");
+});

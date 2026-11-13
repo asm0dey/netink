@@ -14,6 +14,7 @@ const tiny = (label: string): [Model, Placed] => [
     links: [],
     arrows: [],
     vlans: [],
+    trunks: [],
     legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" },
     jumps: "arc",
     hints: [],
@@ -212,6 +213,7 @@ const crossing = (laneVertical: boolean): [Model, Placed] => {
       links: [{ id: "l", from: "a", to: "b", lanes: ["guest"], line: 1 }],
       arrows: [{ id: "x", from: "c", to: "d", kind: "allow" }],
       vlans: [{ name: "guest", ids: [50], color: "blue", subnets: [] }],
+      trunks: [],
       legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" },
       jumps: "arc",
       hints: [],
@@ -258,6 +260,7 @@ test("a vlan:wan group is stroked in the VLAN colour, not the WAN red", async ()
     links: [],
     arrows: [],
     vlans: [{ name: "wan", ids: [70], color: "cyan", subnets: [] }],
+    trunks: [],
     legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" },
     jumps: "arc",
     hints: [],
@@ -279,4 +282,27 @@ test("legend says NAT only when some router does NAT", async () => {
   const lan = "  router\n  bridge br lan address 10.0.0.1/24\n    ports ether2\n";
   expect(await legendOf(`device d\n${lan}`)).toContain(">routed<");
   expect(await legendOf(`device d\n  wan ether1 nat\n${lan}`)).toContain(">routed / NAT<");
+});
+
+test("a two-vlan trunk set draws one trunk bar labelled with its name", () => {
+  const [m, p] = tiny("");
+  m.vlans = [
+    { name: "a", ids: [10], color: "blue", subnets: [] },
+    { name: "b", ids: [20], color: "red", subnets: [] },
+  ];
+  m.trunks = [{ name: "up", vlans: ["a", "b"] }];
+  m.links = [{ id: "l", from: "a", to: "b", lanes: ["a", "b"], trunk: "up", line: 1 }];
+  p.links = [
+    {
+      id: "l",
+      points: [
+        { x: 0, y: 0 },
+        { x: 200, y: 0 },
+      ],
+    },
+  ];
+  const svg = renderSvg(m, p);
+  expect(svg.match(/<path d="M[\d.,]+ L200,0"[^>]*stroke-width="8"/g)?.length).toBe(1); // one bar; a lane pair would offset the path
+  expect(svg).toContain(">up</text>");
+  expect(svg).not.toContain("VLAN 10");
 });

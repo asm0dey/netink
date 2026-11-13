@@ -217,3 +217,15 @@ test("trailing comment line after block is outside it", () => {
   const r = spanOf("device d\n  router\n# x\n");
   expect(r.sp(r.stmts[0]!)?.end).toBe(2);
 });
+
+test("trunk statement and link trunk option", () => {
+  const { stmts, diags } = parseDsl("trunk up vlans a, b\nlink x -- y trunk up", "f");
+  expect(diags).toEqual([]);
+  expect(stmts[0]).toMatchObject({ kind: "trunk", name: "up", vlans: ["a", "b"] });
+  expect(stmts[1]).toMatchObject({ kind: "link", trunk: "up" });
+  expect((stmts[1] as { vlans?: string[] }).vlans).toBeUndefined();
+});
+test("a link with both vlans and trunk is refused", () => {
+  const { diags } = parseDsl("link x -- y vlans a trunk up", "f");
+  expect(diags[0]).toMatchObject({ level: "error", hint: "use either vlans or trunk" });
+});

@@ -1,4 +1,7 @@
 import { expect, test } from "bun:test";
+import { mkdtempSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { complete } from "../src/complete";
 
 const run = (env: Record<string, string>, ...a: string[]) => {
@@ -78,4 +81,9 @@ test("the verb is checked", () => {
 test("--in takes a device", () => {
   expect(complete(["allow", "add", "--in", "", "--file", DSL])).toContain("core");
   expect(complete(["allow", "add", "--i"])).toEqual(["--in"]);
+});
+test("trunk names for --trunk", () => {
+  const f = join(mkdtempSync(join(tmpdir(), "nd-")), "t.net");
+  writeFileSync(f, "vlan a 10\ncloud x\ncloud y\ntrunk up vlans a\nlink x -- y trunk up\n");
+  expect(complete(["link", "set", "x", "y", "--trunk", "", "--file", f])).toEqual(["up"]);
 });

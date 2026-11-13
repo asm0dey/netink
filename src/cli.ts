@@ -86,6 +86,9 @@ function show(model: Model, what: string | undefined, json: boolean, file: strin
       (v) =>
         `${v.name}: ${v.ids === "untagged" ? "untagged" : v.ids.join(",")}  ${v.color}${v.subnets.length ? `  ${v.subnets.join(", ")}` : ""}`,
     );
+  } else if (what === "trunks") {
+    data = model.trunks;
+    text = model.trunks.map((t) => `${t.name}: ${t.vlans.join(", ")}`);
   } else {
     let node: MNode | undefined;
     walk(model.nodes, (n) => {
@@ -222,7 +225,10 @@ export function cli(argv: string[]): Argv {
     .command(
       "show [what]",
       DESC.show,
-      (y) => y.positional("what", { type: "string", describe: "devices | links | vlans | an id" }).option("all", all),
+      (y) =>
+        y
+          .positional("what", { type: "string", describe: "devices | links | vlans | trunks | an id" })
+          .option("all", all),
       go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))),
     )
     .command(

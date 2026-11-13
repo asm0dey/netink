@@ -410,3 +410,9 @@ test("human-mode refusals name the line", () => {
   const g = fresh("dup.net", "vlan x 1\nvlan a 1\n");
   expect(run("vlan", "add", "a", "2", "--file", g).err).toContain(`${g}:2: error: vlan already exists`);
 });
+test("show links --json carries trunk and expanded lanes", () => {
+  const f = join(dir, "t.net");
+  writeFileSync(f, "vlan a 10\nvlan b 20\ncloud x\ncloud y\ntrunk up vlans a, b\nlink x -- y trunk up\n");
+  const l = JSON.parse(run("show", "links", "--file", f, "--json").out);
+  expect(l[0]).toMatchObject({ trunk: "up", lanes: ["a", "b"] });
+});

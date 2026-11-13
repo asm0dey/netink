@@ -448,3 +448,23 @@ test("a client lease needs no device lease line when no device lists leases", ()
   expect(m.diags).toEqual([]);
   expect(node(m, "nas")).toMatchObject({ label: "NAS", sub: ["10.0.0.50"] });
 });
+
+const TR = "vlan a 10\nvlan b 20\ncloud x\ncloud y\n";
+const diagsOf = (src: string) => buildModel(parseDsl(src, "t.net").stmts, new Map()).diags;
+test("a trunk set resolves to its vlans as the link's lanes", () => {
+  const m = buildModel(parseDsl(`${TR}trunk up vlans a, b\nlink x -- y trunk up\n`, "t.net").stmts, new Map());
+  expect(m.diags).toEqual([]);
+  expect(m.links[0]).toMatchObject({ lanes: ["a", "b"], trunk: "up" });
+  expect(m.trunks).toEqual([{ name: "up", vlans: ["a", "b"] }]);
+});
+test("trunk errors: unknown trunk, unknown vlan, name clash", () => {
+  expect(diagsOf(`${TR}trunk up vlans a\nlink x -- y trunk upp\n`)).toContainEqual(
+    expect.objectContaining({ level: "error", line: 6, message: 'unknown trunk "upp"', hint: "did you mean up?" }),
+  );
+  expect(diagsOf(`${TR}trunk up vlans a, zz\n`)).toContainEqual(
+    expect.objectContaining({ level: "error", line: 5, message: 'unknown vlan "zz"' }),
+  );
+  expect(diagsOf(`${TR}trunk a vlans b\n`)).toContainEqual(
+    expect.objectContaining({ level: "error", line: 5, message: 'trunk "a" clashes with vlan "a"' }),
+  );
+});

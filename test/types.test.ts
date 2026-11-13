@@ -8,6 +8,7 @@ it("exports compile", () => {
     links: [],
     arrows: [],
     vlans: [],
+    trunks: [],
     legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" },
     jumps: "arc",
     hints: [],

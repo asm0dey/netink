@@ -19,7 +19,8 @@ strings are "..." with \\" and \\\\ escapes):
       lease <addr> ["comment"]
       allow <if> -> <addr-or-id> ["label"]
   client <id> ["label"] [lease <ip>] [note "n"]
-  link <ep> (-- <ep>)+ [vlans <name>(,<name>)*] [label "l"]     ep = id | id.port ; final ep may be id(, id)* (fan-out)
+  trunk <name> vlans <vlan>(, <vlan>)*                          named VLAN set, drawn as one trunk bar
+  link <ep> (-- <ep>)+ [vlans <name>(,<name>)* | trunk <name>] [label "l"]     ep = id | id.port ; final ep may be id(, id)* (fan-out)
   note <target> "text"           place <a> near <b>      row <a>(, <b>)+
   <device>.side <group> = top|bottom|left|right
   legend auto|off | legend add <style> "text" | legend remove <entry> | legend note "text" | legend position bottom|right
@@ -64,7 +65,7 @@ DSL reference: netdraw help dsl`;
 export const DESC = {
   render: "write the SVG to -o, or to stdout; refuses (exit 1) when check reports errors, warnings do not block",
   check: "exit 0 with no errors, 1 otherwise; diagnostics file:line: level: message (hint) on stderr",
-  show: "print the merged model slice: devices, links, vlans, or one <id> (node subtree, link or arrow)",
+  show: "print the merged model slice: devices, links, vlans, trunks, or one <id> (node subtree, link or arrow)",
   import: "print the device block for a router .rsc export, ready to paste in place of its import",
   init: "create an empty DSL file (default ./network.net); exit 1 if it exists",
   completion: "print a shell completion script (zsh or bash, from $SHELL)",

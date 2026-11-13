@@ -6,6 +6,7 @@ export type Complete =
   | "parent"
   | "port"
   | "vlan"
+  | "trunk"
   | "color"
   | "path"
   | "jumps"
@@ -80,6 +81,27 @@ const vlan: Noun = {
     if (subnet === false) v.subnets = [];
     else if (typeof subnet === "string") v.subnets = csv(subnet);
     return [v];
+  },
+};
+
+const trunk: Noun = {
+  name: "trunk",
+  block: false,
+  covers: ["trunk"],
+  verbs: ["add", "set", "rm"],
+  show: "trunks",
+  args: [{ name: "name", complete: "trunk" }],
+  flags: [{ name: "vlans", type: "string", complete: "vlan", help: "vlan names, comma-separated" }],
+  help: "trunk add|set|rm <name> [--vlans a,b]",
+  match: (t, a) => t.kind === "trunk" && t.name === a.pos[0],
+  make(a) {
+    if (typeof a.flags.vlans !== "string") throw new Error("trunk add needs --vlans");
+    return trunk.apply({ line: 0, kind: "trunk", name: bare(a.pos[0], "trunk name"), vlans: [] }, a)[0]!;
+  },
+  apply(t, a) {
+    if (t.kind !== "trunk") return [t];
+    const { vlans } = a.flags;
+    return [typeof vlans === "string" ? { ...t, vlans: csv(vlans).map((v) => bare(v, "vlan name")) } : t];
   },
 };
 
@@ -195,8 +217,12 @@ const link: Noun = {
     { name: "a", complete: "port" },
     { name: "b", complete: "port" },
   ],
-  flags: [clearable("vlans", "vlan names, comma-separated"), clearable("label", "link label")],
-  help: "link add|set|rm <a> <b> [--vlans a,b] [--label text]",
+  flags: [
+    clearable("vlans", "vlan names, comma-separated"),
+    { ...clearable("trunk", "named trunk set"), complete: "trunk" },
+    clearable("label", "link label"),
+  ],
+  help: "link add|set|rm <a> <b> [--vlans a,b | --trunk name] [--label text]",
   match(t, a) {
     if (t.kind !== "link" || t.path.length !== 2) return false;
     const [p, q] = [a.pos[0], a.pos[1]];
@@ -215,9 +241,18 @@ const link: Noun = {
   apply(t, a) {
     if (t.kind !== "link") return [t];
     const l = { ...t };
-    const { vlans, label } = a.flags;
+    const { vlans, trunk, label } = a.flags;
+    if (typeof vlans === "string" && typeof trunk === "string") throw new Error("use either --vlans or --trunk");
     if (vlans === false) delete l.vlans;
-    else if (typeof vlans === "string") l.vlans = csv(vlans).map((v) => bare(v, "vlan name"));
+    else if (typeof vlans === "string") {
+      l.vlans = csv(vlans).map((v) => bare(v, "vlan name"));
+      delete l.trunk;
+    }
+    if (trunk === false) delete l.trunk;
+    else if (typeof trunk === "string") {
+      l.trunk = bare(trunk, "trunk name");
+      delete l.vlans;
+    }
     if (label === false) delete l.label;
     else if (typeof label === "string") l.label = label;
     return [l];
@@ -747,6 +782,7 @@ export const NOUNS: Noun[] = [
   textNoun("subtitle"),
   importNoun,
   vlan,
+  trunk,
   nodeNoun("device", ["label", "kind", "model", "os", "note"]),
   nodeNoun("cloud", ["label"]),
   nodeNoun("client", ["label", "lease", "note"]),

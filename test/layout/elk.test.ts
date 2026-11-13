@@ -134,6 +134,7 @@ test("lonely node", async () => {
     links: [],
     arrows: [],
     vlans: [],
+    trunks: [],
     hints: [],
     diags: [],
     jumps: "arc",
@@ -161,6 +162,7 @@ test("side hint reorders the device's emitted groups", () => {
     links: [],
     arrows: [],
     vlans: [],
+    trunks: [],
     diags: [],
     jumps: "arc",
     hints: [

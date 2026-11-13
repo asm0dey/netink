@@ -260,7 +260,7 @@ export function renderSvg(model: Model, placed: Placed): string {
   for (const pl of placed.links) {
     const l = link.get(pl.id);
     if (!l || pl.points.length < 2) continue;
-    for (const ln of lanesFor(pl.points, l.lanes))
+    for (const ln of lanesFor(pl.points, l.lanes, !!l.trunk))
       lines.push({ owner: pl.id, lane: lanes.has(ln.lane) ? ln.lane : "wire", points: ln.points });
   }
   for (const pa of placed.arrows) {
@@ -364,11 +364,13 @@ export function renderSvg(model: Model, placed: Placed): string {
   for (const pl of placed.links) {
     const l = link.get(pl.id);
     if (!l || pl.points.length < 2) continue;
-    const trunk = l.lanes.length > 4;
-    const ids = trunk ? model.vlans.filter((v) => l.lanes.includes(v.name)) : [];
-    const vlanText = trunk
-      ? `VLAN ${idList(ids.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))}${ids.some((v) => v.ids === "untagged") ? " + untagged" : ""}`
-      : "";
+    const trunk = l.lanes.length > 4 || !!l.trunk;
+    const ids = trunk && !l.trunk ? model.vlans.filter((v) => l.lanes.includes(v.name)) : [];
+    const vlanText = l.trunk
+      ? l.trunk
+      : trunk
+        ? `VLAN ${idList(ids.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))}${ids.some((v) => v.ids === "untagged") ? " + untagged" : ""}`
+        : "";
     const s = [l.label, vlanText].filter(Boolean).join(" · ");
     const colour = trunk
       ? "#333"
