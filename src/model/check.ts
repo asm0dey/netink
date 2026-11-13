@@ -1,6 +1,6 @@
 import type { Diag, Model, VlanDef } from "../types";
 import { addrKey, inPrefix, parseCidr } from "./addr";
-import { laneOfStyle } from "./build";
+import { laneOfStyle } from "./style";
 import type { Dev } from "./device";
 
 function dist(a: string, b: string): number {

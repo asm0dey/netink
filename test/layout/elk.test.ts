@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { layout, toElkGraph } from "../../src/layout/elk";
 import { textWidth } from "../../src/layout/measure";
-import { loadModel } from "../../src/model/build";
+import { loadModel } from "../../src/load";
 import type { Box, MNode, Model, P, Placed } from "../../src/types";
 
 const HOME = "examples/home/network.net";
@@ -91,7 +91,7 @@ test("polylines are orthogonal and start/end on their endpoint boxes", async () 
 });
 
 test("layout lets the process exit", () => {
-  const r = Bun.spawnSync(["bun", "-e", `import {layout} from "./src/layout/elk.ts"; import {loadModel} from "./src/model/build.ts"; await layout(loadModel("${HOME}"));`], { timeout: 4000 });
+  const r = Bun.spawnSync(["bun", "-e", `import {layout} from "./src/layout/elk.ts"; import {loadModel} from "./src/load.ts"; await layout(loadModel("${HOME}"));`], { timeout: 4000 });
   expect(r.exitCode).toBe(0);
 });
 
@@ -161,7 +161,7 @@ test("hint edges are laid out but never placed", async () => {
 
 test("an upward allow arrow ends on its `to` box (the arrowhead end)", async () => {
   const { parseDsl } = await import("../../src/dsl/parse");
-  const { buildModel } = await import("../../src/model/build");
+  const { buildModel } = await import("../../src/load");
   const m = buildModel(parseDsl("cloud c\ndevice d\nlink c -- d\nallow d -> c\n", "t.net").stmts, new Map());
   const p = await layout(m);
   const a = m.arrows[0]!, pts = p.arrows.find((x) => x.id === a.id)!.points;
@@ -213,7 +213,7 @@ test("internal edges between stacked chips run straight; the core's internal edg
 
 test("cables between two same-tier devices run straight down, whichever way they are written", async () => {
   const { parseDsl } = await import("../../src/dsl/parse");
-  const { buildModel } = await import("../../src/model/build");
+  const { buildModel } = await import("../../src/load");
   const src = "device a\n  ports eth0, eth1\ndevice b\n  ports eth0, eth1\nlink a.eth0 -- b.eth0\nlink b.eth1 -- a.eth1\n";
   const m = buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
   const p = await layout(m);

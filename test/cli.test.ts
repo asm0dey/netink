@@ -108,7 +108,7 @@ test("import without an argument is exit 2", () => {
   expect(run("import").code).toBe(2);
 });
 test("ejected blocks replace their imports", async () => {
-  const { loadModel } = await import("./../src/model/build");
+  const { loadModel } = await import("../src/load");
   const { layout } = await import("./../src/layout/elk");
   const { renderSvg } = await import("./../src/render/svg");
   const blocks = ["core", "ap1", "ap2", "lte"].map((n) => run("import", `examples/home/${n}.rsc`, "--file", HOME).out).join("");

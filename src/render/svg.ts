@@ -1,15 +1,10 @@
 import { textWidth } from "../layout/measure";
 import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
 import { f, jumpArcs, jumpPath, lanesFor } from "./geometry";
-import { laneOfStyle } from "../model/build";
+import { NAMED, laneOfStyle } from "../model/style";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
-/** The theme's named colours: the only names `vlan … color` accepts (else a quoted "#rrggbb"). */
-export const NAMED: Record<string, string> = {
-  green: "#2E7D32", blue: "#1565C0", orange: "#E65100", red: "#C62828", purple: "#6A1B9A", teal: "#00838F",
-  brown: "#6D4C41", pink: "#AD1457", grey: "#546E7A", gray: "#546E7A", amber: "#FF8F00", indigo: "#283593", cyan: "#0097A7",
-};
 /** For colour names the theme doesn't know: picked by VLAN def position, so the result is stable. */
 const PALETTE = ["#00838F", "#AD1457", "#6D4C41", "#283593", "#9E9D24", "#546E7A", "#FF8F00", "#4527A0"];
 const DASHES = ["12 4 3 4", "4 4", "14 6", "7 3 2 3"];

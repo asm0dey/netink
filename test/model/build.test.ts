@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { parseDsl } from "../../src/dsl/parse";
-import { buildModel, loadModel } from "../../src/model/build";
+import { buildModel, loadModel } from "../../src/load";
 import { importRsc } from "../../src/rsc/import";
 import type { MNode, Model } from "../../src/types";
 

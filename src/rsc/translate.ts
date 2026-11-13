@@ -1,3 +1,4 @@
+import { physOf } from "../model/style";
 import type { DevItem, DeviceFacts, Diag, IfFlags, Iface, Stmt, VlanDef } from "../types";
 
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
@@ -6,8 +7,6 @@ type Route = DeviceFacts["routes"][number];
 type Radio = { bridge?: string; tag?: number; ssids: string[]; ifaces: Iface[] };
 
 const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
-// shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
-export const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
 const ipNum = (ip: string) => ip.split(".").reduce((a, o) => a * 256 + Number(o), 0);
 function inCidr(ip: string, cidr?: string): boolean {
   if (!cidr || !/^\d+\.\d+\.\d+\.\d+$/.test(ip)) return false;

@@ -2,14 +2,15 @@
 import { parseArgs } from "node:util";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
-import { loadModel } from "./model/build";
+import { loadModel } from "./load";
 import { parseDsl } from "./dsl/parse";
 import { printStmts } from "./dsl/print";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
 import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
-import { NAMED, renderSvg } from "./render/svg";
+import { NAMED } from "./model/style";
+import { renderSvg } from "./render/svg";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
 
 const GRAMMAR = `DSL (line-oriented; '#' to end of line is a comment unless inside quotes; a line ending in ',' continues on the next line;

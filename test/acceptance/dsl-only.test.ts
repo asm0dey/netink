@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import { layout } from "../../src/layout/elk";
-import { loadModel } from "../../src/model/build";
+import { loadModel } from "../../src/load";
 import { renderSvg } from "../../src/render/svg";
 
 const RSC = "examples/home/network.net";

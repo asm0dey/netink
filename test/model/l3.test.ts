@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { parseDsl } from "../../src/dsl/parse";
-import { buildModel, loadModel } from "../../src/model/build";
+import { buildModel, loadModel } from "../../src/load";
 import type { Model } from "../../src/types";
 
 const HOME = "examples/home/network.net";

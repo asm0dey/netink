@@ -1,4 +1,4 @@
-import { NAMED } from "../render/svg";
+import { NAMED } from "../model/style";
 import type { DevItem, Diag, Endpoint, Stmt, VlanRef } from "../types";
 
 type Tok = { t: "w" | "s" | "p"; v: string }; // word, string, punctuation (, =)

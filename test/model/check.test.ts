@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { parseDsl } from "../../src/dsl/parse";
-import { buildModel, loadModel } from "../../src/model/build";
+import { buildModel, loadModel } from "../../src/load";
 import { checkModel } from "../../src/model/check";
 import { importRsc } from "../../src/rsc/import";
 

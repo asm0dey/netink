@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
-import { loadModel } from "../../src/model/build";
+import { loadModel } from "../../src/load";
 import { renderSvg } from "../../src/render/svg";
 import { textWidth } from "../../src/layout/measure";
 import type { MNode, Model, Placed } from "../../src/types";
@@ -154,7 +154,7 @@ test("a vlan:wan group is stroked in the VLAN colour, not the WAN red", async ()
 
 test("legend says NAT only when some router does NAT", async () => {
   const { parseDsl } = await import("../../src/dsl/parse");
-  const { buildModel } = await import("../../src/model/build");
+  const { buildModel } = await import("../../src/load");
   const legendOf = async (src: string) => {
     const m = buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
     const svg = renderSvg(m, await layout(m));

@@ -1,60 +1,23 @@
-import { readFileSync } from "node:fs";
-import { dirname, isAbsolute, join } from "node:path";
-import { parseDsl } from "../dsl/parse";
-import { importRsc } from "../rsc/import";
 import { parseCidr } from "./addr";
 import { addressDiags, closest } from "./check";
 import { deriveArrows } from "./l3";
-import { translate } from "../rsc/translate";
+import { fallbackIn, laneOfStyle, vlanStyle } from "./style";
 import { buildDevice, mk, type Dev, type Radio } from "./device";
 import type { DeviceFacts, Diag, MArrow, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 
-type Opts = { all?: boolean; file?: string };
+export type Opts = { all?: boolean; file?: string };
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type LinkStmt = Extract<Stmt, { kind: "link" }>;
 /** A resolved link endpoint. `dev` is set for ends inside a device with block lines. */
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
 
-/** VLAN-derived node styles live under `vlan:<name>`, so a VLAN named like a built-in style (wan, dev, spare) cannot be drawn as one. */
-export const vlanStyle = (name: string): string => `vlan:${name}`;
-export const laneOfStyle = (style: string): string | undefined => style.startsWith("vlan:") ? style.slice(5) : undefined;
-/** A fallback style (guest/lan/lte) still takes the colours of a VLAN def of the same name. */
-export const fallbackIn = (vlans: VlanDef[]) => (name: string): string => vlans.some((v) => v.name === name) ? vlanStyle(name) : name;
 const ID_RE = /^[a-z0-9_-]+$/;
 const IPV4_RE = /^\d+\.\d+\.\d+\.\d+$/;
 const HIDDEN_HINT = "unlinked ports on devices without a router are hidden; use --all";
 const leaves = (n: MNode): MNode[] => (n.children.length ? n.children.flatMap(leaves) : [n]);
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
-const vlanDefs = (stmts: Stmt[]): VlanDef[] =>
+export const vlanDefs = (stmts: Stmt[]): VlanDef[] =>
   stmts.flatMap((v) => (v.kind === "vlan" ? [{ name: v.name, ids: v.ids, color: v.color ?? "grey", subnets: v.subnets }] : []));
-
-/** Imports are translated to `device` blocks, spliced in place of their `import` line, and built like hand-written ones. */
-export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts: Opts = {}): Model {
-  const file = opts.file ?? "";
-  const diags: Diag[] = [];
-  const err = (line: number, message: string, hint?: string) => diags.push({ level: "error", file, line, message, ...(hint ? { hint } : {}) });
-  const seen = new Set<string>();
-  const imports = stmts.filter((s): s is Extract<Stmt, { kind: "import" }> => s.kind === "import").filter((s) => {
-    if (seen.has(s.as)) { err(s.line, `"${s.as}" is imported twice`, "give each import its own alias"); return false; }
-    seen.add(s.as);
-    if (facts.has(s.as)) return true;
-    err(s.line, `no facts loaded for import "${s.as}"`);
-    return false;
-  });
-  const t = translate(imports.map((s) => ({ id: s.as, line: s.line, f: facts.get(s.as)! })), vlanDefs(stmts));
-  diags.push(...t.diags);
-  const spliced = stmts.map((s): Stmt => {
-    if (s.kind === "import") return imports.includes(s) ? t.stmts[imports.indexOf(s)]! : s; // a rejected import stays, for its id check
-    const imp = s.kind === "node" && s.items ? imports.find((i) => i.as === s.id) : undefined;
-    if (!imp || s.kind !== "node") return s;
-    err(s.line, `"${s.id}" is imported; its internals come from ${imp.file}`, `run netdraw import ${imp.file} to get an editable block`);
-    const { items: _, ...rest } = s;
-    return rest;
-  });
-  const m = buildFromStmts(spliced, opts);
-  m.diags = [...diags, ...m.diags];
-  return m;
-}
 
 export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   const file = opts.file ?? "";
@@ -373,23 +336,4 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     nodes, links: out, arrows, vlans, legend,
     jumps: of("style").at(-1)?.value ?? "arc", hints: of("hint").map((s): Hint => normHint(s.hint)), diags, ...(opts.file !== undefined ? { file: opts.file } : {}),
   };
-}
-
-export function loadModel(file: string, opts: { all?: boolean } = {}): Model {
-  const { stmts, diags } = parseDsl(readFileSync(file, "utf8"), file);
-  const facts = new Map<string, DeviceFacts>();
-  for (const s of stmts) {
-    if (s.kind !== "import") continue;
-    // not resolve(): relative imports keep relative paths in diagnostics
-    const path = isAbsolute(s.file) ? s.file : join(dirname(file), s.file);
-    let text: string;
-    try { text = readFileSync(path, "utf8"); }
-    catch { diags.push({ level: "error", file, line: s.line, message: `cannot read ${s.file}`, hint: "paths are relative to the .net file" }); continue; }
-    const f = importRsc(text, path, s.as);
-    facts.set(s.as, f);
-    diags.push(...f.warnings);
-  }
-  const m = buildModel(stmts, facts, { ...opts, file });
-  m.diags = [...diags, ...m.diags];
-  return m;
 }

@@ -1,7 +1,6 @@
-import { physOf } from "../rsc/translate";
 import type { DevItem, IfFlags, Iface, MNode, Stmt, VlanDef, VlanRef } from "../types";
 import { parseCidr } from "./addr";
-import { fallbackIn, vlanStyle } from "./build";
+import { fallbackIn, physOf, vlanStyle } from "./style";
 
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 /** One radio chip: a `radio` line. */
