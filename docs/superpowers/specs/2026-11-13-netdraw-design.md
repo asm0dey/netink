@@ -246,7 +246,7 @@ netdraw render [-o out.svg] [--view ...] [--only ...] [--site ...]
      opt-in), and a complete worked example.
    - `docs/cli.md`: every command and flag, the `--json` output shapes, the
      error shape, exit codes, and which DSL line each command writes.
-   - `netdraw --help` and `netdraw help dsl` print the same reference text.
+   - `netdraw help dsl` and the man page print the DSL reference; `netdraw --help` points to it (owner change, 2026-11-14: the grammar no longer fills `--help`).
    - Tests fail when a DSL keyword or CLI command is missing from the docs.
      Every example in the docs is executed by the test suite.
 

@@ -18,7 +18,7 @@ import { printStmts } from "./dsl/print";
 import { base, registerEditCommands, usageMessage } from "./edit/command";
 import { type Candidate, type EditRequest, edit } from "./edit/edit";
 import { NOUNS } from "./edit/table";
-import { DESC, EPILOGUE } from "./help";
+import { DESC, EPILOGUE, GRAMMAR } from "./help";
 import { layout } from "./layout/elk";
 import { loadModel } from "./load";
 import { manPage } from "./man";
@@ -386,7 +386,13 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
 }
 
 async function main(argv: string[]): Promise<number> {
-  if (argv[0] === "help") argv = ["--help"];
+  if (argv[0] === "help") {
+    const topic = argv.slice(1).find((a) => !a.startsWith("-"));
+    if (topic === "dsl") return (out(GRAMMAR), 0);
+    if (topic !== undefined)
+      return fail(argv.includes("--json"), 2, { error: `unknown help topic ${topic}`, hint: "run netdraw help dsl" });
+    argv = ["--help"];
+  }
   exit = 0;
   crash = undefined;
   try {

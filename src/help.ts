@@ -44,10 +44,10 @@ export const JSON_OUT = `--json output:
   check   {ok, diags}
   show    the raw model objects
   import  {ok, stmt, diags}
-  editing {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous`;
+  editing {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous
+  error   {"error", "file", "line", "hint"?} on stdout, for every failure
+  diag    {"level": "error"|"warning", "file", "line", "message", "hint"?}`;
 export const EXIT = `Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
-Errors in --json mode: {"error": string, "file": string, "line": number, "hint"?: string}; diagnostics use
-{"level": "error"|"warning", "file", "line", "message", "hint"?}.
 No command prompts interactively.`;
 export const COMPLETION = `Shell completion: netdraw completion >> ~/.zshrc  (zsh or bash, from $SHELL; completes commands, nouns, verbs, flags and the ids and vlan names in the --file)`;
 export const EPILOGUE = `${EDITING}
@@ -58,7 +58,7 @@ ${EXIT}
 
 ${COMPLETION}
 
-${GRAMMAR}`;
+DSL reference: netdraw help dsl`;
 
 /** The one-line command descriptions, shared by --help and the man page. */
 export const DESC = {
