@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join } from "node:path";
 import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
 import { closest } from "./check";
@@ -431,7 +431,8 @@ export function loadModel(file: string, opts: { all?: boolean } = {}): Model {
   const facts = new Map<string, DeviceFacts>();
   for (const s of stmts) {
     if (s.kind !== "import") continue;
-    const path = join(dirname(file), s.file);
+    // not resolve(): relative imports keep relative paths in diagnostics
+    const path = isAbsolute(s.file) ? s.file : join(dirname(file), s.file);
     let text: string;
     try { text = readFileSync(path, "utf8"); }
     catch { diags.push({ level: "error", file, line: s.line, message: `cannot read ${s.file}`, hint: "paths are relative to the .net file" }); continue; }

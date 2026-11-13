@@ -189,3 +189,14 @@ test("an allow arrow keeps its DSL direction even when it points up the tiers", 
   const m = dsl("cloud c\ndevice d\nlink c -- d\nallow d -> c\nroute d -> c\n");
   expect(m.arrows.find((a) => a.kind === "allow")).toMatchObject({ from: "d", to: "c" });
 });
+
+test("an absolute imports path is read as is", () => {
+  const { mkdtempSync, writeFileSync, rmSync } = require("node:fs"), { tmpdir } = require("node:os"), { join, resolve } = require("node:path");
+  const dir = mkdtempSync(join(tmpdir(), "netdraw-abs-"));
+  try {
+    writeFileSync(join(dir, "n.net"), `imports rsc ${resolve("examples/home/lte.rsc")} as lte\n`);
+    const m = loadModel(join(dir, "n.net"));
+    expect(m.diags.filter((d) => d.level === "error")).toEqual([]);
+    expect(node(m, "lte")).toBeDefined();
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
