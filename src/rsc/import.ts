@@ -80,7 +80,7 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         if (!n) break;
         const i = iface(n, c.path === "/interface wifi" ? "wifi" : "wireless");
         const cfg = p.configuration ? configs.get(p.configuration) : undefined;
-        const ssid = p.ssid ?? cfg?.ssid;
+        const ssid = p.ssid ?? p["configuration.ssid"] ?? cfg?.ssid;
         if (ssid) i.ssid = ssid;
         const dp = p.datapath ?? cfg?.datapath;
         const br = dp ? datapaths.get(dp) : undefined;

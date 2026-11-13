@@ -53,3 +53,13 @@ test("passes reader warnings through", () => {
   expect(f.warnings).toHaveLength(1);
   expect(f.warnings[0]!.file).toBe("t.rsc");
 });
+
+test("RouterOS 7 wifi: wrapped configuration.ssid= and datapath.bridge= on set and add", () => {
+  const f = importRsc([
+    "/interface bridge add name=bridge",
+    "/interface wifi set [ find default-name=wifi1 ] configuration.mode=ap configuration.ssid=Home datapath.bridge=bridge disabled=no",
+    "/interface wifi add configuration.ssid=\"Home Guest\" datapath.bridge=bridge master-interface=wifi1 name=wifi1-guest",
+  ].join("\n"), "t.rsc", "t");
+  expect(get(f, "wifi1")).toMatchObject({ ssid: "Home", bridge: "bridge" });
+  expect(get(f, "wifi1-guest")).toMatchObject({ ssid: "Home Guest", bridge: "bridge" });
+});
