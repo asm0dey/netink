@@ -34,8 +34,9 @@ strings are "..." with \\" and \\\\ escapes):
 export const EDITING = `Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
   Block nouns (wan, bridge, ports, ...) take the parent first: netdraw ports add core/bridge ether2,ether3 --untagged home.
   allow --in <device> edits the line inside that device's block. Lists are one comma-separated argument.
-  --after <key> / --before <key> place a new statement next to a sibling (default: end of file or block);
+  --after <key> / --before <key> place a new statement next to a statement of the same kind (default: end of file or block);
   --select-text <s> picks one of several matches; --no-<flag> clears an optional value.
+  For a value starting with -: use --flag=value, or put positionals after --  (netdraw note add d -- '-> uplink').
   The written lines go to stdout, then check runs and prints its diagnostics (exit 0 once written).
   netdraw <noun> --help lists its verbs and flags. netdraw init creates the empty file to start from.`;
 export const JSON_OUT = `--json output:

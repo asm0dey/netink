@@ -46,7 +46,22 @@ test("missing match", () => {
 test("parse error refuses", () => {
   const r = run("vlan a\n", "add", ["b", "2"]);
   expect(r.ok).toBe(false);
-  if (!r.ok) expect(r.error).toBe("t.net has parse errors; fix them first");
+  if (!r.ok) {
+    expect(r.error).toStartWith("t.net has parse errors; fix them first: ");
+    expect(r.line).toBe(1);
+    expect(r.hint).toBe("run netdraw check");
+  }
+});
+test("an already-exists hint names only verbs the noun has", () => {
+  const router = NOUNS.find((n) => n.name === "router")!;
+  const r = run("device d\n  router\n", "add", [], {}, router, "d");
+  expect(r.ok).toBe(false);
+  if (!r.ok) {
+    expect(r.line).toBe(2);
+    expect(r.hint ?? "").not.toContain("set");
+  }
+  const v = run("vlan a 1\n", "add", ["a", "2"]);
+  if (!v.ok) expect(v.hint).toBe("use netdraw vlan set to change it");
 });
 test("--after places", () => {
   expect(ok(run("vlan a 1\nvlan b 2\n", "add", ["c", "3"], { after: "a" })).text).toBe(

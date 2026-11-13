@@ -168,3 +168,12 @@ test("replays the home example's device blocks", () => {
     expect(t).toBe(`device ${s.id}\n${printItems(s.items, 1).join("\n")}\n`);
   }
 });
+
+test("--no-<list flag> clears the list instead of crashing the printer", () => {
+  const D =
+    "device d\n  bridge br address 10.0.0.1/24\n    ports e1 tagged 10\n    radio w1 ssid a\n  vlan-iface v vlan 5 address 10.1.0.1/24\n";
+  expect(ok(run(D, "bridge", "set", "d", ["br"], { address: false }))).toContain("\n  bridge br\n");
+  expect(ok(run(D, "vlan-iface", "set", "d", ["v"], { address: false }))).toContain("\n  vlan-iface v vlan 5\n");
+  expect(ok(run(D, "ports", "set", "d/br", ["e1"], { tagged: false }))).toContain("\n    ports e1\n");
+  expect(ok(run(D, "radio", "set", "d/br", ["w1"], { ssid: false }))).toContain("\n    radio w1\n");
+});

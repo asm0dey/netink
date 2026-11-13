@@ -480,7 +480,7 @@ const strFlag = (name: string, help: string, complete?: Complete): Flag => ({
   help,
 });
 const IF_FLAGS = ["lan", "guest", "hotspot"];
-/** Apply the given flags to `o`: a string/number flag sets (or, cleared, deletes) its field; a boolean sets `true` or deletes. */
+/** Apply the given flags to `o`: a string/number flag sets (or, cleared, deletes or empties) its field; a boolean sets `true` or deletes. */
 function setFields(
   o: Record<string, unknown>,
   a: Args,
@@ -488,8 +488,11 @@ function setFields(
 ) {
   for (const [flag, field, conv] of specs) {
     const v = a.flags[flag];
-    if (v === false) delete o[field];
-    else if (v === true) o[field] = true;
+    if (v === false) {
+      if (Array.isArray(o[field]))
+        o[field] = []; // a list field always exists; the printer reads its length
+      else delete o[field];
+    } else if (v === true) o[field] = true;
     else if (typeof v === "string") o[field] = conv ? conv(v) : v;
   }
 }
@@ -612,7 +615,6 @@ const bridge: Noun = {
   apply(t, a) {
     if (t.kind !== "bridge") return [t];
     const b = { ...t } as Record<string, unknown>;
-    if (a.flags.address === false) b.addresses = [];
     setFields(b, a, [
       ["address", "addresses", addrs],
       ["filtering", "filtering"],
@@ -632,7 +634,6 @@ const ports = listNoun(
   ],
   (it, a) => {
     const o = it as unknown as Record<string, unknown>;
-    if (a.flags.tagged === false) o.tagged = [];
     setFields(o, a, [
       ["untagged", "untagged", vref],
       ["tagged", "tagged", (s) => csv(s).map(vref)],
@@ -648,7 +649,6 @@ const radio = listNoun(
   [strFlag("tag", "vlan tag"), strFlag("ssid", "ssids, comma-separated")],
   (it, a) => {
     const o = it as unknown as Record<string, unknown>;
-    if (a.flags.ssid === false) o.ssids = [];
     setFields(o, a, [
       ["tag", "tag", (s) => num(s, "tag")],
       ["ssid", "ssids", csv],
@@ -682,7 +682,6 @@ const vlanIface: Noun = {
     if (t.kind !== "vlan-iface") return [t];
     const v = { ...t } as Record<string, unknown>;
     if (a.flags.vlan === false) throw new Error("a vlan-iface always has a vlan");
-    if (a.flags.address === false) v.addresses = [];
     setFields(v, a, [
       ["vlan", "vlan", (s) => num(s, "vlan id")],
       ["on", "on", (s) => ident(s, "--on")],

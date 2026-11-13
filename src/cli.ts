@@ -46,7 +46,9 @@ function fail(
   };
   if (json) out(JSON.stringify(body));
   else {
-    err(`error: ${e.error}${e.hint ? ` (${e.hint})` : ""}`);
+    err(
+      `${body.file && body.line ? `${body.file}:${body.line}: ` : ""}error: ${e.error}${e.hint ? ` (${e.hint})` : ""}`,
+    );
     e.candidates?.forEach((c) => err(`${body.file}:${c.line}: ${c.text}`));
   }
   return code;

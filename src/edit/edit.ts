@@ -56,7 +56,13 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
     return { ok: false, error: "values cannot contain a newline" };
   const { stmts, diags, spans } = parseDsl(text, file);
   const err = diags.find((d) => d.level === "error");
-  if (err) return { ok: false, error: `${file} has parse errors; fix them first`, line: err.line };
+  if (err)
+    return {
+      ok: false,
+      error: `${file} has parse errors; fix them first: ${err.message}`,
+      line: err.line,
+      hint: "run netdraw check",
+    };
   const src = text.split(/\r?\n/);
   const sourceOf = (sp: Span) =>
     src
@@ -128,7 +134,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
         ok: false,
         error: `${noun.name} already exists`,
         line: spans.get(ms[0]!)!.line,
-        hint: `use netdraw ${noun.name} set to change it`,
+        ...(noun.verbs.includes("set") ? { hint: `use netdraw ${noun.name} set to change it` } : {}),
       };
     let at = end;
     for (const where of ["after", "before"] as const) {
