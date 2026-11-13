@@ -119,3 +119,27 @@ test("a use-tag radio chip is filled and outlined in its VLAN's colours", async 
   const f = (n: number) => String(Math.round(n * 10) / 10);
   expect(renderSvg(m, p)).toContain(`<rect x="${f(b.x)}" y="${f(b.y)}" width="${f(b.w)}" height="${f(b.h)}" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>`);
 });
+
+/** One guest lane and one allow arrow crossing at (100, 100); `laneVertical` swaps which of them is the vertical. */
+const crossing = (laneVertical: boolean): [Model, Placed] => {
+  const node = (id: string): MNode => ({ id, kind: "client", style: "box", label: id, sub: [], children: [], tier: 0 });
+  const H = [{ x: 0, y: 100 }, { x: 200, y: 100 }], V = [{ x: 100, y: 0 }, { x: 100, y: 200 }];
+  return [
+    { title: "T", nodes: ["a", "b", "c", "d"].map(node), links: [{ id: "l", from: "a", to: "b", lanes: ["guest"], line: 1 }],
+      arrows: [{ id: "x", from: "c", to: "d", kind: "allow" }], vlans: [{ name: "guest", ids: [50], color: "blue" }],
+      legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" }, jumps: "arc", hints: [], diags: [] },
+    { width: 300, height: 300, boxes: new Map(), links: [{ id: "l", points: laneVertical ? V : H }], arrows: [{ id: "x", points: laneVertical ? H : V }] },
+  ];
+};
+
+test("every jump is drawn on top of what it crosses: a white halo, then a solid arc in the jumping line's colour", () => {
+  for (const laneVertical of [false, true]) {
+    const svg = renderSvg(...crossing(laneVertical));
+    const w = laneVertical ? 2 : 3; // the jumping (horizontal) line: allow arrow 2 px, guest lane 3 px
+    const halo = svg.indexOf(`<path d="M95,100 A5,5 0 0 1 105,100" fill="none" stroke="#fff" stroke-width="${w + 4}"/>`);
+    const arc = svg.indexOf(`<path d="M95,100 A5,5 0 0 1 105,100" fill="none" stroke="#1565C0" stroke-width="${w}"/>`);
+    const lastLine = Math.max(svg.indexOf('stroke-dasharray="2 4"'), svg.indexOf('stroke-dasharray="7 5"'));
+    expect(halo).toBeGreaterThan(lastLine);
+    expect(arc).toBeGreaterThan(halo);
+  }
+});

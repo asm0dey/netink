@@ -33,30 +33,43 @@ export function lanesFor(points: P[], lanes: string[]): { lane: string; points: 
   return lanes.map((lane, i) => ({ lane, points: laneOffset(points, (i - (lanes.length - 1) / 2) * LANE_GAP) }));
 }
 
+type Crosser = { x: number; y1: number; y2: number };
+
+/** The jumps of one segment a→b: horizontal segments jump over vertical crossers strictly inside them, as `[from, to]` x runs. */
+function runsOf(a: P, b: P, crossers: Crosser[], r: number): [number, number][] {
+  if (Math.abs(a.y - b.y) >= 0.5 || Math.abs(a.x - b.x) <= 0.5) return [];
+  const dir = Math.sign(b.x - a.x);
+  const xs = crossers
+    .filter((c) => c.y1 < a.y - 3 && c.y2 > a.y + 3 && (c.x - a.x) * dir >= r + 3 && (b.x - c.x) * dir >= r + 3)
+    .map((c) => c.x)
+    .sort((p, q) => (p - q) * dir);
+  // crossers closer than 2r (a lane bundle) share one jump, stretched flat to span them all
+  const runs: [number, number][] = [];
+  for (const x of xs) {
+    const run = runs.at(-1);
+    if (run && (x - run[1]) * dir < 2 * r) run[1] = x;
+    else runs.push([x, x]);
+  }
+  return runs.map(([s0, s1]) => [s0 - r * dir, s1 + r * dir]);
+}
+
+const arc = (x0: number, x1: number, y: number, r: number, span: number) =>
+  `A${f(r + span / 2)},${f(r)} 0 0 ${x1 > x0 ? 1 : 0} ${f(x1)},${f(y)}`;
+
 /** SVG path `d` for a polyline; horizontal segments jump (arc or gap) over vertical crossers strictly inside them. */
-export function jumpPath(points: P[], crossers: { x: number; y1: number; y2: number }[], r: number, style: "arc" | "gap" | "none"): string {
+export function jumpPath(points: P[], crossers: Crosser[], r: number, style: "arc" | "gap" | "none"): string {
   let d = `M${f(points[0]!.x)},${f(points[0]!.y)}`;
   for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1]!, b = points[i]!;
-    if (style !== "none" && Math.abs(a.y - b.y) < 0.5 && Math.abs(a.x - b.x) > 0.5) {
-      const dir = Math.sign(b.x - a.x), y = f(a.y);
-      const xs = crossers
-        .filter((c) => c.y1 < a.y - 3 && c.y2 > a.y + 3 && (c.x - a.x) * dir >= r + 3 && (b.x - c.x) * dir >= r + 3)
-        .map((c) => c.x)
-        .sort((p, q) => (p - q) * dir);
-      // crossers closer than 2r (a lane bundle) share one jump, stretched flat to span them all
-      const runs: [number, number][] = [];
-      for (const x of xs) {
-        const run = runs.at(-1);
-        if (run && (x - run[1]) * dir < 2 * r) run[1] = x;
-        else runs.push([x, x]);
-      }
-      for (const [s0, s1] of runs) {
-        const [x0, x1] = [f(s0 - r * dir), f(s1 + r * dir)];
-        d += style === "arc" ? ` L${x0},${y} A${f(r + Math.abs(s1 - s0) / 2)},${f(r)} 0 0 ${dir > 0 ? 1 : 0} ${x1},${y}` : ` L${x0},${y} M${x1},${y}`;
-      }
-    }
+    const a = points[i - 1]!, b = points[i]!, y = f(a.y);
+    if (style !== "none") for (const [x0, x1] of runsOf(a, b, crossers, r))
+      d += style === "arc" ? ` L${f(x0)},${y} ${arc(x0, x1, a.y, r, Math.abs(x1 - x0) - 2 * r)}` : ` L${f(x0)},${y} M${f(x1)},${y}`;
     d += ` L${f(b.x)},${f(b.y)}`;
   }
   return d;
+}
+
+/** One `d` per arc jumpPath draws, for drawing the jumps again on top of everything they cross. */
+export function jumpArcs(points: P[], crossers: Crosser[], r: number): string[] {
+  return points.slice(1).flatMap((b, i) => runsOf(points[i]!, b, crossers, r)
+    .map(([x0, x1]) => `M${f(x0)},${f(b.y)} ${arc(x0, x1, b.y, r, Math.abs(x1 - x0) - 2 * r)}`));
 }

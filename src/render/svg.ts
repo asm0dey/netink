@@ -1,6 +1,6 @@
 import { textWidth } from "../layout/measure";
 import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
-import { f, jumpPath, lanesFor } from "./geometry";
+import { f, jumpArcs, jumpPath, lanesFor } from "./geometry";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
@@ -193,10 +193,16 @@ export function renderSvg(model: Model, placed: Placed): string {
     const a = l.points[i]!;
     return Math.abs(a.x - b.x) < 0.5 && Math.abs(a.y - b.y) > 0.5 ? [{ owner: l.owner, x: a.x, y1: Math.min(a.y, b.y), y2: Math.max(a.y, b.y) }] : [];
   }));
+  const crossers = (l: Line) => verticals.filter((v) => v.owner !== l.owner);
   const paths = sorted.map((l) => {
-    const d = jumpPath(l.points, verticals.filter((v) => v.owner !== l.owner), JUMP_R, model.jumps);
+    const d = jumpPath(l.points, crossers(l), JUMP_R, model.jumps);
     return `<path d="${d}" fill="none" ${strokeAttrs(lanes.get(l.lane)!)} stroke-linejoin="round"${markers(l.lane)}/>`;
   });
+  // Arcs again, above every line: a white halo cuts the crossed line, then a solid arc (a 10 px arc of a dashed or
+  // dotted line can fall into its gaps). Halos first, so one lane's halo never cuts a neighbouring lane's arc.
+  const arcs = model.jumps === "arc" ? sorted.flatMap((l) => jumpArcs(l.points, crossers(l), JUMP_R).map((d) => ({ d, s: lanes.get(l.lane)! }))) : [];
+  const bridges = [...arcs.map(({ d, s }) => `<path d="${d}" fill="none" stroke="#fff" stroke-width="${f(s.w + 4)}"/>`),
+    ...arcs.map(({ d, s }) => `<path d="${d}" fill="none" stroke="${s.stroke}" stroke-width="${f(s.w)}"/>`)];
 
   const labels: string[] = [];
   /** Middle of the longest segment: where a label without `labelAt` goes. */
@@ -260,6 +266,7 @@ export function renderSvg(model: Model, placed: Placed): string {
     ...(model.subtitle ? [text(40, 72, model.subtitle, 'class="s" font-size="14"')] : []),
     ...nodes.shapes,
     ...paths,
+    ...bridges,
     ...nodes.texts,
     ...labels,
     ...(legend ? [legend.svg] : []),
