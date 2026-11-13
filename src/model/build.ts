@@ -4,6 +4,7 @@ import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
 import { closest } from "./check";
 import { deriveArrows } from "./l3";
+import { collectRadios, hasRouter as routerRule, isRadio, placeCaps, wanRoutes as matchWanRoutes, type Radio } from "../rsc/translate";
 import type { DeviceFacts, Diag, MArrow, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 
 type Opts = { all?: boolean; file?: string };
@@ -11,8 +12,6 @@ type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type LinkStmt = Extract<Stmt, { kind: "link" }>;
 /** A resolved link endpoint. `dev` is set for ends inside an imported device. */
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
-/** One chip per bridge and VLAN tag: radios on a `use-tag` get their own chip, apart from the bridge's untagged ones. */
-type Radio = { id: string; bridge?: string; tag?: number; phys: string[]; ssids: string[]; ifaces: Iface[] };
 type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
   /** WAN member name → distance of the default route matched to it. */ wanRoutes: Map<string, number>;
   /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
@@ -26,72 +25,25 @@ const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: 
   ({ id, kind, style, label, sub, children: [], tier });
 const ID_RE = /^[a-z0-9_-]+$/;
 const HIDDEN_HINT = "unlinked ports on devices without a router are hidden; use --all";
-const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
-// shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
-const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
-const ipNum = (ip: string) => ip.split(".").reduce((a, o) => a * 256 + Number(o), 0);
-function inCidr(ip: string, cidr?: string): boolean {
-  if (!cidr || !/^\d+\.\d+\.\d+\.\d+$/.test(ip)) return false;
-  const [net, len] = cidr.split("/");
-  const size = 2 ** (32 - Number(len ?? 32));
-  return Math.floor(ipNum(ip) / size) === Math.floor(ipNum(net!) / size);
-}
 const leaves = (n: MNode): MNode[] => (n.children.length ? n.children.flatMap(leaves) : [n]);
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
-
-function collectRadios(id: string, f: DeviceFacts): Radio[] {
-  const out: Radio[] = [];
-  for (const i of f.ifaces) {
-    if (!isRadio(i) || i.name.startsWith("cap-") || (f.lists.WAN ?? []).includes(i.name)) continue;
-    let r = out.find((x) => x.bridge === i.bridge && x.tag === i.useTag);
-    if (!r) out.push((r = { id: `${id}/radio${i.bridge ? "-" + i.bridge : ""}${i.useTag !== undefined ? "-tag" + i.useTag : ""}`, bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), phys: [], ssids: [], ifaces: [] }));
-    r.ifaces.push(i);
-    if (!r.phys.includes(physOf(i.name))) r.phys.push(physOf(i.name));
-    if (i.ssid && !r.ssids.includes(i.ssid)) r.ssids.push(i.ssid);
-  }
-  return out;
-}
-
-/** CAPsMAN `cap-*` radios move to the imported device holding a radio with one of their MACs. */
-function placeCaps(devs: { id: string; f: DeviceFacts; radios: Radio[] }[], warn: (file: string, msg: string, hint: string) => void) {
-  for (const d of devs) {
-    const caps = new Map<string, Iface[]>();
-    for (const i of d.f.ifaces) if (isRadio(i) && i.name.startsWith("cap-")) caps.set(physOf(i.name), [...(caps.get(physOf(i.name)) ?? []), i]);
-    for (const [phys, members] of caps) {
-      const macs = members.flatMap((m) => [m.radioMac, m.mac]).filter((x): x is string => !!x).map((x) => x.toLowerCase());
-      const radio = devs.filter((o) => o !== d).flatMap((o) => o.radios)
-        .find((r) => r.ifaces.some((i) => [i.mac, i.radioMac].some((x) => x && macs.includes(x.toLowerCase()))));
-      if (!radio) { warn(d.f.file, `${d.id}: CAPsMAN radio ${phys} matches no imported device's radio MAC (${macs.join(", ")}); not drawn`, "import the CAP's export so the radio lands in its box"); continue; }
-      for (const m of members) if (m.ssid && !radio.ssids.includes(m.ssid)) radio.ssids.push(m.ssid);
-    }
-  }
-}
 
 function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]): Dev {
   const fallback = fallbackIn(vlans);
   const ref = new Map<string, string>(), ifaceOf = new Map<string, Iface>(), wanRoutes = new Map<string, number>();
-  const byName = new Map(f.ifaces.map((i) => [i.name, i]));
   const wan = f.lists.WAN ?? [];
   const lanIp = f.addresses.find((a) => (f.lists.LAN ?? []).includes(a.iface));
   const label = [id.toUpperCase(), f.model, lanIp?.cidr.split("/")[0], f.version && `RouterOS ${f.version}`].filter(Boolean).join(" · ");
   const node = mk(id, "device", "dev", label);
   const bridges = f.ifaces.filter((i) => i.type === "bridge" && !wan.includes(i.name));
   const addrOf = (n: string) => f.addresses.find((a) => a.iface === n)?.cidr;
-  const hasRouter = f.masqueradeOutLists.length > 0 || bridges.filter((b) => addrOf(b.name)).length > 1;
+  const hasRouter = routerRule(f);
   const add = (parent: MNode, n: MNode, i?: Iface) => { parent.children.push(n); if (i) { ref.set(i.name, n.id); ifaceOf.set(n.id, i); } };
 
   if (wan.length) {
     const g = mk(`${id}/wan`, "group", "wan", "WAN list", [], 1);
-    const defaults = f.routes.filter((r) => r.dst === "0.0.0.0/0").sort((a, b) => a.distance - b.distance);
-    const used = new Set<object>();
-    const routeFor = (i: Iface) => {
-      const sub = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.subnets ?? [];
-      return defaults.find((r) => !used.has(r) && (r.gateway === i.name || inCidr(r.gateway, addrOf(i.name)) || sub.some((c) => inCidr(r.gateway, c))));
-    };
-    const ifs = wan.map((n) => byName.get(n) ?? { name: n, type: "other" as const });
-    const routes = new Map(ifs.map((i) => { const r = routeFor(i); if (r) used.add(r); return [i, r] as const; }));
-    // shortcut: a WAN iface whose gateway is not in any known subnet takes the next unused default route by distance; upgrade if route→iface gets recorded in facts.
-    for (const i of ifs) if (!routes.get(i)) { const r = defaults.find((x) => !used.has(x)); if (r) { used.add(r); routes.set(i, r); } }
+    const matched = matchWanRoutes(f, vlans);
+    const ifs = matched.map((w) => w.iface), routes = new Map(matched.map((w) => [w.iface, w.route] as const));
     for (const i of ifs) {
       const r = routes.get(i), dhcp = f.dhcpClients.find((c) => c.iface === i.name);
       if (r) wanRoutes.set(i.name, r.distance);
