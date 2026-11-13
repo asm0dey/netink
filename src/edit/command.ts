@@ -5,8 +5,8 @@ import { NOUNS, type Args, type Noun, type Verb } from "./table";
 /** Parser settings the CLI and parseEditArgv share: values stay the strings typed (`--vlan 10` is "10", `010` keeps its zero). */
 export const base = (argv: string[]): Argv => yargs(argv).strict().exitProcess(false).version(false).wrap(null)
   .parserConfiguration({ "parse-numbers": false, "parse-positional-numbers": false })
-  .option("file", { type: "string", default: "./network.net", requiresArg: true, global: true })
-  .option("json", { type: "boolean", default: false, global: true });
+  .option("file", { type: "string", default: "./network.net", requiresArg: true, global: true, describe: "the DSL file" })
+  .option("json", { type: "boolean", default: false, global: true, describe: "machine-readable output on stdout (one JSON document)" });
 
 /** yargs's validation message in netdraw's words. */
 export function usageMessage(msg: string, argv: string[]): string {
@@ -23,7 +23,7 @@ export function usageMessage(msg: string, argv: string[]): string {
 
 export type OnEdit = (req: EditRequest, argv: Record<string, unknown>) => void | Promise<void>;
 /** A top-level command that shares its word with a noun (`import <file.rsc>` next to `import add`). */
-export type Plain = { cmd: string; builder: (y: Argv) => Argv; handler: (argv: Record<string, unknown>) => void | Promise<void> };
+export type Plain = { cmd: string; desc: string; builder: (y: Argv) => Argv; handler: (argv: Record<string, unknown>) => void | Promise<void> };
 
 const COMMON = ["after", "before", "select-text"];
 
@@ -63,7 +63,7 @@ function verbs(y: Argv, noun: Noun, onEdit: OnEdit): Argv {
 export function registerEditCommands(y: Argv, onEdit: OnEdit, plain: Record<string, Plain> = {}): Argv {
   for (const w of new Set(NOUNS.map((n) => n.name.split(" ")[0]!))) {
     const own = NOUNS.filter((n) => n.name.split(" ")[0] === w), p = plain[w];
-    y.command(p?.cmd ?? w, own.map((n) => n.help).join("\n"), (z: Argv): Argv => {
+    y.command(p?.cmd ?? w, [...(p ? [p.desc] : []), ...own.map((n) => n.help)].join("\n"), (z: Argv): Argv => {
       for (const n of own) {
         const sub = n.name.split(" ")[1];
         if (sub) z.command(sub, n.help, (s: Argv) => verbs(s, n, onEdit).demandCommand(1, `missing verb: ${n.verbs.join("|")}`));

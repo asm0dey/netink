@@ -49,47 +49,29 @@ strings are "..." with \\" and \\\\ escapes):
   Ids are [a-z0-9_-]+; child ids are parent/child (e.g. core/ether3, core/bridge).
   Paths in 'imports' are relative to the .net file.`;
 
-const HELP = `netdraw - render network diagrams from a DSL plus optional MikroTik .rsc exports.
-
-Usage:
-  netdraw render [--file f] [-o out.svg] [--all] [--json]
-      Write the SVG to -o, or to stdout without -o. Refuses (exit 1) when check reports errors; warnings do not block.
-      --all   include everything the model would otherwise hide as spare/unused.
-      --json  print {ok, output, width, height, warnings} (plus "svg" when no -o). On refusal: {ok:false, diags}.
-  netdraw check [--file f] [--json]
-      Exit 0 with no errors, 1 otherwise. Human output on stderr: file:line: level: message (hint).
-      --json  print {ok, diags} to stdout.
-  netdraw show [devices|links|vlans|<id>] [--file f] [--json]
-      Print the merged model slice; with <id>, that node subtree (or link/arrow). --json prints the raw objects.
-  netdraw import <file.rsc> [--as <id>] [--file f] [--json]
-      Print the device block for a router export, ready to paste into the .net file in place of its import.
-      With --file (default ./network.net) present, all its imports are translated together and the block of the one
-      resolving to <file.rsc> is printed; otherwise the .rsc is translated alone, id = --as or its basename.
-      --json  print {ok, stmt, diags}.
-  netdraw init [file]
-      Create an empty DSL file (default ./network.net); refuses (exit 1) if it exists.
-  netdraw completion
-      Print a shell completion script (zsh or bash, from $SHELL): netdraw completion >> ~/.zshrc
-      Completes commands, nouns, verbs, flags and the ids and vlan names in the --file.
-  netdraw --help | <command> --help
-
-Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
+const EPILOGUE = `Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
   Block nouns (wan, bridge, ports, ...) take the parent first: netdraw ports add core/bridge ether2,ether3 --untagged home.
   allow --in <device> edits the line inside that device's block. Lists are one comma-separated argument.
   --after <key> / --before <key> place a new statement next to a sibling (default: end of file or block);
   --select-text <s> picks one of several matches; --no-<flag> clears an optional value.
   The written lines go to stdout, then check runs and prints its diagnostics (exit 0 once written).
-  --json  print {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous.
-  netdraw <noun> --help lists its verbs and flags.
+  netdraw <noun> --help lists its verbs and flags. netdraw init creates the empty file to start from.
 
-Common options:
-  --file <f>   the DSL file (default ./network.net)
-  --json       machine-readable output on stdout only (one JSON document)
+--json output:
+  render  {ok, output, width, height, warnings} (plus "svg" when no -o); on refusal {ok:false, diags}
+  check   {ok, diags}
+  show    the raw model objects
+  import  {ok, stmt, diags}
+  editing {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous
 
 Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
 Errors in --json mode: {"error": string, "file": string, "line": number, "hint"?: string}; diagnostics use
 {"level": "error"|"warning", "file", "line", "message", "hint"?}.
-No command prompts interactively.`;
+No command prompts interactively.
+
+Shell completion: netdraw completion >> ~/.zshrc  (zsh or bash, from $SHELL; completes commands, nouns, verbs, flags and the ids and vlan names in the --file)
+
+${GRAMMAR}`;
 
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
 const err = (s: string) => process.stderr.write(s + "\n");
@@ -180,26 +162,28 @@ export function cli(argv: string[]): Argv {
   };
   const all = { type: "boolean", describe: "include spare/unused parts" } as const;
   const y = base(argv)
-    .scriptName("netdraw").usage(HELP).epilogue(GRAMMAR).alias("h", "help")
+    .scriptName("netdraw").usage("netdraw - render network diagrams from a DSL plus optional MikroTik .rsc exports.\n\nUsage: netdraw <command> [options]")
+    .epilogue(EPILOGUE).alias("h", "help").wrap(Math.min(130, process.stdout.columns ?? 120))
     .demandCommand(1, "missing command")
     .fail((msg, e) => {
       msg = usageMessage(msg || e?.message || "usage error", argv);
-      if (msg === "missing command") err(HELP);
+      if (msg === "missing command") y.showHelp((t) => err(t));
       exit = fail(json, 2, { error: msg, hint: "run netdraw --help" });
       throw new Usage(msg);
     })
     // yargs's script calls back with `--get-yargs-completions <words>`; the first word is the program name
-    .completion("completion", "print a shell completion script", () => {
+    .completion("completion", "print a shell completion script (zsh or bash, from $SHELL)", () => {
       const w = argv.slice(argv.indexOf("--get-yargs-completions") + 1);
       return complete(w.length > 1 && !COMPLETE_FIRST.has(w[0]!) ? w.slice(1) : w);
     })
-    .command("render", false, (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file" }), go((a) => render(a, "render")))
-    .command("check", false, (y) => y.option("all", all), go((a) => render(a, "check")))
-    .command("show [what]", false, (y) => y.positional("what", { type: "string" }).option("all", all), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
-    .command("init [path]", false, (y) => y.positional("path", { type: "string" }), go((a) => init(a.path ?? a.file, a.json)));
+    .command("render", "write the SVG to -o, or to stdout; refuses (exit 1) when check reports errors, warnings do not block", (y) => y.option("all", all).option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" }), go((a) => render(a, "render")))
+    .command("check", "exit 0 with no errors, 1 otherwise; diagnostics file:line: level: message (hint) on stderr", (y) => y.option("all", all), go((a) => render(a, "check")))
+    .command("show [what]", "print the merged model slice: devices, links, vlans, or one <id> (node subtree, link or arrow)", (y) => y.positional("what", { type: "string", describe: "devices | links | vlans | an id" }).option("all", all), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
+    .command("init [path]", "create an empty DSL file (default ./network.net); exit 1 if it exists", (y) => y.positional("path", { type: "string", describe: "the file to create" }), go((a) => init(a.path ?? a.file, a.json)));
   return registerEditCommands(y, (req, a) => go((x) => editCmd(req, x.file, x.json))(a), {
     import: {
       cmd: "import [rsc]",
+      desc: "print the device block for a router .rsc export, ready to paste in place of its import",
       builder: (y) => y.option("as", { type: "string", requiresArg: true, describe: "the id of the printed device" }),
       handler: go((a) => importCmd(a.rsc, a.as, a.file, a.json)),
     },
