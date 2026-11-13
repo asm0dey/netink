@@ -345,8 +345,13 @@ const NESTED = ["ports", "vlan-iface", "radio"];
 /** Consecutive endpoint pairs of a chain. */
 const pairs = (path: Endpoint[]): Endpoint[][] => path.slice(1).map((e, i) => [path[i]!, e]);
 
-export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Diag[] } {
+/** 1-based source lines of a statement: `line` first, `head` last of its own text, `end` last incl. indented children. */
+export type Span = { line: number; head: number; end: number };
+
+export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Diag[]; spans: Map<Stmt | DevItem, Span> } {
   const stmts: Stmt[] = [];
+  const spans = new Map<Stmt | DevItem, Span>();
+  let devSpan: Span | undefined, bridgeSpan: Span | undefined;
   const diags: Diag[] = [];
   const lines = text.split(/\r?\n/);
   // the last level-0 device's item list, and its last level-1 bridge
@@ -358,14 +363,17 @@ export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Di
     // shortcut: a comment-only line after a trailing comma ends the continuation (it reads as empty), upgrade if that bites
     while (src.endsWith(",") && n + 1 < lines.length) src += " " + stripComment(lines[++n]!).trim();
     if (!src.trim()) continue;
+    const head = n + 1;
     try {
       const c = new Cur(tokenize(src));
       const kw = c.word("keyword");
       if (!lead) {
-        dev = bridge = undefined;
+        dev = bridge = devSpan = bridgeSpan = undefined;
         const out = parseLine(kw, c, line);
+        const sp: Span = { line, head, end: head };
+        for (const o of out) spans.set(o, sp);
         const last = out[out.length - 1];
-        if (last?.kind === "node" && last.type === "device") dev = last;
+        if (last?.kind === "node" && last.type === "device") { dev = last; devSpan = sp; }
         stmts.push(...out);
         continue;
       }
@@ -378,15 +386,20 @@ export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Di
         const it = parseItem(kw, c, line);
         (dev.items ??= []).push(it);
         bridge = it.kind === "bridge" ? it : undefined;
+        spans.set(it, bridgeSpan = { line, head, end: head });
+        devSpan!.end = head;
       } else {
         if (!bridge) throw new DslError(`${kw} is indented under something that is not a bridge`, "only bridge lines take indented children");
         if (!NESTED.includes(kw)) throw new DslError(`${kw} cannot be inside a bridge`, "a bridge holds ports, vlan-iface and radio lines");
-        bridge.items.push(parseItem(kw, c, line));
+        const it = parseItem(kw, c, line);
+        bridge.items.push(it);
+        spans.set(it, { line, head, end: head });
+        bridgeSpan!.end = devSpan!.end = head;
       }
     } catch (e) {
       if (!(e instanceof DslError)) throw e;
       diags.push({ level: "error", file, line, message: e.message, ...(e.hint ? { hint: e.hint } : {}) });
     }
   }
-  return { stmts, diags };
+  return { stmts, diags, spans };
 }

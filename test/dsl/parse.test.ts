@@ -170,3 +170,26 @@ test("comment and blank lines inside a block keep the block open", () => {
   const b = stmts[0]!.kind === "node" && stmts[0]!.items![0]!;
   expect(b && b.kind === "bridge" && b.items.length).toBe(2);
 });
+
+const spanOf = (t: string) => { const r = parseDsl(t, "x.net"); return { ...r, sp: (o: any) => r.spans.get(o) }; };
+
+test("spans cover continuations", () => {
+  const r = spanOf("imports rsc a.rsc as a,\n  b.rsc as b\n");
+  expect(r.stmts.length).toBe(2);
+  for (const s of r.stmts) expect(r.sp(s)).toEqual({ line: 1, head: 2, end: 2 });
+});
+
+test("device span covers block", () => {
+  const r = spanOf("device d\n  bridge br\n    ports e1\n  # c\n  lease 10.0.0.1\nvlan x 1\n");
+  const d: any = r.stmts[0];
+  expect(r.sp(d)).toEqual({ line: 1, head: 1, end: 5 });
+  expect(r.sp(d.items[0])).toEqual({ line: 2, head: 2, end: 3 });
+  expect(r.sp(d.items[0].items[0])).toEqual({ line: 3, head: 3, end: 3 });
+  expect(r.sp(d.items[1])).toEqual({ line: 5, head: 5, end: 5 });
+  expect(r.sp(r.stmts[1])).toEqual({ line: 6, head: 6, end: 6 });
+});
+
+test("trailing comment line after block is outside it", () => {
+  const r = spanOf("device d\n  router\n# x\n");
+  expect(r.sp(r.stmts[0])?.end).toBe(2);
+});
