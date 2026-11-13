@@ -162,3 +162,21 @@ test("--help prints the grammar", () => {
   expect(r.out).toContain("netdraw render");
   expect(r.out.toLowerCase()).toContain("ids are [a-z0-9_-]+");
 });
+
+test("options only, no command, exits 2", () => {
+  const r = run("--json");
+  expect(r.code).toBe(2);
+  expect(JSON.parse(r.out)).toMatchObject({ error: "missing command", hint: "run netdraw --help" });
+  expect(run("--file", HOME).code).toBe(2);
+});
+test("unknown command and flag messages", () => {
+  expect(JSON.parse(run("bogus", "--json").out).error).toBe("unknown command bogus");
+  expect(JSON.parse(run("check", "--frob", "--json").out).error).toBe("unknown flag --frob");
+  expect(JSON.parse(run("check", "--frob", "--zap", "--json").out).error).toBe("unknown flags --frob, --zap");
+  expect(JSON.parse(run("render", "extra", "--json").out).error).toBe("unexpected argument extra");
+});
+test("import without a path says what is missing", () => {
+  const r = run("import", "--json");
+  expect(r.code).toBe(2);
+  expect(JSON.parse(r.out).error).toBe("missing argument: <file.rsc>");
+});

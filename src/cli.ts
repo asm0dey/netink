@@ -163,14 +163,26 @@ export function cli(argv: string[]): Argv {
     .option("as", { type: "string", requiresArg: true, global: true })
     .option("all", { type: "boolean", global: true })
     .option("o", { type: "string", requiresArg: true, global: true })
+    .demandCommand(1)
     .fail((msg, e) => {
-      exit = fail(json, 2, { error: (msg || e?.message || "usage error").replace(/^Unknown argument: /, "unexpected argument "), hint: "run netdraw --help" });
+      msg = msg || e?.message || "usage error";
+      let m: RegExpExecArray | null;
+      if (msg.startsWith("Not enough non-option arguments")) { err(HELP); msg = "missing command"; }
+      else if ((m = /^Unknown arguments?: (.*)$/.exec(msg))) {
+        const names = m[1]!.split(", ");
+        const isFlag = (n: string) => argv.some((x) => x === `--${n}` || x === `-${n}` || x.startsWith(`--${n}=`));
+        const flags = names.filter(isFlag);
+        const first = argv.find((x) => !x.startsWith("-"));
+        msg = flags.length ? `unknown flag${flags.length > 1 ? "s" : ""} ${flags.map((n) => (n.length > 1 ? "--" : "-") + n).join(", ")}`
+          : names[0] === first ? `unknown command ${first}` : `unexpected argument ${names[0]}`;
+      }
+      exit = fail(json, 2, { error: msg, hint: "run netdraw --help" });
       throw new Usage(msg);
     })
     .command("render", false, {}, go((a) => render(a, "render")))
     .command("check", false, {}, go((a) => render(a, "check")))
     .command("show [what]", false, (y) => y.positional("what", { type: "string" }), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
-    .command("import <rsc>", false, (y) => y.positional("rsc", { type: "string" }), go((a) => importCmd(a.rsc, a.as, a.file, a.json)));
+    .command("import [rsc]", false, (y) => y.positional("rsc", { type: "string" }), go((a) => importCmd(a.rsc, a.as, a.file, a.json)));
 }
 
 function withModel(a: Args, f: (m: Model) => number | Promise<number>): number | Promise<number> {
@@ -218,11 +230,7 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
 }
 
 async function main(argv: string[]): Promise<number> {
-  const json = argv.includes("--json");
-  const cmd = argv[0];
-  if (cmd === undefined) { err(HELP); return fail(json, 2, { error: "missing command", hint: "run netdraw --help" }); }
-  if (cmd === "help") argv = ["--help"];
-  else if (!cmd.startsWith("-") && !["render", "check", "show", "import"].includes(cmd)) return fail(json, 2, { error: `unknown command ${cmd}`, hint: "run netdraw --help" });
+  if (argv[0] === "help") argv = ["--help"];
   exit = 0; crash = undefined;
   try { await cli(argv).parseAsync(); }
   catch (e) { if (!(e instanceof Usage)) throw e; }
