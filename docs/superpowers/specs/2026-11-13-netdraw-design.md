@@ -229,6 +229,26 @@ netdraw render [-o out.svg] [--view ...] [--only ...] [--site ...]
    internals, designed together with the owner after milestone 1. Every
    fact the importer produces must have a DSL spelling. That keeps "DSL alone
    is sufficient" true for non-MikroTik gear.
+6. **CLI parity (owner request, 2026-11-13):** everything the DSL can express,
+   including the device-internals statements from item 5, can be added,
+   changed and removed through a CLI command. Each command writes the DSL file
+   immediately: it keeps comments and order, has no separate save step, and
+   holds no hidden state. Tests:
+   - rebuild `examples/home/network.net` from an empty file using only CLI
+     commands, and check that it parses to the same statements as the
+     hand-written file;
+   - edit a hand-written file via the CLI, and check that its comments and
+     ordering survive;
+   - a table test fails when a DSL statement kind has no command.
+7. **Documentation (owner request, 2026-11-13):**
+   - `docs/dsl.md`: every statement, its grammar and options, the inference
+     rules (VLAN lanes, untagged-only ends, chain labels, tiers, lease
+     opt-in), and a complete worked example.
+   - `docs/cli.md`: every command and flag, the `--json` output shapes, the
+     error shape, exit codes, and which DSL line each command writes.
+   - `netdraw --help` and `netdraw help dsl` print the same reference text.
+   - Tests fail when a DSL keyword or CLI command is missing from the docs.
+     Every example in the docs is executed by the test suite.
 
 ## Constraints and project conventions
 
