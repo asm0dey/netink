@@ -96,3 +96,28 @@ test("render --json reports the SVG's own size, legend included", () => {
 test("help lists the named colours", () => {
   expect(run("--help").out).toMatch(/colors: green, blue, orange, .*cyan/);
 });
+
+test("import prints a parseable core block", async () => {
+  const { parseDsl } = await import("./../src/dsl/parse");
+  const r = run("import", "examples/home/core.rsc", "--file", HOME);
+  expect(r.code).toBe(0);
+  expect(r.out.startsWith('device core model "hAP ax3" os "RouterOS 7.25.1"')).toBe(true);
+  expect(parseDsl(r.out, "x").diags).toEqual([]);
+});
+test("import without an argument is exit 2", () => {
+  expect(run("import").code).toBe(2);
+});
+test("ejected blocks replace their imports", async () => {
+  const { loadModel } = await import("./../src/model/build");
+  const { layout } = await import("./../src/layout/elk");
+  const { renderSvg } = await import("./../src/render/svg");
+  const blocks = ["core", "ap1", "ap2", "lte"].map((n) => run("import", `examples/home/${n}.rsc`, "--file", HOME).out).join("");
+  const lines = readFileSync(HOME, "utf8").split("\n");
+  const i = lines.findIndex((l) => l.startsWith("imports"));
+  const ej = join(dir, "ejected.net");
+  writeFileSync(ej, [...lines.slice(0, i), blocks, ...lines.slice(i + 2)].join("\n"));
+  const strip = (x: unknown): unknown => JSON.parse(JSON.stringify(x, (k, v) => (k === "line" || k === "file" || k === "diags" ? undefined : v)));
+  const a = loadModel(HOME), b = loadModel(ej);
+  expect(strip(b)).toEqual(strip(a));
+  expect(renderSvg(b, await layout(b))).toBe(renderSvg(a, await layout(a)));
+});

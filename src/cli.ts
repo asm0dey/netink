@@ -1,11 +1,16 @@
 #!/usr/bin/env bun
 import { parseArgs } from "node:util";
-import { existsSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { loadModel } from "./model/build";
+import { parseDsl } from "./dsl/parse";
+import { printStmts } from "./dsl/print";
+import { importRsc } from "./rsc/import";
+import { translate } from "./rsc/translate";
 import { checkModel } from "./model/check";
 import { layout } from "./layout/elk";
 import { NAMED, renderSvg } from "./render/svg";
-import type { Diag, MNode, Model } from "./types";
+import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
 
 const GRAMMAR = `DSL (line-oriented; '#' to end of line is a comment unless inside quotes; a line ending in ',' continues on the next line;
 strings are "..." with \\" and \\\\ escapes):
@@ -50,6 +55,11 @@ Usage:
       --json  print {ok, diags} to stdout.
   netdraw show [devices|links|vlans|<id>] [--file f] [--json]
       Print the merged model slice; with <id>, that node subtree (or link/arrow). --json prints the raw objects.
+  netdraw import <file.rsc> [--as <id>] [--file f] [--json]
+      Print the device block for a router export, ready to paste into the .net file in place of its import.
+      With --file (default ./network.net) present, all its imports are translated together and the block of the one
+      resolving to <file.rsc> is printed; otherwise the .rsc is translated alone, id = --as or its basename.
+      --json  print {ok, stmt}.
   netdraw --help | <command> --help
 
 Common options:
@@ -64,7 +74,7 @@ No command prompts interactively. Editing commands come in a later version.
 ${GRAMMAR}
 `;
 
-const OPTS = { file: { type: "string" }, json: { type: "boolean" }, all: { type: "boolean" }, o: { type: "string" }, help: { type: "boolean", short: "h" } } as const;
+const OPTS = { as: { type: "string" }, file: { type: "string" }, json: { type: "boolean" }, all: { type: "boolean" }, o: { type: "string" }, help: { type: "boolean", short: "h" } } as const;
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
 const err = (s: string) => process.stderr.write(s + "\n");
 const fmt = (d: Diag) => `${d.file}:${d.line}: ${d.level}: ${d.message}${d.hint ? ` (${d.hint})` : ""}`;
@@ -105,17 +115,50 @@ function show(model: Model, what: string | undefined, json: boolean, file: strin
   return 0;
 }
 
+function importCmd(rsc: string | undefined, as: string | undefined, file: string, json: boolean): number {
+  if (!rsc) return fail(json, 2, { error: "missing argument: <file.rsc>", hint: "run netdraw --help" });
+  const read = (p: string) => { try { return readFileSync(p, "utf8"); } catch { return undefined; } };
+  const abs = resolve(rsc);
+  const net = existsSync(file) ? parseDsl(readFileSync(file, "utf8"), file).stmts : [];
+  const vlans: VlanDef[] = net.flatMap((v) => (v.kind === "vlan" ? [{ name: v.name, ids: v.ids, color: v.color ?? "grey", subnets: v.subnets }] : []));
+  const devs: { id: string; line: number; f: DeviceFacts }[] = [];
+  let target = -1;
+  for (const s of net) {
+    if (s.kind !== "import") continue;
+    const path = isAbsolute(s.file) ? s.file : join(dirname(file), s.file);
+    const text = read(path);
+    if (text === undefined) continue; // an unreadable sibling only costs its CAPsMAN radios
+    if (resolve(path) === abs && target < 0) target = devs.length;
+    devs.push({ id: s.as, line: s.line, f: importRsc(text, path, s.as) });
+  }
+  if (target < 0) {
+    const text = read(rsc);
+    if (text === undefined) return fail(json, 1, { error: `cannot read ${rsc}`, file: rsc, hint: "check the path" });
+    const id = as ?? basename(rsc).replace(/\.rsc$/, "");
+    devs.length = 0;
+    devs.push({ id, line: 0, f: importRsc(text, rsc, id) });
+    target = 0;
+  }
+  const t = translate(devs, vlans);
+  const stmt = { ...t.stmts[target]!, ...(as ? { id: as } : {}) };
+  if (json) out(JSON.stringify({ ok: true, stmt }));
+  else { t.diags.forEach((d) => err(fmt(d))); out(printStmts([stmt])); }
+  return 0;
+}
+
 async function main(argv: string[]): Promise<number> {
   const json = argv.includes("--json");
   const [cmd, ...rest] = argv;
   if (cmd === undefined) { err(HELP); return fail(json, 2, { error: "missing command", hint: "run netdraw --help" }); }
   if (cmd === "--help" || cmd === "-h" || cmd === "help") { out(HELP); return 0; }
-  if (!["render", "check", "show"].includes(cmd)) return fail(json, 2, { error: `unknown command ${cmd}`, hint: "run netdraw --help" });
+  if (!["render", "check", "show", "import"].includes(cmd)) return fail(json, 2, { error: `unknown command ${cmd}`, hint: "run netdraw --help" });
   let v, positionals;
   try { ({ values: v, positionals } = parseArgs({ args: rest, options: OPTS, allowPositionals: true, strict: true })); }
   catch (e) { return fail(json, 2, { error: (e as Error).message.replace(/\s*If you want to use it as a positional.*$/, ""), hint: "run netdraw --help" }); }
   if (v.help) { out(HELP); return 0; }
+  if (cmd === "import") return importCmd(positionals[0], v.as, v.file ?? "./network.net", json);
   if (cmd !== "show" && positionals.length) return fail(json, 2, { error: `unexpected argument ${positionals[0]}`, hint: "run netdraw --help" });
+  if (cmd !== "import" && v.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
   if (positionals.length > 1) return fail(json, 2, { error: `unexpected argument ${positionals[1]}`, hint: "run netdraw --help" });
   const file = v.file ?? "./network.net";
   if (!existsSync(file)) return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file or create ./network.net" });
