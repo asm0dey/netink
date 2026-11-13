@@ -9,7 +9,9 @@ export const JUMP_HALO_MAX_W = 12;
 export const f = (n: number): string => String(Math.round(n * 10) / 10 + 0);
 
 const normal = (a: P, b: P): P => {
-  const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy);
+  const dx = b.x - a.x,
+    dy = b.y - a.y,
+    len = Math.hypot(dx, dy);
   return len ? { x: -dy / len, y: dx / len } : { x: 0, y: 0 };
 };
 
@@ -21,7 +23,8 @@ export function laneOffset(points: P[], d: number): P[] {
   return points.map((p, i) => {
     const nIn = i > 0 ? normal(points[i - 1]!, p) : undefined;
     const nOut = i < points.length - 1 ? normal(p, points[i + 1]!) : undefined;
-    const a = nIn && (nIn.x || nIn.y) ? nIn : nOut!, b = nOut && (nOut.x || nOut.y) ? nOut : a;
+    const a = nIn && (nIn.x || nIn.y) ? nIn : nOut!,
+      b = nOut && (nOut.x || nOut.y) ? nOut : a;
     const k = 1 + a.x * b.x + a.y * b.y;
     // near-reversal: the mitre would shoot off, fall back to the incoming normal
     const [mx, my] = k < 0.2 ? [a.x, a.y] : [(a.x + b.x) / k, (a.y + b.y) / k];
@@ -63,9 +66,15 @@ const arc = (x0: number, x1: number, y: number, r: number, span: number) =>
 export function jumpPath(points: P[], crossers: Crosser[], r: number, style: "arc" | "gap" | "none"): string {
   let d = `M${f(points[0]!.x)},${f(points[0]!.y)}`;
   for (let i = 1; i < points.length; i++) {
-    const a = points[i - 1]!, b = points[i]!, y = f(a.y);
-    if (style !== "none") for (const [x0, x1] of runsOf(a, b, crossers, r))
-      d += style === "arc" ? ` L${f(x0)},${y} ${arc(x0, x1, a.y, r, Math.abs(x1 - x0) - 2 * r)}` : ` L${f(x0)},${y} M${f(x1)},${y}`;
+    const a = points[i - 1]!,
+      b = points[i]!,
+      y = f(a.y);
+    if (style !== "none")
+      for (const [x0, x1] of runsOf(a, b, crossers, r))
+        d +=
+          style === "arc"
+            ? ` L${f(x0)},${y} ${arc(x0, x1, a.y, r, Math.abs(x1 - x0) - 2 * r)}`
+            : ` L${f(x0)},${y} M${f(x1)},${y}`;
     d += ` L${f(b.x)},${f(b.y)}`;
   }
   return d;
@@ -73,6 +82,11 @@ export function jumpPath(points: P[], crossers: Crosser[], r: number, style: "ar
 
 /** One `d` per arc jumpPath draws, for drawing the jumps again on top of everything they cross. */
 export function jumpArcs(points: P[], crossers: Crosser[], r: number): string[] {
-  return points.slice(1).flatMap((b, i) => runsOf(points[i]!, b, crossers, r)
-    .map(([x0, x1]) => `M${f(x0)},${f(b.y)} ${arc(x0, x1, b.y, r, Math.abs(x1 - x0) - 2 * r)}`));
+  return points
+    .slice(1)
+    .flatMap((b, i) =>
+      runsOf(points[i]!, b, crossers, r).map(
+        ([x0, x1]) => `M${f(x0)},${f(b.y)} ${arc(x0, x1, b.y, r, Math.abs(x1 - x0) - 2 * r)}`,
+      ),
+    );
 }

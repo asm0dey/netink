@@ -13,7 +13,8 @@ function v6(s: string): bigint | undefined {
   const halves = s.split("::");
   if (halves.length > 2) return undefined;
   const groups = (h: string) => (h === "" ? [] : h.split(":"));
-  const head = groups(halves[0]!), tail = halves.length === 2 ? groups(halves[1]!) : [];
+  const head = groups(halves[0]!),
+    tail = halves.length === 2 ? groups(halves[1]!) : [];
   const fill = 8 - head.length - tail.length;
   if (halves.length === 1 ? fill !== 0 : fill < 1) return undefined;
   const all = [...head, ...Array<string>(halves.length === 2 ? fill : 0).fill("0"), ...tail];
@@ -24,7 +25,8 @@ function v6(s: string): bigint | undefined {
 function parse(s: string): Addr | undefined {
   const [a, l, ...rest] = s.split("/");
   if (a === undefined || rest.length) return undefined;
-  const v: 4 | 6 = a.includes(":") ? 6 : 4, bits = v === 4 ? 32 : 128;
+  const v: 4 | 6 = a.includes(":") ? 6 : 4,
+    bits = v === 4 ? 32 : 128;
   const addr = v === 4 ? v4(a) : v6(a);
   if (addr === undefined) return undefined;
   if (l === undefined) return { v, addr, len: bits };
@@ -41,11 +43,15 @@ export function parseCidr(s: string): Cidr | undefined {
 
 /** Does `addr` (with or without `/len`) fall inside `prefix`? Different families never match. */
 export function inPrefix(addr: string, prefix: string): boolean {
-  const a = parse(addr), p = parseCidr(prefix);
+  const a = parse(addr),
+    p = parseCidr(prefix);
   if (!a || !p || a.v !== p.v) return false;
   const shift = BigInt((p.v === 4 ? 32 : 128) - p.len);
   return a.addr >> shift === p.net >> shift;
 }
 
 /** Family-tagged address value without the prefix length, for equality. */
-export const addrKey = (s: string): string | undefined => { const a = parse(s); return a && `${a.v}:${a.addr}`; };
+export const addrKey = (s: string): string | undefined => {
+  const a = parse(s);
+  return a && `${a.v}:${a.addr}`;
+};

@@ -63,7 +63,11 @@ test("usage errors exit 2", () => {
 test("missing file", () => {
   const r = run("check", "--file", join(dir, "none.net"), "--json");
   expect(r.code).toBe(1);
-  expect(JSON.parse(r.out)).toMatchObject({ error: `cannot read ${join(dir, "none.net")}`, line: 0, hint: "pass --file or create ./network.net" });
+  expect(JSON.parse(r.out)).toMatchObject({
+    error: `cannot read ${join(dir, "none.net")}`,
+    line: 0,
+    hint: "pass --file or create ./network.net",
+  });
 });
 test("help", () => {
   const r = run("--help");
@@ -74,8 +78,14 @@ test("help", () => {
 test("an unexpected throw is reported in the error shape, never as a stack trace", () => {
   // inject a crash outside every command's own error handling: the check result fails to serialise
   const pre = join(dir, "throw.ts");
-  writeFileSync(pre, `const s = JSON.stringify; JSON.stringify = ((v: any, ...r: any[]) => { if (v && typeof v === "object" && "diags" in v) throw new Error("injected\\nsecond line"); return s(v, ...r); }) as typeof JSON.stringify;\n`);
-  const go = (...a: string[]) => { const r = Bun.spawnSync(["bun", "--preload", pre, "src/cli.ts", ...a]); return { code: r.exitCode, out: r.stdout.toString(), err: r.stderr.toString() }; };
+  writeFileSync(
+    pre,
+    `const s = JSON.stringify; JSON.stringify = ((v: any, ...r: any[]) => { if (v && typeof v === "object" && "diags" in v) throw new Error("injected\\nsecond line"); return s(v, ...r); }) as typeof JSON.stringify;\n`,
+  );
+  const go = (...a: string[]) => {
+    const r = Bun.spawnSync(["bun", "--preload", pre, "src/cli.ts", ...a]);
+    return { code: r.exitCode, out: r.stdout.toString(), err: r.stderr.toString() };
+  };
   const j = go("check", "--file", HOME, "--json");
   expect(j.code).toBe(1);
   expect(JSON.parse(j.out)).toMatchObject({ error: "internal error: injected", file: HOME, line: 0 });
@@ -111,13 +121,17 @@ test("ejected blocks replace their imports", async () => {
   const { loadModel } = await import("../src/load");
   const { layout } = await import("./../src/layout/elk");
   const { renderSvg } = await import("./../src/render/svg");
-  const blocks = ["core", "ap1", "ap2", "lte"].map((n) => run("import", `examples/home/${n}.rsc`, "--file", HOME).out).join("");
+  const blocks = ["core", "ap1", "ap2", "lte"]
+    .map((n) => run("import", `examples/home/${n}.rsc`, "--file", HOME).out)
+    .join("");
   const lines = readFileSync(HOME, "utf8").split("\n");
   const i = lines.findIndex((l) => l.startsWith("imports"));
   const ej = join(dir, "ejected.net");
   writeFileSync(ej, [...lines.slice(0, i), blocks, ...lines.slice(i + 2)].join("\n"));
-  const strip = (x: unknown): unknown => JSON.parse(JSON.stringify(x, (k, v) => (k === "line" || k === "file" || k === "diags" ? undefined : v)));
-  const a = loadModel(HOME), b = loadModel(ej);
+  const strip = (x: unknown): unknown =>
+    JSON.parse(JSON.stringify(x, (k, v) => (k === "line" || k === "file" || k === "diags" ? undefined : v)));
+  const a = loadModel(HOME),
+    b = loadModel(ej);
   expect(strip(b)).toEqual(strip(a));
   expect(renderSvg(b, await layout(b))).toBe(renderSvg(a, await layout(a)));
 });
@@ -136,7 +150,9 @@ test("import --as renames the printed block", () => {
   expect(run("import", "examples/home/core.rsc", "--as", "gw", "--file", HOME).out.startsWith("device gw ")).toBe(true);
 });
 test("import translates alone without the .net file or when the .rsc is not among its imports", () => {
-  expect(run("import", "examples/home/core.rsc", "--file", join(dir, "none.net")).out.startsWith("device core ")).toBe(true);
+  expect(run("import", "examples/home/core.rsc", "--file", join(dir, "none.net")).out.startsWith("device core ")).toBe(
+    true,
+  );
   const x = join(dir, "x.rsc");
   writeFileSync(x, readFileSync("examples/home/core.rsc"));
   const r = run("import", x, "--file", HOME);
@@ -146,7 +162,12 @@ test("import translates alone without the .net file or when the .rsc is not amon
 test("import of a missing .rsc is exit 1 with the standard error shape", () => {
   const r = run("import", join(dir, "nope.rsc"), "--file", HOME, "--json");
   expect(r.code).toBe(1);
-  expect(JSON.parse(r.out)).toEqual({ error: `cannot read ${join(dir, "nope.rsc")}`, file: join(dir, "nope.rsc"), line: 0, hint: "check the path" });
+  expect(JSON.parse(r.out)).toEqual({
+    error: `cannot read ${join(dir, "nope.rsc")}`,
+    file: join(dir, "nope.rsc"),
+    line: 0,
+    hint: "check the path",
+  });
 });
 
 test("unknown flag exits 2 with json error", () => {
@@ -217,17 +238,28 @@ test("edit with missing import still writes", () => {
   expect(r.code).toBe(0);
   expect(readFileSync(f, "utf8")).toBe("imports rsc gone.rsc as g\nvlan a 10\n");
   const j = JSON.parse(r.out);
-  expect(j.diags.some((d: { level: string; message: string }) => d.level === "error" && d.message.includes("gone.rsc"))).toBe(true);
+  expect(
+    j.diags.some((d: { level: string; message: string }) => d.level === "error" && d.message.includes("gone.rsc")),
+  ).toBe(true);
   expect(run("vlan", "add", "b", "20", "--file", f).err).toContain("gone.rsc");
 });
 test("usage errors exit 2, file untouched", () => {
   const f = fresh("usage.net", "vlan b 20\n");
-  for (const a of [["frob", "add", "x"], ["vlan", "add", "a", "10", "--colour", "red"], ["vlan", "add", "a", "10", "--near", "b"], ["vlan", "add"], ["vlan"], ["vlan", "add", "a", "10", "extra"]]) {
+  for (const a of [
+    ["frob", "add", "x"],
+    ["vlan", "add", "a", "10", "--colour", "red"],
+    ["vlan", "add", "a", "10", "--near", "b"],
+    ["vlan", "add"],
+    ["vlan"],
+    ["vlan", "add", "a", "10", "extra"],
+  ]) {
     const r = run(...a, "--file", f, "--json");
     expect([a, r.code]).toEqual([a, 2]);
     expect(JSON.parse(r.out).hint).toBeString();
   }
-  expect(JSON.parse(run("vlan", "add", "a", "10", "--colour", "red", "--file", f, "--json").out).error).toBe("unknown flag --colour");
+  expect(JSON.parse(run("vlan", "add", "a", "10", "--colour", "red", "--file", f, "--json").out).error).toBe(
+    "unknown flag --colour",
+  );
   expect(readFileSync(f, "utf8")).toBe("vlan b 20\n");
 });
 test("--no-color clears; numbers stay strings", () => {
@@ -238,7 +270,7 @@ test("--no-color clears; numbers stay strings", () => {
   expect(readFileSync(f, "utf8")).toBe("vlan a 10, 20 subnet 10.0.0.0/24, 10.1.0.0/24\n");
 });
 test("ambiguous lists candidates", () => {
-  const f = fresh("amb.net", "device a\ndevice b\nlink a -- b\nlink a -- b label \"x\"\n");
+  const f = fresh("amb.net", 'device a\ndevice b\nlink a -- b\nlink a -- b label "x"\n');
   const r = run("link", "rm", "a", "b", "--file", f, "--json");
   expect(r.code).toBe(1);
   expect(JSON.parse(r.out).candidates.length).toBe(2);
@@ -254,7 +286,9 @@ test("block nouns, allow --in, legend subnouns, row, import noun", () => {
   expect(run("import", "add", "core.rsc", "--as", "core", "--file", f).code).toBe(0);
   expect(run("vlan", "add", "b", "2", "--file", f).code).toBe(0);
   expect(run("vlan", "add", "a", "1", "--before", "b", "--file", f).code).toBe(0);
-  expect(readFileSync(f, "utf8")).toBe('device r\n  ports ether2, ether3 tagged 10, 20\n  allow ether1 -> 10.0.0.9\nlegend add dashed "trunk"\nlegend off\nrow r, x\nimports rsc core.rsc as core\nvlan a 1\nvlan b 2\n');
+  expect(readFileSync(f, "utf8")).toBe(
+    'device r\n  ports ether2, ether3 tagged 10, 20\n  allow ether1 -> 10.0.0.9\nlegend add dashed "trunk"\nlegend off\nrow r, x\nimports rsc core.rsc as core\nvlan a 1\nvlan b 2\n',
+  );
   expect(run("vlan", "add", "c", "3", "--before", "b", "--after", "a", "--file", f).code).toBe(2);
 });
 test("help lists every noun", async () => {
@@ -271,7 +305,10 @@ test("parseEditArgv returns a request or a usage message, printing nothing", asy
   const { parseEditArgv } = await import("../src/edit/command");
   const r = parseEditArgv(["ports", "add", "core/bridge", "ether2,ether3", "--untagged", "10", "--no-horizon"]);
   expect("req" in r && { noun: r.req.noun.name, verb: r.req.verb, args: r.req.args }).toEqual({
-    noun: "ports", verb: "add", args: { parent: "core/bridge", pos: ["ether2,ether3"], flags: { untagged: "10", horizon: false } } });
+    noun: "ports",
+    verb: "add",
+    args: { parent: "core/bridge", pos: ["ether2,ether3"], flags: { untagged: "10", horizon: false } },
+  });
   const a = parseEditArgv(["allow", "set", "x", "y", "--in", "r", "--label", "l", "--after", "x z"]);
   expect("req" in a && a.req.args).toEqual({ parent: "r", pos: ["x", "y"], flags: { label: "l", after: "x z" } });
   expect(parseEditArgv(["legend", "note", "add", "hi"])).toMatchObject({ req: { verb: "add", args: { pos: ["hi"] } } });
@@ -281,7 +318,9 @@ test("parseEditArgv returns a request or a usage message, printing nothing", asy
 });
 test("a repeated flag: the last one wins", async () => {
   const { parseEditArgv } = await import("../src/edit/command");
-  expect(parseEditArgv(["vlan", "set", "a", "--color", "red", "--color", "blue"])).toMatchObject({ req: { args: { flags: { color: "blue" } } } });
+  expect(parseEditArgv(["vlan", "set", "a", "--color", "red", "--color", "blue"])).toMatchObject({
+    req: { args: { flags: { color: "blue" } } },
+  });
 });
 test("an edit keeps the file mode and writes through a symlink", async () => {
   const { chmodSync, lstatSync, statSync, symlinkSync } = await import("node:fs");
@@ -289,7 +328,8 @@ test("an edit keeps the file mode and writes through a symlink", async () => {
   chmodSync(f, 0o600);
   expect(run("vlan", "add", "b", "2", "--file", f).code).toBe(0);
   expect(statSync(f).mode & 0o777).toBe(0o600);
-  const target = fresh("target.net", "vlan a 1\n"), link = fresh("link.net");
+  const target = fresh("target.net", "vlan a 1\n"),
+    link = fresh("link.net");
   symlinkSync(target, link);
   expect(run("vlan", "add", "b", "2", "--file", link).code).toBe(0);
   expect(lstatSync(link).isSymbolicLink()).toBe(true);
@@ -301,7 +341,8 @@ test("help is generated by yargs from the command definitions", async () => {
   expect(readFileSync("src/cli.ts", "utf8")).not.toContain("const HELP");
   const r = run("--help");
   expect(r.code).toBe(0);
-  for (const c of ["render", "check", "show", "import", "init", "completion"]) expect(r.out).toMatch(new RegExp(`netdraw ${c}\\b.* {2,}\\S`));
+  for (const c of ["render", "check", "show", "import", "init", "completion"])
+    expect(r.out).toMatch(new RegExp(`netdraw ${c}\\b.* {2,}\\S`));
   for (const n of NOUNS) expect(r.out).toContain(n.help.split(" ").slice(0, 2).join(" "));
   expect(r.out).toContain("Exit codes:");
   expect(r.out).toContain('{"error": string, "file": string, "line": number, "hint"?: string}');

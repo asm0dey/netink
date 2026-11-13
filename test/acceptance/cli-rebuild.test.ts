@@ -14,9 +14,15 @@ const GOLDEN = readFileSync("test/fixtures/home.golden.svg", "utf8");
 
 /** Deep copy without `line` (recursively, items included) or undefined values. */
 const strip = (v: unknown): unknown =>
-  Array.isArray(v) ? v.map(strip)
-  : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).filter(([k, x]) => k !== "line" && x !== undefined).map(([k, x]) => [k, strip(x)]))
-  : v;
+  Array.isArray(v)
+    ? v.map(strip)
+    : v && typeof v === "object"
+      ? Object.fromEntries(
+          Object.entries(v)
+            .filter(([k, x]) => k !== "line" && x !== undefined)
+            .map(([k, x]) => [k, strip(x)]),
+        )
+      : v;
 
 /** Each command applied in turn, in-process, as `netdraw <argv>` would. */
 function run(text: string, file: string, cmds: string[][]): string {
@@ -68,11 +74,33 @@ const DSL_ONLY: string[][] = [
   ["title", "add", "Home network"],
   ["device", "add", "core", "--model", "hAP ax3", "--os", "RouterOS 7.25.1"],
   ["wan", "add", "core", "ether1", "--route", "wan1-main", "--distance", "1", "--dhcp", "--nat"],
-  ["wan", "add", "core", "vlan60-lte", "--on", "bridge", "--vlan", "60", "--route", "wan2-lte", "--distance", "2", "--dhcp", "--nat"],
+  [
+    "wan",
+    "add",
+    "core",
+    "vlan60-lte",
+    "--on",
+    "bridge",
+    "--vlan",
+    "60",
+    "--route",
+    "wan2-lte",
+    "--distance",
+    "2",
+    "--dhcp",
+    "--nat",
+  ],
   ["router", "add", "core"],
   ["bridge", "add", "core", "bridge", "--address", "192.168.0.1/24", "--lan"],
   ["ports", "add", "core/bridge", "ether2,ether3,ether4,ether5"],
-  ["radio", "add", "core/bridge", "wifi1,wifi2,wifi1-iot,wifi1-5g,wifi2-iot", "--ssid", "HomeNet,HomeNet-IoT,HomeNet-5"],
+  [
+    "radio",
+    "add",
+    "core/bridge",
+    "wifi1,wifi2,wifi1-iot,wifi1-5g,wifi2-iot",
+    "--ssid",
+    "HomeNet,HomeNet-IoT,HomeNet-5",
+  ],
   ["bridge", "add", "core", "br-guest", "--address", "10.50.0.1/24", "--guest", "--hotspot"],
   ["vlan-iface", "add", "core/br-guest", "vlan50-guest", "--on", "bridge", "--vlan", "50"],
   ["vlan-iface", "add", "core/br-guest", "vlan51-guest", "--on", "bridge", "--vlan", "51"],
@@ -134,7 +162,8 @@ async function rebuild(name: string, cmds: string[][]) {
     for (const f of readdirSync(HOME).filter((f) => f.endsWith(".rsc"))) copyFileSync(join(HOME, f), join(dir, f));
     const file = join(dir, name);
     const text = run("", file, cmds);
-    const got = parseDsl(text, file), want = parseDsl(readFileSync(join(HOME, name), "utf8"), name);
+    const got = parseDsl(text, file),
+      want = parseDsl(readFileSync(join(HOME, name), "utf8"), name);
     expect(got.diags).toEqual([]);
     expect(strip(got.stmts)).toEqual(strip(want.stmts));
     writeFileSync(file, text);
@@ -161,7 +190,14 @@ test("hand-written file keeps comments", () => {
   const comments = (ls: string[]) => ls.filter((l) => /#/.test(l));
   expect(comments(after)).toEqual(comments(before));
   // multiset line diff: only the guest vlan and the mobile link go; the edited vlan and the new note come
-  const minus = (a: string[], b: string[]) => { const r = [...a]; for (const l of b) { const i = r.indexOf(l); if (i >= 0) r.splice(i, 1); } return r; };
+  const minus = (a: string[], b: string[]) => {
+    const r = [...a];
+    for (const l of b) {
+      const i = r.indexOf(l);
+      if (i >= 0) r.splice(i, 1);
+    }
+    return r;
+  };
   expect(minus(before, after)).toEqual([before.find((l) => l.startsWith("vlan guest"))!, "link mobile -- lte"]);
   const added = minus(after, before);
   expect(added).toHaveLength(2);

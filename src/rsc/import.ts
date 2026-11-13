@@ -2,9 +2,16 @@ import type { DeviceFacts, Iface, RscCommand } from "../types";
 import { readRsc } from "./read";
 
 const ETHER = /^(ether|sfp)[\w-]*\d+$/;
-const inferType = (n: string): Iface["type"] => ETHER.test(n) ? "ether" : /^wifi\d+$/.test(n) ? "wifi" : /^wlan\d+$/.test(n) ? "wireless" : "other";
+const inferType = (n: string): Iface["type"] =>
+  ETHER.test(n) ? "ether" : /^wifi\d+$/.test(n) ? "wifi" : /^wlan\d+$/.test(n) ? "wireless" : "other";
 const num = (s?: string) => (s !== undefined && /^\d+$/.test(s) ? Number(s) : undefined);
-const split = (s?: string) => (s ? s.split(",").map((x) => x.trim()).filter(Boolean) : []);
+const split = (s?: string) =>
+  s
+    ? s
+        .split(",")
+        .map((x) => x.trim())
+        .filter(Boolean)
+    : [];
 const naturalCmp = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 function vlanIds(s?: string): number[] {
@@ -20,26 +27,45 @@ function vlanIds(s?: string): number[] {
 export function importRsc(text: string, file: string, name: string): DeviceFacts {
   const { cmds, header, warnings } = readRsc(text, file);
   const f: DeviceFacts = {
-    name, file, model: header.model, version: header.version,
-    ifaces: [], lists: {}, addresses: [], dhcpClients: [], routes: [], leases: [],
-    hotspots: [], masqueradeOutLists: [], forwardAccepts: [], warnings,
+    name,
+    file,
+    model: header.model,
+    version: header.version,
+    ifaces: [],
+    lists: {},
+    addresses: [],
+    dhcpClients: [],
+    routes: [],
+    leases: [],
+    hotspots: [],
+    masqueradeOutLists: [],
+    forwardAccepts: [],
+    warnings,
   };
   const byName = new Map<string, Iface>();
   const iface = (n: string, type?: Iface["type"]): Iface => {
     let i = byName.get(n);
-    if (!i) { i = { name: n, type: type ?? inferType(n) }; byName.set(n, i); f.ifaces.push(i); }
-    else if (type) i.type = type;
+    if (!i) {
+      i = { name: n, type: type ?? inferType(n) };
+      byName.set(n, i);
+      f.ifaces.push(i);
+    } else if (type) i.type = type;
     return i;
   };
-  const touch = (n?: string) => { if (n && ETHER.test(n)) iface(n); };
+  const touch = (n?: string) => {
+    if (n && ETHER.test(n)) iface(n);
+  };
   const on = (c: RscCommand) => c.props.disabled !== "yes";
 
   // wifi configurations and datapaths may be defined after their users' neighbours; collect first.
-  const datapaths = new Map<string, string>(), configs = new Map<string, { ssid?: string; datapath?: string }>();
+  const datapaths = new Map<string, string>(),
+    configs = new Map<string, { ssid?: string; datapath?: string }>();
   for (const c of cmds) {
     if (c.verb !== "add") continue;
-    if (c.path === "/interface wifi datapath" && c.props.name && c.props.bridge) datapaths.set(c.props.name, c.props.bridge);
-    if (c.path === "/interface wifi configuration" && c.props.name) configs.set(c.props.name, { ssid: c.props.ssid, datapath: c.props.datapath });
+    if (c.path === "/interface wifi datapath" && c.props.name && c.props.bridge)
+      datapaths.set(c.props.name, c.props.bridge);
+    if (c.path === "/interface wifi configuration" && c.props.name)
+      configs.set(c.props.name, { ssid: c.props.ssid, datapath: c.props.datapath });
   }
 
   for (const c of cmds) {
@@ -49,7 +75,10 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         if (c.verb === "set" && p.name) f.identity = p.name;
         break;
       case "/interface bridge":
-        if (c.verb === "add" && p.name) { const b = iface(p.name, "bridge"); if (p["vlan-filtering"] === "yes") b.vlanFiltering = true; }
+        if (c.verb === "add" && p.name) {
+          const b = iface(p.name, "bridge");
+          if (p["vlan-filtering"] === "yes") b.vlanFiltering = true;
+        }
         break;
       case "/interface bridge port":
         if (c.verb === "add" && p.interface) {
@@ -62,14 +91,16 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         if (c.verb !== "add") break;
         for (const id of vlanIds(p["vlan-ids"])) {
           // the bridge itself in `tagged` is the CPU port; its VLAN termination is the /interface vlan on it
-          for (const port of split(p.tagged)) if (port !== p.bridge) Object.assign(iface(`${port}.${id}`, "vlan"), { parent: port, vlanId: id });
+          for (const port of split(p.tagged))
+            if (port !== p.bridge) Object.assign(iface(`${port}.${id}`, "vlan"), { parent: port, vlanId: id });
           for (const port of split(p.untagged)) iface(port).useTag ??= id;
         }
         break;
       case "/interface vlan":
         if (c.verb === "add" && p.name) {
           const i = iface(p.name, "vlan");
-          i.parent = p.interface; i.vlanId = num(p["vlan-id"]);
+          i.parent = p.interface;
+          i.vlanId = num(p["vlan-id"]);
           touch(p.interface);
         }
         break;
@@ -101,29 +132,60 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
         }
         break;
       case "/ip address":
-        if (c.verb === "add" && on(c) && p.address && p.interface) { f.addresses.push({ iface: p.interface, cidr: p.address }); touch(p.interface); }
+        if (c.verb === "add" && on(c) && p.address && p.interface) {
+          f.addresses.push({ iface: p.interface, cidr: p.address });
+          touch(p.interface);
+        }
         break;
       case "/ip dhcp-client":
-        if (c.verb === "add" && p.interface) { f.dhcpClients.push({ iface: p.interface, address: p.address }); touch(p.interface); }
+        if (c.verb === "add" && p.interface) {
+          f.dhcpClients.push({ iface: p.interface, address: p.address });
+          touch(p.interface);
+        }
         break;
       case "/ip route":
         if (c.verb === "add" && p["dst-address"] && p.gateway)
-          f.routes.push({ dst: p["dst-address"], gateway: p.gateway, distance: num(p.distance) ?? 1, comment: p.comment });
+          f.routes.push({
+            dst: p["dst-address"],
+            gateway: p.gateway,
+            distance: num(p.distance) ?? 1,
+            comment: p.comment,
+          });
         break;
       case "/ip dhcp-server lease":
-        if (c.verb === "add" && p.address && p["mac-address"]) f.leases.push({ address: p.address, mac: p["mac-address"], comment: p.comment });
+        if (c.verb === "add" && p.address && p["mac-address"])
+          f.leases.push({ address: p.address, mac: p["mac-address"], comment: p.comment });
         break;
       case "/ip hotspot":
         if (c.verb === "add" && p.interface) f.hotspots.push(p.interface);
         break;
       case "/ip firewall nat":
-        if (c.verb === "add" && on(c) && p.action === "masquerade" && p["out-interface-list"] && !f.masqueradeOutLists.includes(p["out-interface-list"]))
+        if (
+          c.verb === "add" &&
+          on(c) &&
+          p.action === "masquerade" &&
+          p["out-interface-list"] &&
+          !f.masqueradeOutLists.includes(p["out-interface-list"])
+        )
           f.masqueradeOutLists.push(p["out-interface-list"]);
         break;
       case "/ip firewall filter":
-        if (c.verb === "add" && on(c) && p.chain === "forward" && p.action === "accept"
-          && p["connection-state"] === undefined && p["ipsec-policy"] === undefined && !p.comment?.startsWith("defconf:"))
-          f.forwardAccepts.push({ inList: p["in-interface-list"], inIface: p["in-interface"], dstAddress: p["dst-address"], comment: p.comment, line: c.line });
+        if (
+          c.verb === "add" &&
+          on(c) &&
+          p.chain === "forward" &&
+          p.action === "accept" &&
+          p["connection-state"] === undefined &&
+          p["ipsec-policy"] === undefined &&
+          !p.comment?.startsWith("defconf:")
+        )
+          f.forwardAccepts.push({
+            inList: p["in-interface-list"],
+            inIface: p["in-interface"],
+            dstAddress: p["dst-address"],
+            comment: p.comment,
+            line: c.line,
+          });
         break;
     }
   }

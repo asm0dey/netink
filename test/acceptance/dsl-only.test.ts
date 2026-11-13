@@ -6,10 +6,12 @@ import { renderSvg } from "../../src/render/svg";
 
 const RSC = "examples/home/network.net";
 const DSL = "examples/home/network-dsl-only.net";
-const strip = (x: unknown): unknown => JSON.parse(JSON.stringify(x, (k, v) => (k === "line" || k === "file" || k === "diags" ? undefined : v)));
+const strip = (x: unknown): unknown =>
+  JSON.parse(JSON.stringify(x, (k, v) => (k === "line" || k === "file" || k === "diags" ? undefined : v)));
 
 test("DSL-only home equals rsc home", async () => {
-  const a = loadModel(RSC), b = loadModel(DSL);
+  const a = loadModel(RSC),
+    b = loadModel(DSL);
   expect(strip(b)).toEqual(strip(a));
   const svg = renderSvg(b, await layout(b));
   expect(svg).toBe(renderSvg(a, await layout(a)));

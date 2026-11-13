@@ -15,7 +15,8 @@ const segmentHitsBox = (a: P, c: P, b: Box, clear = -0.5): boolean => {
   return x1 > b.x + e && x0 < b.x + b.w - e && y1 > b.y + e && y0 < b.y + b.h - e;
 };
 
-const json = (p: Placed) => JSON.stringify({ ...p, boxes: [...p.boxes.entries()].sort(([a], [b]) => a.localeCompare(b)) });
+const json = (p: Placed) =>
+  JSON.stringify({ ...p, boxes: [...p.boxes.entries()].sort(([a], [b]) => a.localeCompare(b)) });
 
 test("textWidth heuristic", () => {
   expect(textWidth("abcd", 10, false)).toBeCloseTo(24);
@@ -65,7 +66,8 @@ test("no link passes through or hugs a sibling group", async () => {
       if (inside(g, from) || inside(g, to)) continue;
       const box = p.boxes.get(g.id)!;
       l.points.slice(1).forEach((c, i) => {
-        if (segmentHitsBox(l.points[i]!, c, box, CLEAR)) hits.push(`${l.id} seg ${i} ${JSON.stringify([l.points[i], c])} hits ${g.id}`);
+        if (segmentHitsBox(l.points[i]!, c, box, CLEAR))
+          hits.push(`${l.id} seg ${i} ${JSON.stringify([l.points[i], c])} hits ${g.id}`);
       });
     }
   }
@@ -91,7 +93,14 @@ test("polylines are orthogonal and start/end on their endpoint boxes", async () 
 });
 
 test("layout lets the process exit", () => {
-  const r = Bun.spawnSync(["bun", "-e", `import {layout} from "./src/layout/elk.ts"; import {loadModel} from "./src/load.ts"; await layout(loadModel("${HOME}"));`], { timeout: 4000 });
+  const r = Bun.spawnSync(
+    [
+      "bun",
+      "-e",
+      `import {layout} from "./src/layout/elk.ts"; import {loadModel} from "./src/load.ts"; await layout(loadModel("${HOME}"));`,
+    ],
+    { timeout: 4000 },
+  );
   expect(r.exitCode).toBe(0);
 });
 
@@ -101,10 +110,35 @@ test("deterministic", async () => {
 });
 
 test("lonely node", async () => {
-  const group: MNode = { id: "solo/empty", kind: "group", style: "lan", label: "empty", sub: [], children: [], tier: 3 };
-  const dev: MNode = { id: "solo", kind: "device", style: "device", label: "Solo", sub: [], children: [group], tier: 0 };
-  const m: Model = { title: "t", nodes: [dev], links: [], arrows: [], vlans: [], hints: [], diags: [], jumps: "arc",
-    legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" } };
+  const group: MNode = {
+    id: "solo/empty",
+    kind: "group",
+    style: "lan",
+    label: "empty",
+    sub: [],
+    children: [],
+    tier: 3,
+  };
+  const dev: MNode = {
+    id: "solo",
+    kind: "device",
+    style: "device",
+    label: "Solo",
+    sub: [],
+    children: [group],
+    tier: 0,
+  };
+  const m: Model = {
+    title: "t",
+    nodes: [dev],
+    links: [],
+    arrows: [],
+    vlans: [],
+    hints: [],
+    diags: [],
+    jumps: "arc",
+    legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" },
+  };
   const p = await layout(m);
   expect(p.boxes.get("solo")!.w).toBeGreaterThan(0);
   expect(p.boxes.get("solo/empty")!.w).toBeGreaterThan(0);
@@ -112,10 +146,29 @@ test("lonely node", async () => {
 
 test("side hint reorders the device's emitted groups", () => {
   const g = (id: string): MNode => ({ id, kind: "group", style: "lan", label: id, sub: [], children: [], tier: 3 });
-  const dev: MNode = { id: "d", kind: "device", style: "device", label: "D", sub: [], children: [g("d/a"), g("d/b"), g("d/c")], tier: 0 };
-  const m: Model = { title: "t", nodes: [dev], links: [], arrows: [], vlans: [], diags: [], jumps: "arc",
-    hints: [{ type: "side", device: "d", group: "d/c", side: "top" }, { type: "side", device: "d", group: "d/a", side: "bottom" }],
-    legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" } };
+  const dev: MNode = {
+    id: "d",
+    kind: "device",
+    style: "device",
+    label: "D",
+    sub: [],
+    children: [g("d/a"), g("d/b"), g("d/c")],
+    tier: 0,
+  };
+  const m: Model = {
+    title: "t",
+    nodes: [dev],
+    links: [],
+    arrows: [],
+    vlans: [],
+    diags: [],
+    jumps: "arc",
+    hints: [
+      { type: "side", device: "d", group: "d/c", side: "top" },
+      { type: "side", device: "d", group: "d/a", side: "bottom" },
+    ],
+    legend: { mode: "auto", add: [], remove: [], notes: [], position: "bottom" },
+  };
   expect(toElkGraph(m).children![0]!.children!.map((c) => c.id)).toEqual(["d/c", "d/b", "d/a"]);
 });
 
@@ -152,7 +205,9 @@ test("row ap1, ap2: same top", async () => {
 
 test("hint edges are laid out but never placed", async () => {
   const m = loadModel(HOME);
-  const hintEdges = toElkGraph(m).edges!.filter((e) => !m.links.some((l) => l.id === e.id) && !m.arrows.some((a) => a.id === e.id) && !e.id.endsWith("#inner"));
+  const hintEdges = toElkGraph(m).edges!.filter(
+    (e) => !m.links.some((l) => l.id === e.id) && !m.arrows.some((a) => a.id === e.id) && !e.id.endsWith("#inner"),
+  );
   expect(hintEdges.length).toBeGreaterThan(0);
   const p = await layout(m);
   const placed = new Set([...p.links, ...p.arrows].map((l) => l.id));
@@ -164,7 +219,8 @@ test("an upward allow arrow ends on its `to` box (the arrowhead end)", async () 
   const { buildModel } = await import("../../src/load");
   const m = buildModel(parseDsl("cloud c\ndevice d\nlink c -- d\nallow d -> c\n", "t.net").stmts, new Map());
   const p = await layout(m);
-  const a = m.arrows[0]!, pts = p.arrows.find((x) => x.id === a.id)!.points;
+  const a = m.arrows[0]!,
+    pts = p.arrows.find((x) => x.id === a.id)!.points;
   const on = (q: P, b: Box) => q.x >= b.x - 1 && q.x <= b.x + b.w + 1 && q.y >= b.y - 1 && q.y <= b.y + b.h + 1;
   expect([a.from, a.to]).toEqual(["d", "c"]);
   expect(on(pts.at(-1)!, p.boxes.get("c")!)).toBe(true);
@@ -173,7 +229,8 @@ test("an upward allow arrow ends on its `to` box (the arrowhead end)", async () 
 
 test("cable thickness uses the renderer's LANE_GAP, the one definition", async () => {
   const { LANE_GAP } = await import("../../src/render/geometry");
-  const m = loadModel(HOME), l = m.links.find((x) => x.lanes.length === 3)!;
+  const m = loadModel(HOME),
+    l = m.links.find((x) => x.lanes.length === 3)!;
   const e = toElkGraph(m).edges!.find((x) => x.id === l.id)!;
   expect(e.layoutOptions!["elk.edge.thickness"]).toBe(String(3 * LANE_GAP));
   expect(await Bun.file("src/layout/elk.ts").text()).not.toMatch(/const LANE_GAP\b/);
@@ -183,38 +240,62 @@ test("cable thickness uses the renderer's LANE_GAP, the one definition", async (
 const crossings = (a: P[], b: P[]) => {
   const segs = (q: P[]) => q.slice(1).map((c, i) => [q[i]!, c] as const);
   const flat = (s: readonly [P, P]) => Math.abs(s[0].y - s[1].y) < 0.5;
-  return segs(a).flatMap((s) => segs(b).filter((t) => {
-    const [h, v] = flat(s) && !flat(t) ? [s, t] : flat(t) && !flat(s) ? [t, s] : [];
-    if (!h || !v) return false;
-    const [x0, x1] = [Math.min(h[0].x, h[1].x), Math.max(h[0].x, h[1].x)], [y0, y1] = [Math.min(v[0].y, v[1].y), Math.max(v[0].y, v[1].y)];
-    return v[0].x > x0 + 0.5 && v[0].x < x1 - 0.5 && h[0].y > y0 + 0.5 && h[0].y < y1 - 0.5;
-  })).length;
+  return segs(a).flatMap((s) =>
+    segs(b).filter((t) => {
+      const [h, v] = flat(s) && !flat(t) ? [s, t] : flat(t) && !flat(s) ? [t, s] : [];
+      if (!h || !v) return false;
+      const [x0, x1] = [Math.min(h[0].x, h[1].x), Math.max(h[0].x, h[1].x)],
+        [y0, y1] = [Math.min(v[0].y, v[1].y), Math.max(v[0].y, v[1].y)];
+      return v[0].x > x0 + 0.5 && v[0].x < x1 - 0.5 && h[0].y > y0 + 0.5 && h[0].y < y1 - 0.5;
+    }),
+  ).length;
 };
 
 test("internal edges between stacked chips run straight; the core's internal edges barely cross", async () => {
   const m = loadModel(HOME);
   const p = await layout(m);
   const dev = (id: string) => id.split("/")[0]!;
-  const leaf = new Set(all(m.nodes).filter((n) => !n.children.length).map((n) => n.id));
-  const internal = m.links.filter((l) => l.from.includes("/") && dev(l.from) === dev(l.to) && leaf.has(l.from) && leaf.has(l.to));
+  const leaf = new Set(
+    all(m.nodes)
+      .filter((n) => !n.children.length)
+      .map((n) => n.id),
+  );
+  const internal = m.links.filter(
+    (l) => l.from.includes("/") && dev(l.from) === dev(l.to) && leaf.has(l.from) && leaf.has(l.to),
+  );
   const pts = (id: string) => p.links.find((x) => x.id === id)!.points;
   // a chip directly above (or below) the other, overlapping it horizontally by at least 20 px: one straight vertical
   const stacked = internal.filter((l) => {
     const [a, b] = [p.boxes.get(l.from)!, p.boxes.get(l.to)!];
     return Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) >= 20;
   });
-  expect(stacked.map((l) => l.id)).toEqual(expect.arrayContaining(["core/ether3--core/vlan50-guest", "core/ether4--core/vlan51-guest", "ap2/ether1--ap2/vlan51-guest"]));
-  expect(stacked.filter((l) => pts(l.id).length !== 2 || pts(l.id)[0]!.x !== pts(l.id)[1]!.x).map((l) => l.id)).toEqual([]);
-  const core = internal.filter((l) => dev(l.from) === "core").concat(m.links.filter((l) => dev(l.from) === "core" && dev(l.to) === "core" && !leaf.has(l.to)));
+  expect(stacked.map((l) => l.id)).toEqual(
+    expect.arrayContaining([
+      "core/ether3--core/vlan50-guest",
+      "core/ether4--core/vlan51-guest",
+      "ap2/ether1--ap2/vlan51-guest",
+    ]),
+  );
+  expect(stacked.filter((l) => pts(l.id).length !== 2 || pts(l.id)[0]!.x !== pts(l.id)[1]!.x).map((l) => l.id)).toEqual(
+    [],
+  );
+  const core = internal
+    .filter((l) => dev(l.from) === "core")
+    .concat(m.links.filter((l) => dev(l.from) === "core" && dev(l.to) === "core" && !leaf.has(l.to)));
   let n = 0;
-  core.forEach((a, i) => core.slice(i + 1).forEach((b) => { n += crossings(pts(a.id), pts(b.id)); }));
+  core.forEach((a, i) =>
+    core.slice(i + 1).forEach((b) => {
+      n += crossings(pts(a.id), pts(b.id));
+    }),
+  );
   expect(n).toBeLessThanOrEqual(2);
 });
 
 test("cables between two same-tier devices run straight down, whichever way they are written", async () => {
   const { parseDsl } = await import("../../src/dsl/parse");
   const { buildModel } = await import("../../src/load");
-  const src = "device a\n  ports eth0, eth1\ndevice b\n  ports eth0, eth1\nlink a.eth0 -- b.eth0\nlink b.eth1 -- a.eth1\n";
+  const src =
+    "device a\n  ports eth0, eth1\ndevice b\n  ports eth0, eth1\nlink a.eth0 -- b.eth0\nlink b.eth1 -- a.eth1\n";
   const m = buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
   const p = await layout(m);
   expect(p.boxes.get("a")!.y).toBeLessThan(p.boxes.get("b")!.y);

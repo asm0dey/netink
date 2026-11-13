@@ -23,15 +23,29 @@ test("core", () => {
   expect(get(f, "wifi1-iot")?.ssid).toBe("HomeNet-IoT");
   expect(get(f, "cap-wifi1")?.radioMac).toBe("02:00:00:00:00:10");
   expect(f.dhcpClients.map((d) => d.iface)).toEqual(["ether1", "vlan60-lte"]);
-  expect(f.ifaces.filter((i) => i.type === "ether").map((i) => i.name)).toEqual(["ether1", "ether2", "ether3", "ether4", "ether5"]);
+  expect(f.ifaces.filter((i) => i.type === "ether").map((i) => i.name)).toEqual([
+    "ether1",
+    "ether2",
+    "ether3",
+    "ether4",
+    "ether5",
+  ]);
 });
 
 test("ap1", () => {
-  expect(get(load("examples/home/ap1.rsc", "ap1"), "wlan1-guest")).toMatchObject({ useTag: 50, ssid: "HomeNet-Guest", bridge: "bridgeLocal" });
+  expect(get(load("examples/home/ap1.rsc", "ap1"), "wlan1-guest")).toMatchObject({
+    useTag: 50,
+    ssid: "HomeNet-Guest",
+    bridge: "bridgeLocal",
+  });
 });
 
 test("ap2", () => {
-  expect(get(load("examples/home/ap2.rsc", "ap2"), "vlan51-guest")).toMatchObject({ parent: "bridge", vlanId: 51, bridge: "br-guest" });
+  expect(get(load("examples/home/ap2.rsc", "ap2"), "vlan51-guest")).toMatchObject({
+    parent: "bridge",
+    vlanId: 51,
+    bridge: "br-guest",
+  });
 });
 
 test("lte", () => {
@@ -55,11 +69,15 @@ test("passes reader warnings through", () => {
 });
 
 test("RouterOS 7 wifi: wrapped configuration.ssid= and datapath.bridge= on set and add", () => {
-  const f = importRsc([
-    "/interface bridge add name=bridge",
-    "/interface wifi set [ find default-name=wifi1 ] configuration.mode=ap configuration.ssid=Home datapath.bridge=bridge disabled=no",
-    "/interface wifi add configuration.ssid=\"Home Guest\" datapath.bridge=bridge master-interface=wifi1 name=wifi1-guest",
-  ].join("\n"), "t.rsc", "t");
+  const f = importRsc(
+    [
+      "/interface bridge add name=bridge",
+      "/interface wifi set [ find default-name=wifi1 ] configuration.mode=ap configuration.ssid=Home datapath.bridge=bridge disabled=no",
+      '/interface wifi add configuration.ssid="Home Guest" datapath.bridge=bridge master-interface=wifi1 name=wifi1-guest',
+    ].join("\n"),
+    "t.rsc",
+    "t",
+  );
   expect(get(f, "wifi1")).toMatchObject({ ssid: "Home", bridge: "bridge" });
   expect(get(f, "wifi1-guest")).toMatchObject({ ssid: "Home Guest", bridge: "bridge" });
 });

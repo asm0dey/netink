@@ -5,7 +5,9 @@ const code = (s: string) => "```\n" + s + "\n```";
 
 /** The man page as marked-man markdown, built from the same definitions --help uses. */
 export function manPage(): string {
-  const commands = Object.entries(DESC).map(([n, d]) => `* \`${n}\`:\n  ${d}`).join("\n");
+  const commands = Object.entries(DESC)
+    .map(([n, d]) => `* \`${n}\`:\n  ${d}`)
+    .join("\n");
   const editing = NOUNS.map((n) => {
     const flags = n.flags.map((f) => `  * \`--${f.name}\`: ${f.help}`).join("\n");
     return `* \`${n.help}\`${flags ? "\n" + flags : ""}`;

@@ -4,10 +4,16 @@ import { buildModel, loadModel } from "../../src/load";
 import { checkModel } from "../../src/model/check";
 import { importRsc } from "../../src/rsc/import";
 
-const RSC = () => [1, 2, 3].map((n) => `/interface bridge port add bridge=bridge interface=ether${n}`).join("\n").replace(/^/, "/interface bridge add name=bridge\n");
+const RSC = () =>
+  [1, 2, 3]
+    .map((n) => `/interface bridge port add bridge=bridge interface=ether${n}`)
+    .join("\n")
+    .replace(/^/, "/interface bridge add name=bridge\n");
 function check(dsl: string) {
   const { stmts } = parseDsl(dsl, "t.net");
-  const facts = new Map(stmts.filter((s) => s.kind === "import").map((s) => [s.as, importRsc(RSC(), `${s.as}.rsc`, s.as)] as const));
+  const facts = new Map(
+    stmts.filter((s) => s.kind === "import").map((s) => [s.as, importRsc(RSC(), `${s.as}.rsc`, s.as)] as const),
+  );
   return checkModel(buildModel(stmts, facts, { file: "t.net" }));
 }
 const HEAD = `imports rsc core.rsc as core, ap1.rsc as ap1\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\n`;
@@ -29,7 +35,9 @@ test("unknown node suggests the closest id", () => {
 });
 
 test("port on two links is an error", () => {
-  const d = check(HEAD + "client a\nclient b\nlink core.ether3 -- a\nlink core.ether3 -- b\n").filter((x) => x.level === "error");
+  const d = check(HEAD + "client a\nclient b\nlink core.ether3 -- a\nlink core.ether3 -- b\n").filter(
+    (x) => x.level === "error",
+  );
   expect(d).toHaveLength(1);
   expect(d[0]!.line).toBe(7);
 });
@@ -70,18 +78,29 @@ test("check takes the file from the model", () => {
 });
 
 test("explicit vlans on a radio link through a transparent bridge do not warn", () => {
-  const rsc = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n/interface wifi set [ find default-name=wifi1 ] datapath.bridge=bridge\n";
-  const { stmts } = parseDsl('imports rsc x.rsc as x, y.rsc as y\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nlink x.wifi1 -- y.ether1 vlans lan,guest\n', "t.net");
+  const rsc =
+    "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n/interface wifi set [ find default-name=wifi1 ] datapath.bridge=bridge\n";
+  const { stmts } = parseDsl(
+    'imports rsc x.rsc as x, y.rsc as y\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nlink x.wifi1 -- y.ether1 vlans lan,guest\n',
+    "t.net",
+  );
   const facts = new Map(["x", "y"].map((n) => [n, importRsc(rsc, `${n}.rsc`, n)] as const));
   const m = buildModel(stmts, facts, { file: "t.net" });
   expect(m.links[0]!.inferred).toEqual(["lan", "guest"]);
   expect(checkModel(m).filter((x) => x.level === "warning")).toEqual([]);
 });
 
-const CORE50 = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n";
+const CORE50 =
+  "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n";
 const one = (dsl: string) => {
-  const { stmts } = parseDsl('imports rsc core.rsc as core\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nvlan lte 60 color orange "10.60.0.0/24"\ndevice x\n' + dsl, "t.net");
-  return checkModel(buildModel(stmts, new Map([["core", importRsc(CORE50, "core.rsc", "core")]]), { file: "t.net" })).filter((d) => d.level === "warning");
+  const { stmts } = parseDsl(
+    'imports rsc core.rsc as core\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nvlan lte 60 color orange "10.60.0.0/24"\ndevice x\n' +
+      dsl,
+    "t.net",
+  );
+  return checkModel(
+    buildModel(stmts, new Map([["core", importRsc(CORE50, "core.rsc", "core")]]), { file: "t.net" }),
+  ).filter((d) => d.level === "warning");
 };
 
 test("explicit vlans toward a fact-less end do not warn when the imported end carries them", () => {
@@ -104,13 +123,17 @@ test("address inside its VLAN's subnets is quiet", () => {
   expect(check(dev(`  vlan-iface v50 vlan 50 address 10.50.0.1/24, 2001:db8::1/64\n`))).toEqual([]);
 });
 test("same address on two interfaces warns", () => {
-  const w = check(dev(`  vlan-iface v50 vlan 50 address 10.50.0.1/24\n  vlan-iface v51 vlan 51 address 10.50.0.1/16\n`)).filter((x) => x.level === "warning");
+  const w = check(
+    dev(`  vlan-iface v50 vlan 50 address 10.50.0.1/24\n  vlan-iface v51 vlan 51 address 10.50.0.1/16\n`),
+  ).filter((x) => x.level === "warning");
   expect(w.filter((x) => x.message.includes("already used"))).toHaveLength(1);
   expect(w.find((x) => x.message.includes("already used"))).toMatchObject({ line: 4 });
   expect(w[0]!.message).toContain("d.v50");
 });
 test("bridge address outside the VLAN its style came from warns", () => {
-  const w = check(dev(`  bridge br address 10.99.0.1/24\n    vlan-iface v50 vlan 50\n`)).filter((x) => x.level === "warning");
+  const w = check(dev(`  bridge br address 10.99.0.1/24\n    vlan-iface v50 vlan 50\n`)).filter(
+    (x) => x.level === "warning",
+  );
   expect(w).toHaveLength(1);
   expect(w[0]).toMatchObject({ line: 3 });
 });

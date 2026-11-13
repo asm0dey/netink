@@ -6,7 +6,14 @@ const r = (t: string) => readRsc(t, "t.rsc");
 
 test("reads one-liner", () => {
   const { cmds } = r('/interface vlan add comment="LTE: x -> y" interface=bridge name=vlan60-lte vlan-id=60');
-  expect(cmds).toEqual([{ path: "/interface vlan", verb: "add", props: { comment: "LTE: x -> y", interface: "bridge", name: "vlan60-lte", "vlan-id": "60" }, line: 1 }]);
+  expect(cmds).toEqual([
+    {
+      path: "/interface vlan",
+      verb: "add",
+      props: { comment: "LTE: x -> y", interface: "bridge", name: "vlan60-lte", "vlan-id": "60" },
+      line: 1,
+    },
+  ]);
 });
 test("reads raw export with continuation", () => {
   const { cmds, header } = r(readFileSync("test/fixtures/raw-export.rsc", "utf8"));
@@ -39,7 +46,9 @@ test("scripting skipped", () => {
   expect(warnings[0]!.line).toBe(2);
 });
 test("multi-line quoted value", () => {
-  const { cmds } = r('/system script add name=upd owner=admin source=":global k \\"x\\"\\\n    \\n:log info ddns-sync\\\n    \\n:delay 1s"\n/ip address add address=10.0.0.1/24');
+  const { cmds } = r(
+    '/system script add name=upd owner=admin source=":global k \\"x\\"\\\n    \\n:log info ddns-sync\\\n    \\n:delay 1s"\n/ip address add address=10.0.0.1/24',
+  );
   expect(cmds).toHaveLength(2);
   expect(cmds[0]!.props.source).toContain("ddns");
   expect(cmds[0]!.props.source).toContain('"x"');
@@ -51,7 +60,9 @@ test("find selector", () => {
   expect(r("/interface wifi set wlan1 disabled=no").cmds[0]!.find).toEqual({ name: "wlan1" });
 });
 test("malformed lease line", () => {
-  const { cmds, warnings } = r("\n/ip dhcp-server lease add address=192.168.0.101client-id=1:2:0:0:0:0:3 mac-address=02:00:00:00:00:03");
+  const { cmds, warnings } = r(
+    "\n/ip dhcp-server lease add address=192.168.0.101client-id=1:2:0:0:0:0:3 mac-address=02:00:00:00:00:03",
+  );
   expect(cmds[0]!.props.address).toBe("192.168.0.101");
   expect(cmds[0]!.props["client-id"]).toBe("1:2:0:0:0:0:3");
   expect(cmds[0]!.props["mac-address"]).toBe("02:00:00:00:00:03");
@@ -68,7 +79,10 @@ test("annotated header", () => {
   expect(header).toEqual({ model: "hAP ax3", version: "7.25.1" });
 });
 test("reads a larger synthetic export", () => {
-  const body = Array.from({ length: 40 }, (_, i) => `/interface vlan add interface=bridge name=vlan${i} vlan-id=${i + 1}`).join("\n");
+  const body = Array.from(
+    { length: 40 },
+    (_, i) => `/interface vlan add interface=bridge name=vlan${i} vlan-id=${i + 1}`,
+  ).join("\n");
   const { cmds, warnings } = r(`# ap1 - hAP, 10.0.0.1, RouterOS 7.0\n${body}\n`);
   expect(cmds).toHaveLength(40);
   expect(warnings).toEqual([]);

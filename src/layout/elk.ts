@@ -75,9 +75,14 @@ const ordered = (kids: MNode[], model: Model, parent?: string): MNode[] => {
     if (h.type === "row") h.ids.slice(1).forEach((id, i) => move(id, h.ids[i]!));
   }
   // shortcut: side left/right is not expressed (DOWN layout has no in-device column control); add when a fixture needs it.
-  const sides = new Map(model.hints.flatMap((h) => (h.type === "side" && h.device === parent ? [[h.group, h.side] as const] : [])));
+  const sides = new Map(
+    model.hints.flatMap((h) => (h.type === "side" && h.device === parent ? [[h.group, h.side] as const] : [])),
+  );
   const rank = (n: MNode) => (sides.get(n.id) === "top" ? 0 : sides.get(n.id) === "bottom" ? 2 : 1);
-  return out.map((n, i) => ({ n, i })).sort((a, b) => rank(a.n) - rank(b.n) || a.i - b.i).map((x) => x.n);
+  return out
+    .map((n, i) => ({ n, i }))
+    .sort((a, b) => rank(a.n) - rank(b.n) || a.i - b.i)
+    .map((x) => x.n);
 };
 
 const labelWidth = (n: MNode) => Math.max(textWidth(n.label, 15, true), ...n.sub.map((s) => textWidth(s, 12.5, false)));
@@ -89,7 +94,10 @@ export function toElkGraph(model: Model): ElkNode {
 
 function build(model: Model) {
   const info = new Map<string, { node: MNode; top: MNode }>();
-  const index = (n: MNode, top: MNode) => { info.set(n.id, { node: n, top }); n.children.forEach((c) => index(c, top)); };
+  const index = (n: MNode, top: MNode) => {
+    info.set(n.id, { node: n, top });
+    n.children.forEach((c) => index(c, top));
+  };
   model.nodes.forEach((n) => index(n, n));
   const top = (id: string) => info.get(id)!.top;
   /** An arrow pointing up the tiers: its ELK edge is flipped so layering still flows down. */
@@ -100,11 +108,15 @@ function build(model: Model) {
   // same-tier devices: the first cable between them decides which one sits above
   const above = new Map<string, string>();
   for (const l of model.links) {
-    const [a, b] = [top(l.from).id, top(l.to).id], key = [a, b].sort().join("\n");
+    const [a, b] = [top(l.from).id, top(l.to).id],
+      key = [a, b].sort().join("\n");
     if (a !== b && !above.has(key)) above.set(key, a);
   }
   for (const l of model.links) {
-    for (const [end, far] of [[l.from, l.to], [l.to, l.from]] as const) {
+    for (const [end, far] of [
+      [l.from, l.to],
+      [l.to, l.from],
+    ] as const) {
       const n = info.get(end)!.node;
       if ((n.kind !== "port" && n.kind !== "radio") || border.has(end) || top(end) === top(far)) continue;
       const [mine, theirs] = [top(end).tier, top(far).tier];
@@ -113,12 +125,17 @@ function build(model: Model) {
     }
   }
   /** A same-tier cable written lower → upper: its ELK edge is flipped so layering agrees with the port sides. */
-  const flip = (l: { from: string; to: string }) => top(l.from) !== top(l.to) && top(l.from).tier === top(l.to).tier
-    && above.get([top(l.from).id, top(l.to).id].sort().join("\n")) !== top(l.from).id;
+  const flip = (l: { from: string; to: string }) =>
+    top(l.from) !== top(l.to) &&
+    top(l.from).tier === top(l.to).tier &&
+    above.get([top(l.from).id, top(l.to).id].sort().join("\n")) !== top(l.from).id;
   const bid = (port: string) => `${port}#border`;
   const portsOf = new Map<string, ElkPort[]>();
   for (const [port, b] of [...border].sort(([a], [c]) => (a < c ? -1 : 1))) {
-    portsOf.set(b.device, [...(portsOf.get(b.device) ?? []), { id: bid(port), width: 10, height: 10, layoutOptions: { "elk.port.side": b.side } }]);
+    portsOf.set(b.device, [
+      ...(portsOf.get(b.device) ?? []),
+      { id: bid(port), width: 10, height: 10, layoutOptions: { "elk.port.side": b.side } },
+    ]);
   }
 
   const toElk = (n: MNode): ElkNode => {
@@ -135,12 +152,19 @@ function build(model: Model) {
       e.height = n.kind === "cloud" ? 80 : 38 + 16 * n.sub.length;
     }
     const ports = portsOf.get(n.id);
-    if (ports) { e.ports = ports; e.layoutOptions!["elk.portConstraints"] = "FIXED_SIDE"; }
+    if (ports) {
+      e.ports = ports;
+      e.layoutOptions!["elk.portConstraints"] = "FIXED_SIDE";
+    }
     return e;
   };
 
-  const edge = (id: string, s: string, t: string, thickness: number): ElkExtendedEdge =>
-    ({ id, sources: [s], targets: [t], layoutOptions: { "elk.edge.thickness": String(thickness) } });
+  const edge = (id: string, s: string, t: string, thickness: number): ElkExtendedEdge => ({
+    id,
+    sources: [s],
+    targets: [t],
+    layoutOptions: { "elk.edge.thickness": String(thickness) },
+  });
   const inner = (port: string) => `${port}#inner`;
   /** Only a cable leaving the device uses the border port; device-internal links and arrows attach to the chip. */
   const via = (l: { from: string; to: string }, end: string) => border.has(end) && top(l.from) !== top(l.to);
@@ -149,16 +173,35 @@ function build(model: Model) {
     ...[...border].map(([p, b]) => (b.side === "NORTH" ? edge(inner(p), bid(p), p, 4) : edge(inner(p), p, bid(p), 4))),
     ...model.links.map((l) => {
       const [s, t] = [via(l, l.from) ? bid(l.from) : l.from, via(l, l.to) ? bid(l.to) : l.to];
-      return flip(l) ? edge(l.id, t, s, Math.max(4, l.lanes.length * LANE_GAP)) : edge(l.id, s, t, Math.max(4, l.lanes.length * LANE_GAP));
+      return flip(l)
+        ? edge(l.id, t, s, Math.max(4, l.lanes.length * LANE_GAP))
+        : edge(l.id, s, t, Math.max(4, l.lanes.length * LANE_GAP));
     }),
     // ELK runs every arrow down the tiers; `layout` reverses the points of the ones it flipped
     ...model.arrows.map((a) => (up(a) ? edge(a.id, a.to, a.from, 4) : edge(a.id, a.from, a.to, 4))),
     // `place a near b`: invisible edge b → a pulls a below b and towards it (best effort, see the note above). Never placed.
-    ...model.hints.flatMap((h) => (h.type === "near" && info.has(h.a) && info.has(h.b)
-      ? [{ ...edge(`near:${h.b}->${h.a}`, h.b, h.a, 0), layoutOptions: { "elk.edge.thickness": "0", "elk.layered.priority.straightness": "100", "elk.layered.priority.shortness": "100" } }] : [])),
+    ...model.hints.flatMap((h) =>
+      h.type === "near" && info.has(h.a) && info.has(h.b)
+        ? [
+            {
+              ...edge(`near:${h.b}->${h.a}`, h.b, h.a, 0),
+              layoutOptions: {
+                "elk.edge.thickness": "0",
+                "elk.layered.priority.straightness": "100",
+                "elk.layered.priority.shortness": "100",
+              },
+            },
+          ]
+        : [],
+    ),
   ].sort(byId);
 
-  const graph: ElkNode = { id: "root", layoutOptions: ROOT_OPTIONS, children: ordered(model.nodes, model).map(toElk), edges };
+  const graph: ElkNode = {
+    id: "root",
+    layoutOptions: ROOT_OPTIONS,
+    children: ordered(model.nodes, model).map(toElk),
+    edges,
+  };
   return { graph, border, via, inner, up, flip };
 }
 
@@ -167,13 +210,19 @@ export async function layout(model: Model): Promise<Placed> {
   const out = await elk.layout(graph);
 
   const boxes = new Map<string, Box>();
-  const walk = (e: ElkNode) => e.children?.forEach((c) => {
-    boxes.set(c.id, { id: c.id, x: c.x ?? 0, y: c.y ?? 0, w: c.width ?? 0, h: c.height ?? 0 });
-    walk(c);
-  });
+  const walk = (e: ElkNode) =>
+    e.children?.forEach((c) => {
+      boxes.set(c.id, { id: c.id, x: c.x ?? 0, y: c.y ?? 0, w: c.width ?? 0, h: c.height ?? 0 });
+      walk(c);
+    });
   walk(out);
 
-  const routes = new Map((out.edges ?? []).map((e) => [e.id, (e.sections ?? []).flatMap((s) => [s.startPoint, ...(s.bendPoints ?? []), s.endPoint])]));
+  const routes = new Map(
+    (out.edges ?? []).map((e) => [
+      e.id,
+      (e.sections ?? []).flatMap((s) => [s.startPoint, ...(s.bendPoints ?? []), s.endPoint]),
+    ]),
+  );
   const route = (id: string) => routes.get(id)!.map(({ x, y }) => ({ x, y }));
   /** Inner chip → border port, whichever way ELK's edge ran. */
   const leg = (p: string) => (border.get(p)!.side === "NORTH" ? route(inner(p)).reverse() : route(inner(p)));
@@ -209,43 +258,65 @@ export async function layout(model: Model): Promise<Placed> {
  * becomes one vertical in the overlap, unless that vertical would cut another box or run along another line.
  */
 function straighten(model: Model, boxes: Map<string, Box>, links: Placed["links"], arrows: Placed["arrows"]) {
-  const parent = new Map<string, string>(), leaf = new Set<string>();
-  const index = (n: MNode, up?: string) => { if (up) parent.set(n.id, up); if (!n.children.length) leaf.add(n.id); n.children.forEach((c) => index(c, n.id)); };
+  const parent = new Map<string, string>(),
+    leaf = new Set<string>();
+  const index = (n: MNode, up?: string) => {
+    if (up) parent.set(n.id, up);
+    if (!n.children.length) leaf.add(n.id);
+    n.children.forEach((c) => index(c, n.id));
+  };
   model.nodes.forEach((n) => index(n));
   const chain = (id: string): string[] => (parent.has(id) ? [id, ...chain(parent.get(id)!)] : [id]);
   const top = (id: string) => chain(id).at(-1);
-  const MARGIN = 6, NEAR = 8;
+  const MARGIN = 6,
+    NEAR = 8;
   for (const l of model.links) {
     if (!leaf.has(l.from) || !leaf.has(l.to) || top(l.from) !== top(l.to)) continue;
     const [a, b] = [boxes.get(l.from)!, boxes.get(l.to)!];
     const half = (l.lanes.length * LANE_GAP) / 2 + MARGIN;
     const [x0, x1] = [Math.max(a.x, b.x) + half, Math.min(a.x + a.w, b.x + b.w) - half];
-    const down = a.y + a.h <= b.y, upw = b.y + b.h <= a.y;
+    const down = a.y + a.h <= b.y,
+      upw = b.y + b.h <= a.y;
     if (x0 > x1 || (!down && !upw)) continue;
     const [y0, y1] = down ? [a.y + a.h, b.y] : [a.y, b.y + b.h];
     const pl = links.find((p) => p.id === l.id)!;
     const own = new Set([...chain(l.from), ...chain(l.to)]);
     const others = [...links, ...arrows].filter((p) => p !== pl);
     const [lo, hi] = [Math.min(y0, y1), Math.max(y0, y1)];
-    const free = (x: number) => [...boxes.values()].every((q) => own.has(q.id) || q.x > x + half || q.x + q.w < x - half || q.y >= hi || q.y + q.h <= lo)
-      && others.every((o) => o.points.slice(1).every((c, i) => {
-        const p = o.points[i]!;
-        return Math.abs(p.x - c.x) > 0.5 || Math.abs(p.x - x) >= NEAR + half || Math.max(p.y, c.y) <= lo || Math.min(p.y, c.y) >= hi;
-      }));
+    const free = (x: number) =>
+      [...boxes.values()].every(
+        (q) => own.has(q.id) || q.x > x + half || q.x + q.w < x - half || q.y >= hi || q.y + q.h <= lo,
+      ) &&
+      others.every((o) =>
+        o.points.slice(1).every((c, i) => {
+          const p = o.points[i]!;
+          return (
+            Math.abs(p.x - c.x) > 0.5 ||
+            Math.abs(p.x - x) >= NEAR + half ||
+            Math.max(p.y, c.y) <= lo ||
+            Math.min(p.y, c.y) >= hi
+          );
+        }),
+      );
     const ends = [pl.points.at(-1)!.x, pl.points[0]!.x].filter((x) => x >= x0 && x <= x1);
     const x = [...ends, (x0 + x1) / 2].find(free);
-    if (x !== undefined) pl.points = [{ x, y: y0 }, { x, y: y1 }];
+    if (x !== undefined)
+      pl.points = [
+        { x, y: y0 },
+        { x, y: y1 },
+      ];
   }
 }
 
 const near = (a: P, b: P) => Math.abs(a.x - b.x) < 0.01 && Math.abs(a.y - b.y) < 0.01;
 
 /** ELK can return a diagonal section for a hierarchy-crossing edge without ports; bend it at a right angle (vertical first out of the start, vertical last into the end). */
-const orthogonal = (pts: P[]): P[] => pts.flatMap((b, i) => {
-  const a = pts[i - 1];
-  if (!a || Math.abs(a.x - b.x) < 0.01 || Math.abs(a.y - b.y) < 0.01) return [b];
-  return [i === 1 ? { x: a.x, y: b.y } : { x: b.x, y: a.y }, b];
-});
+const orthogonal = (pts: P[]): P[] =>
+  pts.flatMap((b, i) => {
+    const a = pts[i - 1];
+    if (!a || Math.abs(a.x - b.x) < 0.01 || Math.abs(a.y - b.y) < 0.01) return [b];
+    return [i === 1 ? { x: a.x, y: b.y } : { x: b.x, y: a.y }, b];
+  });
 
 /** Drops repeated points (where legs join) and middle points of straight runs. */
 const simplify = (pts: P[]): P[] => {
@@ -253,7 +324,13 @@ const simplify = (pts: P[]): P[] => {
   for (const p of pts) {
     if (out.length && near(out[out.length - 1]!, p)) continue;
     const [a, b] = [out[out.length - 2], out[out.length - 1]];
-    if (a && b && ((Math.abs(a.x - b.x) < 0.01 && Math.abs(b.x - p.x) < 0.01) || (Math.abs(a.y - b.y) < 0.01 && Math.abs(b.y - p.y) < 0.01))) out.pop();
+    if (
+      a &&
+      b &&
+      ((Math.abs(a.x - b.x) < 0.01 && Math.abs(b.x - p.x) < 0.01) ||
+        (Math.abs(a.y - b.y) < 0.01 && Math.abs(b.y - p.y) < 0.01))
+    )
+      out.pop();
     out.push(p);
   }
   return out.length >= 2 ? out : [pts[0]!, pts[pts.length - 1]!];
@@ -261,7 +338,14 @@ const simplify = (pts: P[]): P[] => {
 
 /** Midpoint of the longest segment. */
 const labelPoint = (pts: P[]): P => {
-  let best = 0, len = -1;
-  pts.slice(1).forEach((p, i) => { const d = Math.hypot(p.x - pts[i]!.x, p.y - pts[i]!.y); if (d > len) { len = d; best = i; } });
+  let best = 0,
+    len = -1;
+  pts.slice(1).forEach((p, i) => {
+    const d = Math.hypot(p.x - pts[i]!.x, p.y - pts[i]!.y);
+    if (d > len) {
+      len = d;
+      best = i;
+    }
+  });
   return { x: (pts[best]!.x + pts[best + 1]!.x) / 2, y: (pts[best]!.y + pts[best + 1]!.y) / 2 };
 };

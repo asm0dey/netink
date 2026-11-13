@@ -6,9 +6,15 @@ import type { DevItem, Stmt } from "../../src/types";
 
 /** Deep copy without `line` (recursively, items included) or undefined values. */
 const strip = (v: unknown): unknown =>
-  Array.isArray(v) ? v.map(strip)
-  : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).filter(([k, x]) => k !== "line" && x !== undefined).map(([k, x]) => [k, strip(x)]))
-  : v;
+  Array.isArray(v)
+    ? v.map(strip)
+    : v && typeof v === "object"
+      ? Object.fromEntries(
+          Object.entries(v)
+            .filter(([k, x]) => k !== "line" && x !== undefined)
+            .map(([k, x]) => [k, strip(x)]),
+        )
+      : v;
 
 const roundTrip = (s: Stmt[]) => {
   const text = printStmts(s);
@@ -21,16 +27,44 @@ const roundTrip = (s: Stmt[]) => {
 const L = 0;
 const items: DevItem[] = [
   { line: L, kind: "router" },
-  { line: L, kind: "wan", iface: "ether1", on: "bond1", vlan: 7, route: "isp", distance: 2, dhcp: "192.0.2.5/24", nat: true },
+  {
+    line: L,
+    kind: "wan",
+    iface: "ether1",
+    on: "bond1",
+    vlan: 7,
+    route: "isp",
+    distance: 2,
+    dhcp: "192.0.2.5/24",
+    nat: true,
+  },
   { line: L, kind: "wan", iface: "wan2", dhcp: true },
-  { line: L, kind: "bridge", name: "bridge main", addresses: ["192.168.0.1/24", "2001:db8::1/64"], filtering: true, lan: true, guest: true, hotspot: true, items: [
-    { line: L, kind: "ports", names: ["ether2", "ether 3"], untagged: "lan", tagged: ["guest", 60], horizon: 5 },
-    { line: L, kind: "vlan-iface", name: "vlan50", on: "bridge main", vlan: 50, addresses: ["10.50.0.1/24"], guest: true },
-    { line: L, kind: "radio", ifaces: ["wifi1", "wifi2"], tag: 50, ssids: ["Home Net", "guest"] },
-  ] },
+  {
+    line: L,
+    kind: "bridge",
+    name: "bridge main",
+    addresses: ["192.168.0.1/24", "2001:db8::1/64"],
+    filtering: true,
+    lan: true,
+    guest: true,
+    hotspot: true,
+    items: [
+      { line: L, kind: "ports", names: ["ether2", "ether 3"], untagged: "lan", tagged: ["guest", 60], horizon: 5 },
+      {
+        line: L,
+        kind: "vlan-iface",
+        name: "vlan50",
+        on: "bridge main",
+        vlan: 50,
+        addresses: ["10.50.0.1/24"],
+        guest: true,
+      },
+      { line: L, kind: "radio", ifaces: ["wifi1", "wifi2"], tag: 50, ssids: ["Home Net", "guest"] },
+    ],
+  },
   { line: L, kind: "ports", names: ["ether5"], tagged: [] },
   { line: L, kind: "address", iface: "lo", cidrs: ["203.0.113.1/32", "203.0.113.2/32"], lan: true, hotspot: true },
-  { line: L, kind: "lease", address: "192.168.0.10", comment: "NAS \"main\"" },
+  { line: L, kind: "lease", address: "192.168.0.10", comment: 'NAS "main"' },
   { line: L, kind: "lease", address: "192.168.0.11" },
   { line: L, kind: "allow", from: "wan2", to: "lan", label: "failover" },
   { line: L, kind: "allow", from: "a", to: "b" },
@@ -45,10 +79,27 @@ const all: Stmt[] = [
   { line: L, kind: "vlan", name: "guest", ids: [50, 51], color: "#12ab34", subnets: [] },
   { line: L, kind: "vlan", name: "plain", ids: [9], subnets: [] },
   { line: L, kind: "node", type: "cloud", id: "internet", label: "Internet" },
-  { line: L, kind: "node", type: "device", id: "core", label: "Core router", role: "router", note: "n", model: "CCR", os: "RouterOS 7", items },
+  {
+    line: L,
+    kind: "node",
+    type: "device",
+    id: "core",
+    label: "Core router",
+    role: "router",
+    note: "n",
+    model: "CCR",
+    os: "RouterOS 7",
+    items,
+  },
   { line: L, kind: "node", type: "device", id: "bare" },
   { line: L, kind: "node", type: "client", id: "hub", label: "Hub", lease: "192.168.0.130", note: "fwd" },
-  { line: L, kind: "link", path: [{ node: "core", port: "ether1" }, { node: "isp" }], vlans: ["lan", "guest"], label: "uplink" },
+  {
+    line: L,
+    kind: "link",
+    path: [{ node: "core", port: "ether1" }, { node: "isp" }],
+    vlans: ["lan", "guest"],
+    label: "uplink",
+  },
   { line: L, kind: "link", path: [{ node: "a" }, { node: "b" }] },
   { line: L, kind: "note", target: "core.ether1", text: "CAKE shaping" },
   { line: L, kind: "hint", hint: { type: "near", a: "lte", b: "isp" } },
@@ -77,7 +128,15 @@ test("round-trip examples/home/network.net", () => {
 });
 
 test("name with a space is quoted", () => {
-  const text = printStmts([{ line: L, kind: "node", type: "device", id: "d", items: [{ line: L, kind: "bridge", name: "my br", addresses: [], items: [] }] }]);
+  const text = printStmts([
+    {
+      line: L,
+      kind: "node",
+      type: "device",
+      id: "d",
+      items: [{ line: L, kind: "bridge", name: "my br", addresses: [], items: [] }],
+    },
+  ]);
   expect(text).toContain('bridge "my br"');
 });
 

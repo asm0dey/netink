@@ -2,7 +2,9 @@
 bun = "1.4.4"
 
 [tasks]
-test = "bun test"
+fmt = "bunx biome format --write src test"
+fmt-check = "bunx biome format src test"
+test = "bunx biome format src test && bun test"
 typecheck = "bunx tsc --noEmit"
 render-home = "bun src/cli.ts render --file examples/home/network.net -o examples/home/network.svg"
 man = "mkdir -p dist && bun src/cli.ts __man > dist/netdraw.md && bunx marked-man dist/netdraw.md > dist/netdraw.1"

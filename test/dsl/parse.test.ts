@@ -38,7 +38,10 @@ test("parses the home sketch", () => {
   expect(guest).toMatchObject({ ids: [50, 51], color: "blue", subnets: ["10.50.0.0/24"] });
   const imports = stmts.filter((s) => s.kind === "import");
   expect(imports.map((s) => s.kind === "import" && s.as)).toEqual(["core", "ap1", "ap2", "lte"]);
-  expect(stmts.find((s) => s.kind === "node" && s.id === "switch")).toMatchObject({ role: "switch", label: "Cisco switch" });
+  expect(stmts.find((s) => s.kind === "node" && s.id === "switch")).toMatchObject({
+    role: "switch",
+    label: "Cisco switch",
+  });
 });
 
 test("link endpoint with port", () => {
@@ -46,7 +49,10 @@ test("link endpoint with port", () => {
   expect(diags).toEqual([]);
   expect(stmts[0]).toMatchObject({
     kind: "link",
-    path: [{ node: "core", port: "ether3" }, { node: "ap1", port: "ether1" }],
+    path: [
+      { node: "core", port: "ether3" },
+      { node: "ap1", port: "ether1" },
+    ],
     vlans: ["lan", "guest"],
     label: "x",
   });
@@ -77,7 +83,10 @@ test("chained link label goes on the last pair only", () => {
 
 test("vlan colours: a named theme colour or a quoted hex; anything else is an error naming the valid ones", () => {
   const vlan = (src: string) => parseDsl(src, "t.net");
-  expect(vlan('vlan a 10 color "#FF0000" "10.0.0.0/24"\n').stmts[0]).toMatchObject({ color: "#FF0000", subnets: ["10.0.0.0/24"] });
+  expect(vlan('vlan a 10 color "#FF0000" "10.0.0.0/24"\n').stmts[0]).toMatchObject({
+    color: "#FF0000",
+    subnets: ["10.0.0.0/24"],
+  });
   expect(vlan('vlan a 10 color "#f00"\n').stmts[0]).toMatchObject({ color: "#ff0000" });
   expect(vlan("vlan a 10 color teal\n").stmts[0]).toMatchObject({ color: "teal" });
   const unknown = vlan("vlan a 10 color mauve\n").diags[0]!;
@@ -132,7 +141,10 @@ test("dhcp takes an optional address; allow is a device item", () => {
   const { stmts, diags } = parseDsl('device d\n  wan e1 dhcp 203.0.113.5/24 nat\n  allow e1 -> 192.168.0.5 "x"\n', "f");
   expect(diags).toEqual([]);
   const d = stmts[0]!;
-  expect(d.kind === "node" && d.items).toMatchObject([{ dhcp: "203.0.113.5/24", nat: true }, { kind: "allow", from: "e1", to: "192.168.0.5", label: "x" }]);
+  expect(d.kind === "node" && d.items).toMatchObject([
+    { dhcp: "203.0.113.5/24", nat: true },
+    { kind: "allow", from: "e1", to: "192.168.0.5", label: "x" },
+  ]);
 });
 
 test("quoted port name", () => {
@@ -143,16 +155,23 @@ test("quoted port name", () => {
 });
 
 test("vlan subnets: list and legacy string", () => {
-  const a = parseDsl('vlan g 50 subnet 10.50.0.0/24, 2001:db8:50::/64\nvlan l untagged "192.168.0.0/24"\nvlan n 5\n', "f");
+  const a = parseDsl(
+    'vlan g 50 subnet 10.50.0.0/24, 2001:db8:50::/64\nvlan l untagged "192.168.0.0/24"\nvlan n 5\n',
+    "f",
+  );
   expect(a.diags).toEqual([]);
-  expect(a.stmts.map((s) => s.kind === "vlan" && s.subnets)).toEqual([["10.50.0.0/24", "2001:db8:50::/64"], ["192.168.0.0/24"], []]);
+  expect(a.stmts.map((s) => s.kind === "vlan" && s.subnets)).toEqual([
+    ["10.50.0.0/24", "2001:db8:50::/64"],
+    ["192.168.0.0/24"],
+    [],
+  ]);
 });
 
 test("indentation errors", () => {
   for (const src of ["device d\n\trouter\n", "device d\n   router\n"]) {
     expect(err(src)).toMatchObject([{ line: 2, hint: "indent block lines with two spaces" }]);
   }
-  expect(err('cloud c\n  ports a\n')).toMatchObject([{ line: 2, message: "ports must be inside a device block" }]);
+  expect(err("cloud c\n  ports a\n")).toMatchObject([{ line: 2, message: "ports must be inside a device block" }]);
   expect(err("device d\n  wan e1\n    ports a\n")).toHaveLength(1);
   expect(err("device d\n    ports a\n")).toHaveLength(1);
   expect(err("device d\n  link a -- b\n")).toMatchObject([{ hint: "unindent it" }]);
@@ -171,7 +190,10 @@ test("comment and blank lines inside a block keep the block open", () => {
   expect(b && b.kind === "bridge" && b.items.length).toBe(2);
 });
 
-const spanOf = (t: string) => { const r = parseDsl(t, "x.net"); return { ...r, sp: (o: any) => r.spans.get(o) }; };
+const spanOf = (t: string) => {
+  const r = parseDsl(t, "x.net");
+  return { ...r, sp: (o: any) => r.spans.get(o) };
+};
 
 test("spans cover continuations", () => {
   const r = spanOf("imports rsc a.rsc as a,\n  b.rsc as b\n");
