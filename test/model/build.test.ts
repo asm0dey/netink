@@ -298,7 +298,7 @@ test("a bridge label takes its first IPv4 address", () => {
   expect(node(m, "d/br")).toMatchObject({ label: "br · 192.168.0.1/24", sub: ["2001:db8::1/64"] });
 });
 test("diagnostics do not assume internals come from imports", () => {
-  const m = dslModel("client c lease 10.0.0.9\ndevice x\nlink x.p -- nowhere\n");
+  const m = dslModel("client c lease 10.0.0.9\ndevice x\nlink x.p -- nowhere\ndevice y\n  lease 10.0.0.1\n");
   expect(m.diags).toEqual([
     { level: "warning", file: "t.net", line: 1, message: "no device has a lease for 10.0.0.9" },
     { level: "error", file: "t.net", line: 3, message: '"x" has no device block, so it has no port "p"', hint: 'add a block under "device x" listing p, or link x without a port' },
@@ -315,4 +315,9 @@ test("address lines show on their port and vlan-iface chips, except the one alre
   expect(node(m, "d/v9")!.sub).toEqual(["10.9.0.1/24"]);
   expect(node(m, "d/v8")!.sub).toEqual([]);
   expect(node(m, "d/ether1")!.sub).toEqual(["203.0.113.2/30"]);
+});
+test("a client lease needs no device lease line when no device lists leases", () => {
+  const m = dslModel('device r\n  bridge br address 10.0.0.1/24 lan\n    ports ether2\nclient nas "NAS" lease 10.0.0.50\nlink r.ether2 -- nas\n');
+  expect(m.diags).toEqual([]);
+  expect(node(m, "nas")).toMatchObject({ label: "NAS", sub: ["10.0.0.50"] });
 });

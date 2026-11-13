@@ -78,6 +78,8 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   // Nodes in declaration order
   const nodes: MNode[] = [], nodeType = new Map<string, NodeStmt["type"]>();
   const declaredLeases = new Set<string>(), leaseOf = new Map<string, string>();
+  // a client's own lease is enough; an unmatched one is only suspicious when some device lists its leases
+  const listsLeases = [...devs.values()].some((d) => d.leases.length);
   for (const s of stmts) {
     if (s.kind !== "node") continue;
     if (blocks.has(s)) { nodes.push(devs.get(s.id)!.node); continue; }
@@ -92,7 +94,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       const owner = [...devs.values()].find((x) => x.leases.some((l) => l.address === s.lease));
       const lease = owner?.leases.find((l) => l.address === s.lease);
       if (owner) declaredLeases.add(`${owner.id} ${s.lease}`);
-      else diags.push({ level: "warning", file, line: s.line, message: `no device has a lease for ${s.lease}` });
+      else if (listsLeases) diags.push({ level: "warning", file, line: s.line, message: `no device has a lease for ${s.lease}` });
       label = s.label ?? lease?.comment ?? s.lease;
       sub.push(s.lease);
     }
