@@ -229,3 +229,17 @@ test("a bridge on a VLAN named wan gets style vlan:wan", () => {
   const m = synth(rsc, 'imports rsc x.rsc as x\nvlan wan 70 color cyan "10.70.0.0/24"\n');
   expect(node(m, "x/br70")!.style).toBe("vlan:wan");
 });
+
+test("fallback styles take a same-named VLAN def's style, else stay built-in", () => {
+  const rsc = "/ip hotspot add interface=br70\n/interface bridge add name=br70\n/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n";
+  const wan = "/interface list add name=WAN\n/interface list member add list=WAN interface=vlan9\n/interface vlan add interface=ether1 name=vlan9 vlan-id=9\n";
+  const style = (m: Model, id: string) => node(m, id)!.style;
+  const withDefs = synth(rsc, 'imports rsc x.rsc as x\nvlan guest 50 color blue "10.50.0.0/24"\nvlan lan 51 color green "10.51.0.0/24"\n');
+  expect(style(withDefs, "x/br70")).toBe("vlan:guest");
+  expect(style(withDefs, "x/bridge")).toBe("vlan:lan");
+  const none = synth(rsc, "imports rsc x.rsc as x\n");
+  expect(style(none, "x/br70")).toBe("guest");
+  expect(style(none, "x/bridge")).toBe("lan");
+  expect(style(synth(wan, 'imports rsc x.rsc as x\nvlan lte 52 color orange "10.52.0.0/24"\n'), "x/vlan9")).toBe("vlan:lte");
+  expect(style(synth(wan, "imports rsc x.rsc as x\n"), "x/vlan9")).toBe("lte");
+});
