@@ -31,6 +31,12 @@ test("orientation", () => {
   for (const l of m.links) expect(tier.get(l.from)!).toBeLessThanOrEqual(tier.get(l.to)!);
 });
 
+test("a node upstream of a WAN chip gets a tier between the clouds and the chip", () => {
+  const m = loadModel(HOME);
+  expect(node(m, "isp")!.tier).toBeGreaterThan(node(m, "internet")!.tier);
+  expect(node(m, "isp")!.tier).toBeLessThan(node(m, "core/ether1")!.tier);
+});
+
 test("cap radios land on ap2", () => {
   const m = loadModel(HOME);
   expect(all(m.nodes).some((n) => n.id.startsWith("core/cap-"))).toBe(false);

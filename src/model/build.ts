@@ -371,7 +371,12 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   };
   free.filter((n) => n.kind === "cloud").forEach((n) => tier.set(n.id, 0));
   bfs(free.filter((n) => n.kind !== "cloud" && nbrs(n.id).some((x) => (tier.get(x) ?? -1) >= 3 && devs.has(x.split("/")[0]!))).map((n) => n.id), 5);
+  const before = new Set(tier.keys());
   bfs([...new Set(free.filter((n) => n.kind === "cloud").flatMap((n) => nbrs(n.id)))].sort(), 1);
+  // Upstream nodes (reached from clouds) sit strictly between the clouds (0) and the WAN chips (1): hop h of H becomes h/(H+1).
+  const up = [...tier].filter(([id, t]) => !before.has(id));
+  const hops = Math.max(0, ...up.map(([, t]) => t));
+  for (const [id, t] of up) tier.set(id, t / (hops + 1));
   for (const n of free) n.tier = tier.get(n.id) ?? 5;
   for (const l of out) if ((tier.get(l.from) ?? 0) > (tier.get(l.to) ?? 0)) [l.from, l.to] = [l.to, l.from];
 

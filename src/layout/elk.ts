@@ -22,14 +22,28 @@ const elk = new ELK();
  *   order; ELK ignores `elk.layered.layering.layerChoiceConstraint` (probed on leaves and compounds),
  *   and `layerConstraint` is ignored inside compounds, so "same layer" is best effort.
  *   `near` is an invisible edge b → a (thickness 0, high straightness/shortness priority) that pulls
- *   a below b and next to it horizontally. On home, lte still lands 189 px below isp, not one layer:
+ *   a below b and next to it horizontally. On home, lte still lands 207 px below isp (was 189 before Task 11), not one layer:
  *   its NORTH border port (cable from mobile) takes a layer of its own. Aiming the edge at lte's top
  *   leaf or at that border port gave 247 px (and centres 411 to 687 px apart). No edge gave 254 px
  *   and 1242 px. LONGEST_PATH, LONGEST_PATH_SOURCE, COFFMAN_GRAHAM and MIN_WIDTH layering made it
  *   worse, and STRETCH_WIDTH stalled.
- * - Same-tier ends (isp → core/ether1) kept EAST per the brief. NORTH for the downstream end
- *   straightened the WAN cable, but ELK then returned diagonal sections for the radio → client
- *   cables and the allow arrow.
+ * - Same-tier ends stay EAST per the brief. isp is no longer same-tier as core/ether1 (upstream nodes
+ *   now tier below the WAN chips), so ether1's port is NORTH and the uplink enters core from the top.
+ *   ELK then returns a diagonal section for the allow arrow (hierarchy-crossing, no ports); `orthogonal`
+ *   bends any such section at a right angle.
+ * - Radios with a cable leaving the device get a border port too. Without one, ELK routed the radio →
+ *   client cables through core's interior, hugging (and, after the tier fix, crossing) br-guest.
+ * - Compound minimum sizes: ELK applies them transposed (see toElk). Fixing that, not an option, is what
+ *   shrank the oversized compounds on home: lte 659×492 → 699×208, core 825×792 → 900×608.
+ * - Task 11 tuning, tried and not kept (home network, after the fixes above):
+ *   - compaction.postCompaction.strategy EDGE_LENGTH: 192 px shorter and lte one layer below isp,
+ *     but ap1/ap2 tops drift 30 px apart (row hint). LEFT: same drift.
+ *   - nodePlacement.bk.fixedAlignment BALANCED (± EDGE_LENGTH): lte 201 px from isp, but 228 px wider
+ *     and the uplink bends 369 px sideways. LEFTUP/RIGHTUP/LEFTDOWN wider still, uplink bent.
+ *   - nodePlacement NETWORK_SIMPLEX: ELK throws (NEdge without source/target). LINEAR_SEGMENTS: 400 px
+ *     wider, uplink bent.
+ *   - considerModelOrder.components MODEL_ORDER, connectedComponents compaction, favorStraightEdges:
+ *     no change. thoroughness 50, considerModelOrder NONE: wider.
  */
 const ROOT_OPTIONS: Record<string, string> = {
   "elk.algorithm": "layered",
@@ -84,7 +98,7 @@ function build(model: Model) {
   for (const l of model.links) {
     for (const [end, far] of [[l.from, l.to], [l.to, l.from]] as const) {
       const n = info.get(end)!.node;
-      if (n.kind !== "port" || border.has(end) || top(end) === top(far)) continue;
+      if ((n.kind !== "port" && n.kind !== "radio") || border.has(end) || top(end) === top(far)) continue;
       const [mine, theirs] = [top(end).tier, top(far).tier];
       border.set(end, { device: top(end).id, side: theirs < mine ? "NORTH" : theirs > mine ? "SOUTH" : "EAST" });
     }
@@ -155,7 +169,7 @@ export async function layout(model: Model): Promise<Placed> {
       ...route(id),
       ...(cable && via(ends, to) ? leg(to).reverse() : []),
     ];
-    const points = simplify(pts);
+    const points = simplify(orthogonal(pts));
     return label === undefined ? { id, points } : { id, points, labelAt: labelPoint(points) };
   };
 
@@ -169,6 +183,13 @@ export async function layout(model: Model): Promise<Placed> {
 }
 
 const near = (a: P, b: P) => Math.abs(a.x - b.x) < 0.01 && Math.abs(a.y - b.y) < 0.01;
+
+/** ELK can return a diagonal section for a hierarchy-crossing edge without ports; bend it at a right angle (vertical first out of the start, vertical last into the end). */
+const orthogonal = (pts: P[]): P[] => pts.flatMap((b, i) => {
+  const a = pts[i - 1];
+  if (!a || Math.abs(a.x - b.x) < 0.01 || Math.abs(a.y - b.y) < 0.01) return [b];
+  return [i === 1 ? { x: a.x, y: b.y } : { x: b.x, y: a.y }, b];
+});
 
 /** Drops repeated points (where legs join) and middle points of straight runs. */
 const simplify = (pts: P[]): P[] => {
