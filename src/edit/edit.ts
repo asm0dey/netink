@@ -57,7 +57,11 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
   let pool: Target[] = stmts, level = 0, end = (text.match(/[^\n]*\n|[^\n]+$/g) ?? []).length;
   if (noun.block && args.parent === undefined) return { ok: false, error: `${noun.name} needs a parent device` };
   if (args.parent !== undefined) {
-    const [d, b] = args.parent.split("/");
+    const [d, b, deeper] = args.parent.split("/");
+    if (deeper !== undefined) return { ok: false, error: `bad parent "${args.parent}": use device or device/bridge` };
+    const imp = stmts.find((s): s is Extract<Stmt, { kind: "import" }> => s.kind === "import" && s.as === d);
+    // same words as src/load.ts: an imported device has no block to edit
+    if (imp) return { ok: false, error: `"${d}" is imported; its internals come from ${imp.file}`, line: spans.get(imp)?.line, hint: `run netdraw import ${imp.file} to get an editable block` };
     const dev = stmts.find((s): s is Extract<Stmt, { kind: "node" }> => s.kind === "node" && s.type === "device" && s.id === d);
     const parent = b === undefined ? dev : dev?.items?.find((i) => i.kind === "bridge" && i.name === b);
     if (!parent) return { ok: false, error: `no device or bridge "${args.parent}"`, hint: "run netdraw show devices" };

@@ -1,4 +1,4 @@
-import type { DevItem, Stmt } from "../types";
+import type { DevItem, Stmt, VlanRef } from "../types";
 
 export type Verb = "add" | "set" | "rm";
 export type Complete = "node" | "parent" | "port" | "vlan" | "color" | "path" | "jumps" | "side" | "legend-mode" | "legend-position";
@@ -16,7 +16,6 @@ export type Noun = {
   repeatable?: true;       // several statements may share a key (see spec "Kinds that can repeat")
   help: string;            // one usage line for --help
   show?: string;           // the `netdraw show` slice that lists candidates, e.g. "vlans"
-  each?(a: Args): Args[];  // one command that is really several edits (legend --mode with --position)
   each?(a: Args): Args[];  // one command that is really several edits (legend --mode with --position)
   last?: true;             // set/rm act on the last of several matches (title, subtitle: the one the model uses)
   upsert?: true;           // set with no match adds `make(a)` (settings: legend, style)
@@ -281,7 +280,8 @@ const style: Noun = {
 };
 
 const arrowNoun = (kind: "route" | "allow"): Noun => ({
-  name: kind, block: false, covers: [kind], verbs: ["add", "set", "rm"], args: [{ name: "from", complete: "node" }, { name: "to", complete: "node" }],
+  // `allow` also serves the in-block form: with a parent (`--in <device>`) the pool is that device's items
+  name: kind, block: false, covers: kind === "allow" ? [kind, "item:allow"] : [kind], verbs: ["add", "set", "rm"], args: [{ name: "from", complete: "node" }, { name: "to", complete: "node" }],
   flags: [clearable("label", "arrow label")], help: `${kind} add|set|rm <from> <to> [--label text]`,
   match: (t, a) => t.kind === kind && t.from === a.pos[0] && t.to === a.pos[1],
   make: (a) => arrowNoun(kind).apply({ line: 0, kind, from: bare(a.pos[0], "from"), to: bare(a.pos[1], "to") }, a)[0]!,
@@ -301,10 +301,166 @@ const hide: Noun = {
   apply: (t) => [t],
 };
 
+// ---- device-block lines (need a parent: `device` or `device/bridge`) ----
+const num = (s: string | undefined, what: string): number => {
+  if (s === undefined || !/^\d+$/.test(s)) throw new Error(`bad ${what} "${s ?? ""}": use a whole number`);
+  return Number(s);
+};
+const vref = (s: string): VlanRef => (/^\d+$/.test(s) ? Number(s) : ident(s, "vlan"));
+const boolFlag = (name: string, help: string): Flag => ({ name, type: "boolean", clearable: true, help });
+const strFlag = (name: string, help: string, complete?: Complete): Flag => ({ name, type: "string", clearable: true, ...(complete ? { complete } : {}), help });
+const IF_FLAGS = ["lan", "guest", "hotspot"];
+/** Apply the given flags to `o`: a string/number flag sets (or, cleared, deletes) its field; a boolean sets `true` or deletes. */
+function setFields(o: Record<string, unknown>, a: Args, specs: [flag: string, field: string, conv?: (s: string) => unknown][]) {
+  for (const [flag, field, conv] of specs) {
+    const v = a.flags[flag];
+    if (v === false) delete o[field];
+    else if (v === true) o[field] = true;
+    else if (typeof v === "string") o[field] = conv ? conv(v) : v;
+  }
+}
+const names = (s: string | undefined, what: string) => {
+  const xs = csv(s ?? "").map((x) => ident(x, what));
+  if (!xs.length) throw new Error(`missing ${what}`);
+  return xs;
+};
+const addrs = (s: string) => csv(s).map((x) => bare(x, "address"));
+const kindOf = (kind: DevItem["kind"]) => (t: Target) => "kind" in t && t.kind === kind;
+
+type Item<K extends DevItem["kind"]> = Extract<DevItem, { kind: K }>;
+/** `ports`/`radio` lines: matched by any named port/iface; rm drops just those; set on part of a line moves them to a new line right after. */
+const listNoun = <K extends "ports" | "radio">(kind: K, field: K extends "ports" ? "names" : "ifaces", flags: Flag[], fill: (it: Item<K>, a: Args) => void, help: string): Noun => {
+  const get = (t: Target) => (t as unknown as Record<string, string[]>)[field]!;
+  const named = (a: Args) => names(a.pos[0], kind === "ports" ? "port" : "interface");
+  const noun: Noun = {
+    name: kind, block: true, covers: [`item:${kind}`], verbs: ["add", "set", "rm"], args: [{ name: kind === "ports" ? "names" : "ifaces", complete: "port" }], flags, help,
+    match: (t, a) => kindOf(kind)(t) && named(a).some((n) => get(t).includes(n)),
+    make: (a) => {
+      const it = (kind === "ports" ? { line: 0, kind, names: [], tagged: [] } : { line: 0, kind, ifaces: [], ssids: [] }) as unknown as Item<K>;
+      (it as Record<string, unknown>)[field] = named(a);
+      fill(it, a);
+      return it;
+    },
+    apply(t, a) {
+      const hit = named(a), rest = get(t).filter((n) => !hit.includes(n));
+      const moved = { ...t, [field]: get(t).filter((n) => hit.includes(n)) } as unknown as Item<K>;
+      fill(moved, a);
+      if (!rest.length) return [moved];
+      return Object.keys(a.flags).some((k) => a.flags[k] !== undefined) ? [{ ...t, [field]: rest } as Target, moved] : [t];
+    },
+    remove(t, a) {
+      const rest = get(t).filter((n) => !named(a).includes(n));
+      return rest.length ? [{ ...t, [field]: rest } as Target] : [];
+    },
+  };
+  return noun;
+};
+
+const wan: Noun = {
+  name: "wan", block: true, covers: ["item:wan"], verbs: ["add", "set", "rm"], args: [{ name: "iface", complete: "port" }],
+  flags: [strFlag("on", "parent interface"), strFlag("vlan", "vlan id"), strFlag("route", "route name"), strFlag("distance", "route distance"),
+    boolFlag("dhcp", "DHCP client"), { name: "dhcp-address", type: "string", help: "DHCP address" }, boolFlag("nat", "masquerade")],
+  help: "wan add|set|rm <parent> <iface> [--on i] [--vlan n] [--route r] [--distance n] [--dhcp] [--dhcp-address a] [--nat]",
+  match: (t, a) => t.kind === "wan" && t.iface === a.pos[0],
+  make: (a) => wan.apply({ line: 0, kind: "wan", iface: ident(a.pos[0], "interface") }, a)[0]!,
+  apply(t, a) {
+    if (t.kind !== "wan") return [t];
+    const w = { ...t } as Record<string, unknown>;
+    setFields(w, a, [["on", "on", (s) => ident(s, "--on")], ["vlan", "vlan", (s) => num(s, "vlan id")], ["route", "route", (s) => ident(s, "--route")],
+      ["distance", "distance", (s) => num(s, "distance")], ["nat", "nat"]]);
+    if (a.flags.dhcp === false) delete w.dhcp;
+    else if (a.flags.dhcp === true && w.dhcp === undefined) w.dhcp = true;
+    if (typeof a.flags["dhcp-address"] === "string") w.dhcp = bare(a.flags["dhcp-address"], "--dhcp-address");
+    return [w as Target];
+  },
+};
+
+const router: Noun = {
+  name: "router", block: true, covers: ["item:router"], verbs: ["add", "rm"], args: [], flags: [], help: "router add|rm <parent>",
+  match: kindOf("router"), make: () => ({ line: 0, kind: "router" }), apply: (t) => [t],
+};
+
+const bridge: Noun = {
+  name: "bridge", block: true, covers: ["item:bridge"], verbs: ["add", "set", "rm"], args: [{ name: "name" }],
+  flags: [strFlag("address", "addresses, comma-separated"), ...["lan", "guest", "hotspot", "filtering"].map((f) => boolFlag(f, f))],
+  help: "bridge add|set|rm <device> <name> [--address a,b] [--lan] [--guest] [--hotspot] [--filtering]",
+  match: (t, a) => t.kind === "bridge" && t.name === a.pos[0],
+  make: (a) => bridge.apply({ line: 0, kind: "bridge", name: ident(a.pos[0], "name"), addresses: [], items: [] }, a)[0]!,
+  apply(t, a) {
+    if (t.kind !== "bridge") return [t];
+    const b = { ...t } as Record<string, unknown>;
+    if (a.flags.address === false) b.addresses = [];
+    setFields(b, a, [["address", "addresses", addrs], ["filtering", "filtering"], ...IF_FLAGS.map((f): [string, string] => [f, f])]);
+    return [b as Target];
+  },
+};
+
+const ports = listNoun("ports", "names", [strFlag("untagged", "untagged vlan", "vlan"), strFlag("tagged", "tagged vlans, comma-separated", "vlan"), strFlag("horizon", "split-horizon group")],
+  (it, a) => {
+    const o = it as unknown as Record<string, unknown>;
+    if (a.flags.tagged === false) o.tagged = [];
+    setFields(o, a, [["untagged", "untagged", vref], ["tagged", "tagged", (s) => csv(s).map(vref)], ["horizon", "horizon", (s) => num(s, "horizon")]]);
+  }, "ports add|set|rm <parent> <names> [--untagged v] [--tagged a,b] [--horizon n]");
+
+const radio = listNoun("radio", "ifaces", [strFlag("tag", "vlan tag"), strFlag("ssid", "ssids, comma-separated")],
+  (it, a) => {
+    const o = it as unknown as Record<string, unknown>;
+    if (a.flags.ssid === false) o.ssids = [];
+    setFields(o, a, [["tag", "tag", (s) => num(s, "tag")], ["ssid", "ssids", csv]]);
+  }, "radio add|set|rm <parent> <ifaces> [--tag n] [--ssid a,b]");
+
+const vlanIface: Noun = {
+  name: "vlan-iface", block: true, covers: ["item:vlan-iface"], verbs: ["add", "set", "rm"], args: [{ name: "name" }],
+  flags: [strFlag("vlan", "vlan id (required on add)"), strFlag("on", "parent interface"), strFlag("address", "addresses, comma-separated"), ...IF_FLAGS.map((f) => boolFlag(f, f))],
+  help: "vlan-iface add|set|rm <parent> <name> --vlan n [--on i] [--address a,b] [--lan] [--guest] [--hotspot]",
+  match: (t, a) => t.kind === "vlan-iface" && t.name === a.pos[0],
+  make(a) {
+    if (typeof a.flags.vlan !== "string") throw new Error("vlan-iface add needs --vlan <n>");
+    return vlanIface.apply({ line: 0, kind: "vlan-iface", name: ident(a.pos[0], "name"), vlan: 0, addresses: [] }, a)[0]!;
+  },
+  apply(t, a) {
+    if (t.kind !== "vlan-iface") return [t];
+    const v = { ...t } as Record<string, unknown>;
+    if (a.flags.vlan === false) throw new Error("a vlan-iface always has a vlan");
+    if (a.flags.address === false) v.addresses = [];
+    setFields(v, a, [["vlan", "vlan", (s) => num(s, "vlan id")], ["on", "on", (s) => ident(s, "--on")], ["address", "addresses", addrs], ...IF_FLAGS.map((f): [string, string] => [f, f])]);
+    return [v as Target];
+  },
+};
+
+const address: Noun = {
+  name: "address", block: true, covers: ["item:address"], verbs: ["add", "set", "rm"], args: [{ name: "iface", complete: "port" }, { name: "cidrs", optional: true }],
+  flags: IF_FLAGS.map((f) => boolFlag(f, f)), help: "address add|set|rm <parent> <iface> <cidrs> [--lan] [--guest] [--hotspot]",
+  match: (t, a) => t.kind === "address" && t.iface === a.pos[0],
+  make(a) {
+    if (a.pos[1] === undefined) throw new Error("address add needs the cidrs (a,b)");
+    return address.apply({ line: 0, kind: "address", iface: ident(a.pos[0], "interface"), cidrs: [] }, a)[0]!;
+  },
+  apply(t, a) {
+    if (t.kind !== "address") return [t];
+    const o = { ...t } as Record<string, unknown>;
+    if (a.pos[1] !== undefined) o.cidrs = addrs(a.pos[1]);
+    setFields(o, a, IF_FLAGS.map((f): [string, string] => [f, f]));
+    return [o as Target];
+  },
+};
+
+const lease: Noun = {
+  name: "lease", block: true, covers: ["item:lease"], verbs: ["add", "set", "rm"], args: [{ name: "address" }, { name: "comment", optional: true }], flags: [],
+  help: "lease add|set|rm <parent> <address> [comment]",
+  match: (t, a) => t.kind === "lease" && t.address === a.pos[0],
+  make: (a) => ({ line: 0, kind: "lease", address: bare(a.pos[0], "address"), ...(a.pos[1] !== undefined ? { comment: a.pos[1] } : {}) }),
+  apply(t, a) {
+    if (a.pos[1] === undefined) throw new Error("lease set needs the new comment");
+    return t.kind === "lease" ? [{ ...t, comment: a.pos[1] }] : [t];
+  },
+};
+
 export const NOUNS: Noun[] = [
   textNoun("title"), textNoun("subtitle"), importNoun, vlan,
   nodeNoun("device", ["label", "kind", "model", "os", "note"]), nodeNoun("cloud", ["label"]), nodeNoun("client", ["label", "lease", "note"]),
   link, note, place, row, side, legend, legendEntry, legendHide, legendNote, style, arrowNoun("route"), arrowNoun("allow"), hide,
+  wan, router, bridge, ports, vlanIface, radio, address, lease,
 ];
 
 /** The noun named by the leading words, longest name first ("legend entry" before "legend"). */
