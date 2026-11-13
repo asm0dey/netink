@@ -214,7 +214,8 @@ export function renderSvg(model: Model, placed: Placed): string {
 
   const nodes = drawNodes(model, placed, lanes, laneOf);
   const legend = drawLegend(model, placed, lanes, lines);
-  const W = Math.max(placed.width, legend ? legend.w + 40 : 0), H = Math.max(placed.height, legend ? legend.h + 40 : 0);
+  // whole pixels, rounded up: rounding to 0.1 px could clip the layout by a fraction
+  const W = Math.ceil(Math.max(placed.width, legend ? legend.w + 40 : 0)), H = Math.ceil(Math.max(placed.height, legend ? legend.h + 40 : 0));
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${f(W)}" height="${f(H)}" viewBox="0 0 ${f(W)} ${f(H)}" font-family="${FONT}" font-size="14" fill="#222">`,
     "<defs>",
