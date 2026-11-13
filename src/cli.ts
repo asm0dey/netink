@@ -59,7 +59,7 @@ Usage:
       Print the device block for a router export, ready to paste into the .net file in place of its import.
       With --file (default ./network.net) present, all its imports are translated together and the block of the one
       resolving to <file.rsc> is printed; otherwise the .rsc is translated alone, id = --as or its basename.
-      --json  print {ok, stmt}.
+      --json  print {ok, stmt, diags}.
   netdraw --help | <command> --help
 
 Common options:
@@ -141,7 +141,7 @@ function importCmd(rsc: string | undefined, as: string | undefined, file: string
   }
   const t = translate(devs, vlans);
   const stmt = { ...t.stmts[target]!, ...(as ? { id: as } : {}) };
-  if (json) out(JSON.stringify({ ok: true, stmt }));
+  if (json) out(JSON.stringify({ ok: true, stmt, diags: t.diags }));
   else { t.diags.forEach((d) => err(fmt(d))); out(printStmts([stmt])); }
   return 0;
 }
@@ -156,10 +156,10 @@ async function main(argv: string[]): Promise<number> {
   try { ({ values: v, positionals } = parseArgs({ args: rest, options: OPTS, allowPositionals: true, strict: true })); }
   catch (e) { return fail(json, 2, { error: (e as Error).message.replace(/\s*If you want to use it as a positional.*$/, ""), hint: "run netdraw --help" }); }
   if (v.help) { out(HELP); return 0; }
+  if (positionals.length > 1) return fail(json, 2, { error: `unexpected argument ${positionals[1]}`, hint: "run netdraw --help" });
   if (cmd === "import") return importCmd(positionals[0], v.as, v.file ?? "./network.net", json);
   if (cmd !== "show" && positionals.length) return fail(json, 2, { error: `unexpected argument ${positionals[0]}`, hint: "run netdraw --help" });
-  if (cmd !== "import" && v.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
-  if (positionals.length > 1) return fail(json, 2, { error: `unexpected argument ${positionals[1]}`, hint: "run netdraw --help" });
+  if (v.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
   const file = v.file ?? "./network.net";
   if (!existsSync(file)) return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file or create ./network.net" });
 

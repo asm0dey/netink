@@ -121,3 +121,30 @@ test("ejected blocks replace their imports", async () => {
   expect(strip(b)).toEqual(strip(a));
   expect(renderSvg(b, await layout(b))).toBe(renderSvg(a, await layout(a)));
 });
+test("import with an extra argument is exit 2", () => {
+  const r = run("import", "examples/home/core.rsc", "extra", "--json");
+  expect(r.code).toBe(2);
+  expect(JSON.parse(r.out).error).toBe("unexpected argument extra");
+});
+test("import --json prints ok, stmt and the translator diags", () => {
+  const j = JSON.parse(run("import", "examples/home/ap2.rsc", "--file", HOME, "--json").out);
+  expect(j.ok).toBe(true);
+  expect(j.stmt.id).toBe("ap2");
+  expect(j.diags.map((d: { message: string }) => d.message)).toContainEqual(expect.stringContaining("CAPsMAN radio"));
+});
+test("import --as renames the printed block", () => {
+  expect(run("import", "examples/home/core.rsc", "--as", "gw", "--file", HOME).out.startsWith("device gw ")).toBe(true);
+});
+test("import translates alone without the .net file or when the .rsc is not among its imports", () => {
+  expect(run("import", "examples/home/core.rsc", "--file", join(dir, "none.net")).out.startsWith("device core ")).toBe(true);
+  const x = join(dir, "x.rsc");
+  writeFileSync(x, readFileSync("examples/home/core.rsc"));
+  const r = run("import", x, "--file", HOME);
+  expect(r.code).toBe(0);
+  expect(r.out.startsWith("device x ")).toBe(true);
+});
+test("import of a missing .rsc is exit 1 with the standard error shape", () => {
+  const r = run("import", join(dir, "nope.rsc"), "--file", HOME, "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out)).toEqual({ error: `cannot read ${join(dir, "nope.rsc")}`, file: join(dir, "nope.rsc"), line: 0, hint: "check the path" });
+});
