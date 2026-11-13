@@ -16,6 +16,8 @@ export type Noun = {
   repeatable?: true;       // several statements may share a key (see spec "Kinds that can repeat")
   help: string;            // one usage line for --help
   show?: string;           // the `netdraw show` slice that lists candidates, e.g. "vlans"
+  each?(a: Args): Args[];  // one command that is really several edits (legend --mode with --position)
+  each?(a: Args): Args[];  // one command that is really several edits (legend --mode with --position)
   last?: true;             // set/rm act on the last of several matches (title, subtitle: the one the model uses)
   upsert?: true;           // set with no match adds `make(a)` (settings: legend, style)
   match(t: Target, a: Args): boolean;
@@ -126,7 +128,8 @@ const nodeNoun = (type: "device" | "cloud" | "client", flags: string[]): Noun =>
     name: type, block: false, covers: [`node:${type}`], verbs: ["add", "set", "rm"], show: "devices", args: [{ name: "id", complete: "node" }],
     flags: fields.map((f) => clearable(f.flag, f.help)),
     help: `${type} add|set|rm <id>${fields.map((f) => ` [--${f.flag} v]`).join("")}`,
-    match: (t, a) => t.kind === "node" && t.type === type && t.id === a.pos[0],
+    // an id is the key across device/cloud/client, so add collides with any type
+    match: (t, a) => t.kind === "node" && (a.verb === "add" || t.type === type) && t.id === a.pos[0],
     make: (a) => noun.apply({ line: 0, kind: "node", type, id: ident(a.pos[0], "id") }, a)[0]!,
     apply(t, a) {
       const n: Record<string, unknown> = { ...t };
@@ -156,7 +159,11 @@ const link: Noun = {
   },
   make(a) {
     const [x, y] = ends(a);
-    const ep = (w: string) => { const d = w.indexOf("."); return d < 0 ? { node: w } : { node: w.slice(0, d), port: w.slice(d + 1) }; };
+    const ep = (w: string) => {
+      const d = w.indexOf(".");
+      if (d === 0 || d === w.length - 1) throw new Error(`empty ${d ? "port" : "node"} in "${w}"`);
+      return d < 0 ? { node: w } : { node: w.slice(0, d), port: w.slice(d + 1) };
+    };
     return link.apply({ line: 0, kind: "link", path: [ep(x!), ep(y!)] }, a)[0]!;
   },
   apply(t, a) {
@@ -173,8 +180,8 @@ const note: Noun = {
   name: "note", block: false, covers: ["note"], verbs: ["add", "set", "rm"], repeatable: true,
   args: [{ name: "target", complete: "node" }, { name: "text", optional: true }], flags: [],
   help: "note add|set|rm <target> [text]   (several notes: narrow with --select-text)",
-  // rm names the note by its text; set's text is the new one, so the caller narrows with --select-text
-  match: (t, a) => t.kind === "note" && t.target === a.pos[0] && (a.verb !== "rm" || a.pos[1] === undefined || t.text === a.pos[1]),
+  // rm/add name the note by its text; set's text is the new one, so the caller narrows with --select-text
+  match: (t, a) => t.kind === "note" && t.target === a.pos[0] && (a.verb === "set" || a.pos[1] === undefined || t.text === a.pos[1]),
   make(a) {
     if (a.pos[1] === undefined) throw new Error("note add needs the text");
     return { line: 0, kind: "note", target: bare(a.pos[0], "target"), text: a.pos[1] };
@@ -227,7 +234,6 @@ const MODES = ["auto", "off"] as const, POSITIONS = ["bottom", "right"] as const
 /** Which setting a `legend` command names: `rm` says it, `set` says it by flag. */
 const setting = (a: Args): "mode" | "position" => {
   const [m, p] = [str(a.flags.mode), str(a.flags.position)];
-  if (m !== undefined && p !== undefined) throw new Error("set one of --mode and --position at a time");
   if (a.verb === "rm" || a.pos[0] !== undefined) return pick(a.pos[0], ["mode", "position"] as const, "setting");
   if (m === undefined && p === undefined) throw new Error("legend set needs --mode or --position");
   return m !== undefined ? "mode" : "position";
@@ -236,6 +242,8 @@ const legend: Noun = {
   name: "legend", block: false, covers: ["legend:auto", "legend:off", "legend:position"], verbs: ["set", "rm"], last: true, upsert: true,
   args: [{ name: "setting", optional: true }],
   flags: [{ name: "mode", type: "string", complete: "legend-mode", help: "auto or off" }, { name: "position", type: "string", complete: "legend-position", help: "bottom or right" }],
+  each: (a) => (str(a.flags.mode) !== undefined && str(a.flags.position) !== undefined
+    ? [{ ...a, flags: { ...a.flags, position: undefined } }, { ...a, flags: { ...a.flags, mode: undefined } }] : [a]),
   help: "legend set --mode auto|off | --position bottom|right; legend rm mode|position",
   match: (t, a) => t.kind === "legend" && (setting(a) === "mode" ? t.op === "auto" || t.op === "off" : t.op === "position"),
   make: (a) => legend.apply({ line: 0, kind: "legend", op: "auto" }, a)[0]!,

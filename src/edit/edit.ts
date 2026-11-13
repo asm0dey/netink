@@ -19,6 +19,29 @@ function print(ts: Target[], level: number, own: boolean): string[] {
 
 /** Pure in-place edit of DSL `text`: every byte outside the edited statement is kept. */
 export function edit(text: string, file: string, req: EditRequest): EditResult {
+  // a command that sets several settings runs as one edit per setting
+  const parts = req.noun.each?.({ ...req.args, verb: req.verb }) ?? [req.args];
+  let cur = text, first: Extract<EditResult, { ok: true }> | undefined;
+  const written: string[] = [];
+  for (const args of parts) {
+    const r = editOne(cur, file, { ...req, args });
+    if (!r.ok) return r;
+    first ??= r;
+    cur = r.text;
+    written.push(r.written);
+  }
+  return { ...first!, text: cur, written: written.join("\n") };
+}
+
+function editOne(text: string, file: string, req: EditRequest): EditResult {
+  const r = editRaw(text, file, req);
+  if (!r.ok) return r;
+  // never hand back text the parser would reject (a value the printer cannot quote)
+  const bad = parseDsl(r.text, file).diags.find((d) => d.level === "error");
+  return bad ? { ok: false, error: bad.message, line: bad.line, ...(bad.hint ? { hint: bad.hint } : {}) } : r;
+}
+
+function editRaw(text: string, file: string, req: EditRequest): EditResult {
   const { noun, verb } = req;
   const args: Args = { ...req.args, verb };
   const values = [args.parent, ...args.pos, ...Object.values(args.flags)];

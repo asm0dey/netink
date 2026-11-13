@@ -129,3 +129,20 @@ test("every noun resolves by name; legend alone is the settings noun", () => {
   for (const n of NOUNS) expect(nounOf(n.name.split(" "))?.noun).toBe(n);
   expect(nounOf(["legend", "set"])?.noun.name).toBe("legend");
 });
+test("device add refuses an id any node already has", () => {
+  const r = run("cloud a\n", "device", "add", ["a"]);
+  expect(r.ok).toBe(false);
+  expect(run("cloud a\n", "device", "set", ["a"], { label: "x" }).ok).toBe(false); // set/rm still by type
+});
+test("note add --after names a note by target and text", () => {
+  const t = 'device a\nnote a "x"\nnote a "y"\n';
+  expect(ok(run(t, "note", "add", ["a", "z"], { after: "a x" }))).toBe('device a\nnote a "x"\nnote a "z"\nnote a "y"\n');
+});
+test("legend set takes --mode and --position together", () => {
+  expect(ok(run("legend auto\n", "legend", "set", [], { mode: "off", position: "right" }))).toBe("legend off\nlegend position right\n");
+  expect(ok(run(B, "legend", "set", [], { mode: "off", position: "right" }))).toBe(B + "legend off\nlegend position right\n");
+});
+test("link add refuses an empty port", () => {
+  expect(run("", "link", "add", ["a.", "b"]).ok).toBe(false);
+  expect(run("", "link", "add", ["a", ".p"]).ok).toBe(false);
+});

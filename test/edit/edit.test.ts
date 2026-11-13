@@ -211,3 +211,11 @@ test("--after with --before is refused", () => {
   expect(r.ok).toBe(false);
   if (!r.ok) expect(r.error).toBe("use either --after or --before");
 });
+
+test("output the parser would reject is refused, text unchanged", () => {
+  for (const [pos, flags] of [[["v", "10"], { color: "chartreuse" }], [["v w", "10"], {}], [["v", "10"], { subnet: "a b" }]] as [string[], Args["flags"]][]) {
+    const r = run("", "add", pos, flags);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error.length).toBeGreaterThan(0);
+  }
+});
