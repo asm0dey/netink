@@ -94,3 +94,20 @@ test("route arrowheads are 10-12 px", () => {
   expect(w! * 4).toBeGreaterThanOrEqual(10); // route stroke is 4 px; markerUnits = strokeWidth
   expect(w! * 4).toBeLessThanOrEqual(12);
 });
+
+test("group and WAN-chip colours follow the VLAN def, not its name", async () => {
+  const { mkdtempSync, readFileSync, writeFileSync, rmSync } = require("node:fs"), { tmpdir } = require("node:os"), { join, resolve } = require("node:path");
+  const dir = mkdtempSync(join(tmpdir(), "netdraw-rename-"));
+  try {
+    const src = readFileSync(HOME, "utf8")
+      .replace(/(\w+)\.rsc as/g, (_: string, n: string) => `${resolve("examples/home", n)}.rsc as`)
+      .replace(/^vlan lan /m, "vlan main ").replace(/^vlan guest /m, "vlan visitors ").replace(/^vlan lte /m, "vlan backup ")
+      .replace("vlans lte", "vlans backup");
+    writeFileSync(join(dir, "n.net"), src);
+    const renamed = loadModel(join(dir, "n.net")), orig = loadModel(HOME);
+    const style = (m: Model, id: string) => { const w = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...w(n.children)]); return w(m.nodes).find((n) => n.id === id)!.style; };
+    expect(["core/bridge", "core/br-guest", "ap2/br-guest", "core/vlan60-lte"].map((id) => style(renamed, id))).toEqual(["main", "visitors", "visitors", "backup"]);
+    const body = async (m: Model) => renderSvg(m, await layout(m)).split('<g class="legend">')[0];
+    expect(await body(renamed)).toBe(await body(orig));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});

@@ -17,7 +17,6 @@ type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; 
 const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
   ({ id, kind, style, label, sub, children: [], tier });
 const ID_RE = /^[a-z0-9_-]+$/;
-const LANE_STYLES = ["lan", "guest", "lte"];
 const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
 const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
@@ -86,7 +85,9 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     for (const i of ifs) {
       const r = routes.get(i), dhcp = f.dhcpClients.find((c) => c.iface === i.name);
       const sub = [r && `${r.comment ?? r.dst} · distance ${r.distance}`, dhcp && `DHCP ${dhcp.address ?? "client"}`].filter((s): s is string => !!s);
-      add(g, mk(`${id}/${i.name}`, i.type === "vlan" ? "iface" : "port", i.type === "vlan" ? "lte" : "box", i.name, sub, 1), i);
+      // a WAN VLAN chip is styled by its VLAN def (render colours it like that lane)
+      const vstyle = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.name ?? "lte";
+      add(g, mk(`${id}/${i.name}`, i.type === "vlan" ? "iface" : "port", i.type === "vlan" ? vstyle : "box", i.name, sub, 1), i);
     }
     node.children.push(g);
   }
@@ -97,7 +98,8 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     const guest = f.hotspots.includes(b.name) || (f.lists.GUEST ?? []).includes(b.name);
     // a bridge is styled by the tagged VLAN its vlan-iface members belong to
     const def = vlans.find((v) => v.ids !== "untagged" && f.ifaces.some((i) => i.type === "vlan" && i.bridge === b.name && i.vlanId !== undefined && (v.ids as number[]).includes(i.vlanId)));
-    const style = def && LANE_STYLES.includes(def.name) ? def.name : guest ? "guest" : "lan";
+    // untagged def for a plain bridge; "guest"/"lan" only when no def applies
+    const style = def?.name ?? (guest ? "guest" : vlans.find((v) => v.ids === "untagged")?.name ?? "lan");
     const cidr = addrOf(b.name);
     const g = mk(`${id}/${b.name}`, "group", style, cidr ? `${b.name} · ${cidr}` : b.name, f.hotspots.includes(b.name) ? ["hotspot"] : [], 3);
     groups.set(b.name, g);

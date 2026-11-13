@@ -14,7 +14,10 @@ const DASHES = ["12 4 3 4", "4 4", "14 6", "7 3 2 3"];
 const TINT: Record<string, string | undefined> & Record<"lan" | "guest" | "lte" | "wan" | "router" | "dev", string> = { lan: "#E8F5E9", guest: "#E3F2FD", lte: "#FFF3E0", wan: "#FDECEA", router: "#F3E5F5", dev: "#FAFAFA" };
 const ROUTE = "#6A1B9A", ALLOW = "#1565C0", WIRE = "#555";
 
-type Stroke = { stroke: string; w: number; dash?: string };
+/** `tint` (VLAN lanes only): the group/chip fill for nodes styled by that VLAN def. */
+type Stroke = { stroke: string; w: number; dash?: string; tint?: string };
+/** Theme fills for the theme's own colours; any other colour gets a computed light tint. */
+const THEME_TINT: Record<string, string> = { [NAMED.green!]: "#E8F5E9", [NAMED.blue!]: "#E3F2FD", [NAMED.orange!]: "#FFF3E0" };
 /** Where along a segment a label may go: 0.05 … 0.95, nearest the middle first. */
 const STEPS = Array.from({ length: 19 }, (_, i) => (i + 1) / 20).sort((a, b) => Math.abs(a - 0.5) - Math.abs(b - 0.5) || a - b);
 type Rect = { x0: number; y0: number; x1: number; y1: number };
@@ -36,10 +39,10 @@ function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
     ["route", { stroke: ROUTE, w: 4 }], ["allow", { stroke: ALLOW, w: 2, dash: "2 4" }]]);
   let tagged = 0;
   vlans.forEach((v, i) => {
-    const stroke = hex(v.color, i);
-    if (v.ids === "untagged") m.set(v.name, { stroke, w: 4 });
-    else if (v.name === "lte" || stroke === NAMED.orange) m.set(v.name, { stroke, w: 4, dash: "10 4" });
-    else m.set(v.name, { stroke, w: 3, dash: tagged++ === 0 ? "7 5" : DASHES[(tagged - 2) % DASHES.length] });
+    const stroke = hex(v.color, i), t = THEME_TINT[stroke.toUpperCase()] ?? tint(stroke);
+    if (v.ids === "untagged") m.set(v.name, { stroke, w: 4, tint: t });
+    else if (v.name === "lte" || stroke === NAMED.orange) m.set(v.name, { stroke, w: 4, dash: "10 4", tint: t });
+    else m.set(v.name, { stroke, w: 3, dash: tagged++ === 0 ? "7 5" : DASHES[(tagged - 2) % DASHES.length], tint: t });
   });
   return m;
 }
@@ -92,13 +95,13 @@ function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, lan
       centred = true; labelFill = ' fill="#4A148C"'; bg = TINT.router;
     } else if (n.kind === "iface") {
       const c = lanes.get(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
-      rect(6, TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
+      rect(6, lanes.get(n.style)?.tint ?? TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
     } else if (n.style === "spare") rect(6, "#F5F5F5", { stroke: "#999", w: 1.5, dash: "4 3" });
     else if (n.style === "dev") rect(10, TINT.dev, { stroke: "#333", w: 2 });
     else if (n.style === "wan") rect(10, TINT.wan, { stroke: "#C62828", w: 1.5 });
     else if (container) {
       const c = styleStroke(n.style, WIRE);
-      rect(10, TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
+      rect(10, lanes.get(n.style)?.tint ?? TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
     } else rect(6, "#fff", { stroke: WIRE, w: 1.5 });
 
     const tx = centred ? x + w / 2 : x + 14, anchor = centred ? ' text-anchor="middle"' : "";
