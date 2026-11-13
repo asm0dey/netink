@@ -2,6 +2,8 @@ import type { P } from "../types";
 
 export const LANE_GAP = 7;
 export const TRUNK_AT = 4;
+/** Width of the white halo behind a jump arc; a crosser must extend past the line by r + half of it + 2 px, or the halo erases its end. */
+export const JUMP_HALO_W = 7;
 
 /** Coordinates in SVG output: rounded to 0.1 px, no trailing ".0", no "-0". */
 export const f = (n: number): string => String(Math.round(n * 10) / 10 + 0);
@@ -39,8 +41,9 @@ type Crosser = { x: number; y1: number; y2: number };
 function runsOf(a: P, b: P, crossers: Crosser[], r: number): [number, number][] {
   if (Math.abs(a.y - b.y) >= 0.5 || Math.abs(a.x - b.x) <= 0.5) return [];
   const dir = Math.sign(b.x - a.x);
+  const m = r + JUMP_HALO_W / 2 + 2;
   const xs = crossers
-    .filter((c) => c.y1 < a.y - 3 && c.y2 > a.y + 3 && (c.x - a.x) * dir >= r + 3 && (b.x - c.x) * dir >= r + 3)
+    .filter((c) => c.y1 < a.y - m && c.y2 > a.y + m && (c.x - a.x) * dir >= r + 3 && (b.x - c.x) * dir >= r + 3)
     .map((c) => c.x)
     .sort((p, q) => (p - q) * dir);
   // crossers closer than 2r (a lane bundle) share one jump, stretched flat to span them all
