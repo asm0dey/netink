@@ -1,0 +1,236 @@
+import { textWidth } from "../layout/measure";
+import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
+import { f, jumpPath, lanesFor } from "./geometry";
+
+const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
+const JUMP_R = 5;
+const NAMED: Record<string, string> = {
+  green: "#2E7D32", blue: "#1565C0", orange: "#E65100", red: "#C62828", purple: "#6A1B9A", teal: "#00838F",
+  brown: "#6D4C41", pink: "#AD1457", grey: "#546E7A", gray: "#546E7A", amber: "#FF8F00", indigo: "#283593", cyan: "#0097A7",
+};
+/** For colour names the theme doesn't know: picked by VLAN def position, so the result is stable. */
+const PALETTE = ["#00838F", "#AD1457", "#6D4C41", "#283593", "#9E9D24", "#546E7A", "#FF8F00", "#4527A0"];
+const DASHES = ["12 4 3 4", "4 4", "14 6", "7 3 2 3"];
+const TINT: Record<string, string | undefined> & Record<"lan" | "guest" | "lte" | "wan" | "router" | "dev", string> = { lan: "#E8F5E9", guest: "#E3F2FD", lte: "#FFF3E0", wan: "#FDECEA", router: "#F3E5F5", dev: "#FAFAFA" };
+const ROUTE = "#6A1B9A", ALLOW = "#1565C0", WIRE = "#555";
+
+type Stroke = { stroke: string; w: number; dash?: string };
+
+export const esc = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const hex = (c: string, i: number): string => (c.startsWith("#") ? c : NAMED[c.toLowerCase()] ?? PALETTE[i % PALETTE.length]!);
+/** Light tint of a colour: mixed 88 % towards white, for group fills the theme has no tint for. */
+const tint = (c: string): string => {
+  const n = parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16);
+  const ch = (s: number) => Math.round(((n >> s) & 255) * 0.12 + 255 * 0.88).toString(16).padStart(2, "0");
+  return `#${ch(16)}${ch(8)}${ch(0)}`.toUpperCase();
+};
+
+/** Stroke per lane name: one per VLAN def, plus the fixed kinds. */
+function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
+  const m = new Map<string, Stroke>([["wire", { stroke: WIRE, w: 2.5 }], ["trunk", { stroke: WIRE, w: 8 }],
+    ["route", { stroke: ROUTE, w: 4 }], ["allow", { stroke: ALLOW, w: 2, dash: "2 4" }]]);
+  let tagged = 0;
+  vlans.forEach((v, i) => {
+    const stroke = hex(v.color, i);
+    if (v.ids === "untagged") m.set(v.name, { stroke, w: 4 });
+    else if (v.name === "lte" || stroke === NAMED.orange) m.set(v.name, { stroke, w: 4, dash: "10 4" });
+    else m.set(v.name, { stroke, w: 3, dash: tagged++ === 0 ? "7 5" : DASHES[(tagged - 2) % DASHES.length] });
+  });
+  return m;
+}
+
+const strokeAttrs = (s: Stroke) => `stroke="${s.stroke}" stroke-width="${f(s.w)}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ""}`;
+const markers = (lane: string) => (lane === "route" ? ' marker-start="url(#ap)" marker-end="url(#ap)"' : lane === "allow" ? ' marker-end="url(#ab)"' : "");
+
+/** "10–13, 40": runs of three or more consecutive ids collapse into ranges; "50, 51" stays a list. */
+export function idList(ids: number[]): string {
+  const s = [...new Set(ids)].sort((a, b) => a - b), out: string[] = [];
+  for (let i = 0; i < s.length; i++) {
+    let j = i;
+    while (j + 1 < s.length && s[j + 1] === s[j]! + 1) j++;
+    if (j - i >= 2) { out.push(`${s[i]}–${s[j]}`); i = j; } else out.push(String(s[i]));
+  }
+  return out.join(", ");
+}
+const display = (name: string) => (name.length <= 4 ? name.toUpperCase() : name.charAt(0).toUpperCase() + name.slice(1));
+const text = (x: number, y: number, s: string, attrs: string) => `<text x="${f(x)}" y="${f(y)}" ${attrs}>${esc(s)}</text>`;
+const halo = 'stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke"';
+
+/** Cloud outline inside its box: five bumps over a flat base. */
+const cloud = ({ x, y, w, h }: Box) => {
+  const p = (u: number, v: number) => `${f(x + u * w)},${f(y + v * h)}`;
+  const a = (r: number, u: number, v: number) => ` A${f(r * w)},${f(r * w)} 0 0 1 ${p(u, v)}`;
+  return `M${p(0.14, 0.95)}${a(0.14, 0.03, 0.55)}${a(0.18, 0.3, 0.18)}${a(0.22, 0.7, 0.12)}${a(0.17, 0.97, 0.55)}${a(0.13, 0.86, 0.95)} Z`;
+};
+
+/** Shapes, and their labels separately so they can go on top of the cables (with a halo in the box's own fill). */
+function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, laneOf: Map<string, string>): { shapes: string[]; texts: string[] } {
+  const out: string[] = [], texts: string[] = [];
+  const styleStroke = (style: string, fallback: string) => lanes.get(style)?.stroke ?? fallback;
+  const draw = (n: MNode) => {
+    const b = placed.boxes.get(n.id);
+    if (!b) return;
+    const [x, y, w, h] = [b.x, b.y, b.w, b.h];
+    let bg = "#F5F5F5";
+    const rect = (rx: number, fill: string, s: Stroke) => {
+      bg = fill;
+      out.push(`<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="${rx}" fill="${fill}" ${strokeAttrs(s)}/>`);
+    };
+    const container = n.children.length > 0;
+    let centred = !container && n.sub.length === 0, labelFill = "";
+    if (n.kind === "cloud") {
+      out.push(`<path d="${cloud(b)}" fill="#F5F5F5" stroke="#777" stroke-width="1.5"/>`);
+      centred = true;
+    } else if (n.kind === "router") {
+      const pts = [[0, h / 2], [20, 0], [w - 20, 0], [w, h / 2], [w - 20, h], [20, h]].map(([u, v]) => `${f(x + u!)},${f(y + v!)}`).join(" ");
+      out.push(`<polygon points="${pts}" fill="${TINT.router}" stroke="${ROUTE}" stroke-width="2"/>`);
+      centred = true; labelFill = ' fill="#4A148C"'; bg = TINT.router;
+    } else if (n.kind === "iface") {
+      const c = lanes.get(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
+      rect(6, TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
+    } else if (n.style === "spare") rect(6, "#F5F5F5", { stroke: "#999", w: 1.5, dash: "4 3" });
+    else if (n.style === "dev") rect(10, TINT.dev, { stroke: "#333", w: 2 });
+    else if (n.style === "wan") rect(10, TINT.wan, { stroke: "#C62828", w: 1.5 });
+    else if (container) {
+      const c = styleStroke(n.style, WIRE);
+      rect(10, TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
+    } else rect(6, "#fff", { stroke: WIRE, w: 1.5 });
+
+    const tx = centred ? x + w / 2 : x + 14, anchor = centred ? ' text-anchor="middle"' : "";
+    const ty = n.kind === "cloud" ? y + h / 2 + 5 - 8 * n.sub.length : y + (n.kind === "router" ? h / 2 + 5 : 24);
+    const h2 = ` stroke="${bg}" stroke-width="3" stroke-linejoin="round" paint-order="stroke"`;
+    texts.push(text(tx, ty, n.label, `class="h"${anchor}${labelFill}${h2}`));
+    n.sub.forEach((s, i) => texts.push(text(tx, ty + 17 * (i + 1), s, `class="s"${anchor}${h2}`)));
+    n.children.forEach(draw);
+  };
+  model.nodes.forEach(draw);
+  return { shapes: out, texts };
+}
+
+type Line = { owner: string; lane: string; points: P[] };
+type Entry = { key: string; label: string; sub?: string; lane: string };
+
+function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]): Entry[] {
+  const used = new Set(lines.map((l) => l.lane));
+  const carried = new Set(model.links.flatMap((l) => l.lanes));
+  const kinds: Entry[] = [
+    { key: "wire", label: "plain cable", lane: "wire" },
+    { key: "trunk", label: "trunk, more than 4 VLANs", lane: "trunk" },
+    { key: "route", label: "routed / NAT", lane: "route" },
+    { key: "allow", label: "firewall allows", lane: "allow" },
+  ];
+  const entries: Entry[] = [
+    ...model.vlans.filter((v) => carried.has(v.name)).map((v) => ({
+      key: v.name, label: `${display(v.name)} (${v.ids === "untagged" ? "untagged" : idList(v.ids)})`, sub: v.subnet, lane: v.name })),
+    ...kinds.filter((k) => used.has(k.lane)),
+    ...model.legend.add.map((a) => ({ key: a.text, label: a.text, lane: lanes.has(a.style) ? a.style : "wire" })),
+  ];
+  const gone = new Set(model.legend.remove.map((r) => r.toLowerCase()));
+  return entries.filter((e) => !gone.has(e.key.toLowerCase()) && !gone.has(e.label.toLowerCase()));
+}
+
+function drawLegend(model: Model, placed: Placed, lanes: Map<string, Stroke>, lines: Line[]): { svg: string; w: number; h: number } | undefined {
+  if (model.legend.mode === "off") return undefined;
+  const entries = legendEntries(model, lanes, lines), notes = model.legend.notes;
+  if (!entries.length && !notes.length) return undefined;
+  const right = model.legend.position === "right";
+  const ew = (e: Entry) => 56 + textWidth(e.label, 13, true) + (e.sub ? 8 + textWidth(e.sub, 12.5, false) : 0) + 28;
+  const colW = Math.max(...entries.map(ew), 0);
+  const noteW = Math.max(...notes.map((n) => textWidth(n, 12.5, false)), 0) + 32;
+  const avail = right ? colW + 32 : Math.max(placed.width - 80, colW + 32, noteW);
+  const cols = Math.max(1, Math.min(entries.length, Math.floor((avail - 32) / Math.max(colW, 1))));
+  const rows = Math.ceil(entries.length / cols);
+  const x = right ? placed.width : 40, y = right ? 110 : placed.height;
+  const w = right ? Math.max(colW + 32, noteW) : avail;
+  const top = 50, rowH = 26, h = top + rows * rowH + (notes.length ? 8 + notes.length * 18 : 0) + 6;
+  const out = [`<g class="legend">`, `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>`,
+    text(x + 16, y + 28, "Legend", 'class="h"')];
+  entries.forEach((e, i) => {
+    const ex = x + 16 + Math.floor(i / rows) * colW, ey = y + top + (i % rows) * rowH;
+    const s = lanes.get(e.lane)!, [x0, x1] = e.lane === "route" ? [ex + 4, ex + 44] : [ex, ex + (e.lane === "allow" ? 38 : 44)];
+    out.push(`<path d="M${f(x0)},${f(ey)} L${f(x1)},${f(ey)}" fill="none" ${strokeAttrs(s)}${markers(e.lane)}/>`);
+    out.push(`<text x="${f(ex + 56)}" y="${f(ey + 4.5)}" class="t">${esc(e.label)}${e.sub ? ` <tspan class="s">${esc(e.sub)}</tspan>` : ""}</text>`);
+  });
+  notes.forEach((n, i) => out.push(text(x + 16, y + top + rows * rowH + 6 + i * 18, n, 'class="s"')));
+  out.push("</g>");
+  return { svg: out.join("\n"), w: x + w, h: y + h };
+}
+
+export function renderSvg(model: Model, placed: Placed): string {
+  const lanes = laneStyles(model.vlans);
+  const link = new Map(model.links.map((l) => [l.id, l]));
+  const arrow = new Map(model.arrows.map((a) => [a.id, a]));
+
+  const lines: Line[] = [];
+  for (const pl of placed.links) {
+    const l = link.get(pl.id);
+    if (!l || pl.points.length < 2) continue;
+    for (const ln of lanesFor(pl.points, l.lanes)) lines.push({ owner: pl.id, lane: lanes.has(ln.lane) ? ln.lane : "wire", points: ln.points });
+  }
+  for (const pa of placed.arrows) {
+    const a = arrow.get(pa.id);
+    if (a && pa.points.length >= 2) lines.push({ owner: pa.id, lane: a.kind, points: pa.points });
+  }
+  /** A VLAN iface is drawn in the colour of the lane its cables carry. */
+  const laneOf = new Map<string, string>();
+  for (const l of model.links) for (const end of [l.from, l.to]) if (!laneOf.has(end) && l.lanes[0]) laneOf.set(end, l.lanes[0]);
+
+  const order = ["allow", "wire", ...model.vlans.map((v) => v.name), "trunk", "route"];
+  const rank = (lane: string) => order.indexOf(lane);
+  const sorted = lines.map((l, i) => [l, i] as const).sort(([a, i], [b, j]) => rank(a.lane) - rank(b.lane) || i - j).map(([l]) => l);
+
+  const verticals = lines.flatMap((l) => l.points.slice(1).flatMap((b, i) => {
+    const a = l.points[i]!;
+    return Math.abs(a.x - b.x) < 0.5 && Math.abs(a.y - b.y) > 0.5 ? [{ owner: l.owner, x: a.x, y1: Math.min(a.y, b.y), y2: Math.max(a.y, b.y) }] : [];
+  }));
+  const paths = sorted.map((l) => {
+    const d = jumpPath(l.points, verticals.filter((v) => v.owner !== l.owner), JUMP_R, model.jumps);
+    return `<path d="${d}" fill="none" ${strokeAttrs(lanes.get(l.lane)!)} stroke-linejoin="round"${markers(l.lane)}/>`;
+  });
+
+  const labels: string[] = [];
+  /** Middle of the longest segment: where a label without `labelAt` goes. */
+  const mid = (pts: P[]): P => {
+    const segs = pts.slice(1).map((b, i) => [pts[i]!, b] as const);
+    const [a, b] = segs.reduce((best, s) => (Math.hypot(s[1].x - s[0].x, s[1].y - s[0].y) > Math.hypot(best[1].x - best[0].x, best[1].y - best[0].y) ? s : best));
+    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+  };
+  const label = (at: P, s: string, colour: string) => labels.push(text(at.x + 6, at.y - 6, s, `class="t" fill="${colour}" ${halo}`));
+  for (const pl of placed.links) {
+    const l = link.get(pl.id);
+    if (!l || pl.points.length < 2) continue;
+    const trunk = l.lanes.length > 4;
+    const ids = trunk ? model.vlans.filter((v) => l.lanes.includes(v.name)) : [];
+    const vlanText = trunk ? `VLAN ${idList(ids.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))}${ids.some((v) => v.ids === "untagged") ? " + untagged" : ""}` : "";
+    const s = [l.label, vlanText].filter(Boolean).join(" · ");
+    const colour = trunk ? "#333" : l.lanes[0] && l.lanes[0] !== "wire" ? lanes.get(l.lanes[0])?.stroke ?? "#333" : "#333";
+    if (s) label(pl.labelAt ?? mid(pl.points), s, colour);
+  }
+  for (const pa of placed.arrows) {
+    const a = arrow.get(pa.id);
+    if (a?.label && pa.points.length >= 2) label(pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW);
+  }
+
+  const nodes = drawNodes(model, placed, lanes, laneOf);
+  const legend = drawLegend(model, placed, lanes, lines);
+  const W = Math.max(placed.width, legend ? legend.w + 40 : 0), H = Math.max(placed.height, legend ? legend.h + 40 : 0);
+  return [
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${f(W)}" height="${f(H)}" viewBox="0 0 ${f(W)} ${f(H)}" font-family="${FONT}" font-size="14" fill="#222">`,
+    "<defs>",
+    `<marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${ROUTE}"/></marker>`,
+    `<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="${ALLOW}"/></marker>`,
+    "<style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>",
+    "</defs>",
+    `<rect width="${f(W)}" height="${f(H)}" fill="#fff"/>`,
+    text(40, 46, model.title, 'font-size="26" font-weight="700"'),
+    ...(model.subtitle ? [text(40, 72, model.subtitle, 'class="s" font-size="14"')] : []),
+    ...nodes.shapes,
+    ...paths,
+    ...nodes.texts,
+    ...labels,
+    ...(legend ? [legend.svg] : []),
+    "</svg>",
+    "",
+  ].join("\n");
+}
