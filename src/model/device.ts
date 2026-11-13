@@ -36,7 +36,8 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
   };
 
   // The neutral table, in document order; radio items become chips after it.
-  const radioItems: { it: Extract<DevItem, { kind: "radio" }>; bridge?: string; rows: Iface[] }[] = [];
+  /** One chip per (bridge, tag): radio lines sharing both merge, members and SSIDs in document order. */
+  const radioItems: { bridge?: string; tag?: number; names: string[]; ssids: string[]; rows: Iface[] }[] = [];
   for (const w of wan) {
     ifaces.push(w.vlan !== undefined ? { name: w.iface, type: "vlan", ...(w.on !== undefined ? { parent: w.on } : {}), vlanId: w.vlan } : { name: w.iface, type: "other" });
     if (w.route !== undefined || w.distance !== undefined) wanRoutes.set(w.iface, w.distance ?? Infinity);
@@ -61,7 +62,10 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
       } else if (it.kind === "radio") {
         const rows: Iface[] = it.ifaces.map((n) => ({ name: n, type: "wifi", ...br, ...(it.tag !== undefined ? { useTag: it.tag } : {}) }));
         ifaces.push(...rows);
-        radioItems.push({ it, ...br, rows });
+        let r = radioItems.find((x) => x.bridge === bridge && x.tag === it.tag);
+        if (!r) radioItems.push((r = { ...br, ...(it.tag !== undefined ? { tag: it.tag } : {}), names: [], ssids: [], rows: [] }));
+        for (const row of rows) if (!r.names.includes(row.name)) { r.names.push(row.name); r.rows.push(row); }
+        for (const x of it.ssids) if (!r.ssids.includes(x)) r.ssids.push(x);
       } else if (it.kind === "address") for (const c of it.cidrs) addresses.push({ iface: it.iface, cidr: c, flags: flagsOf(it) });
     }
   };
@@ -117,16 +121,16 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     const parent = (i.parent && (groups.get(i.parent) ?? placed.get(i.parent))) || (i.bridge && groups.get(i.bridge)) || node;
     add(parent, mk(child(i.name), "iface", "vif", i.name, [], 3), i);
   }
-  for (const { it, bridge, rows } of radioItems) {
-    const r: Radio = { id: `${id}/radio${bridge !== undefined ? "-" + esc(bridge) : ""}${it.tag !== undefined ? "-tag" + it.tag : ""}`,
-      ...(bridge !== undefined ? { bridge } : {}), ...(it.tag !== undefined ? { tag: it.tag } : {}), ifaces: rows };
+  for (const { bridge, tag, names, ssids, rows } of radioItems) {
+    const r: Radio = { id: `${id}/radio${bridge !== undefined ? "-" + esc(bridge) : ""}${tag !== undefined ? "-tag" + tag : ""}`,
+      ...(bridge !== undefined ? { bridge } : {}), ...(tag !== undefined ? { tag } : {}), ifaces: rows };
     radios.push(r);
     // a tagged chip names its interfaces (the physical radios are shared with the untagged chip) and takes its VLAN's style
     const def = r.tag !== undefined ? vlans.find((v) => v.ids !== "untagged" && v.ids.includes(r.tag!)) : undefined;
-    const label = r.tag !== undefined ? `${it.ifaces.join(" / ")} · use-tag ${r.tag}` : [...new Set(it.ifaces.map(physOf))].join(" / ");
-    const n = mk(r.id, "radio", def ? vlanStyle(def.name) : "port", label, it.ssids.length ? [it.ssids.join(" · ")] : [], 4);
+    const label = r.tag !== undefined ? `${names.join(" / ")} · use-tag ${r.tag}` : [...new Set(names.map(physOf))].join(" / ");
+    const n = mk(r.id, "radio", def ? vlanStyle(def.name) : "port", label, ssids.length ? [ssids.join(" · ")] : [], 4);
     ((bridge !== undefined && groups.get(bridge)) || node).children.push(n);
-    for (const i of it.ifaces) ref.set(i, r.id);
+    for (const i of names) ref.set(i, r.id);
   }
   const leases = items.flatMap((i) => (i.kind === "lease" ? [{ address: i.address, ...(i.comment !== undefined ? { comment: i.comment } : {}) }] : []));
   const allows = items.filter((i): i is Extract<DevItem, { kind: "allow" }> => i.kind === "allow");

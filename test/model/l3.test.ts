@@ -57,3 +57,9 @@ test("allow to an unleased address draws nothing", () => {
   const ok = buildModel(parseDsl(src("lease 10.0.0.9").replace("lease 10.0.0.8\nallow", "lease 10.0.0.9\nallow"), "t.net").stmts, new Map());
   expect(ok.arrows.filter((a) => a.kind === "allow")).toEqual([{ id: "allow:r/lan->c", from: "r/lan", to: "c", kind: "allow", label: "x" }]);
 });
+
+test("an allow line from an unknown interface is an error with a did-you-mean", () => {
+  const m = buildModel(parseDsl("device r\n  router\n  bridge lan address 10.0.0.1/24\n  lease 10.0.0.9\n  allow lna -> 10.0.0.9\nclient c lease 10.0.0.9\n", "t.net").stmts, new Map());
+  expect(m.diags).toEqual([{ level: "error", file: "", line: 5, message: 'r has no interface "lna"', hint: "did you mean lan?" }]);
+  expect(m.arrows.filter((a) => a.kind === "allow")).toEqual([]);
+});

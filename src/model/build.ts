@@ -313,6 +313,12 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   for (const l of out) if ((tier.get(l.from) ?? 0) > (tier.get(l.to) ?? 0)) [l.from, l.to] = [l.to, l.from];
 
   // L3 arrows: derived per device, then DSL route/allow, then hide (arrow id or node id).
+  // An allow line's `from` must name something drawn in its device; deriveArrows skips the ones that do not.
+  for (const d of devs.values()) for (const a of d.allows) {
+    if (d.ref.has(a.from)) continue;
+    if (d.hidden.has(a.from)) err(a.line, `allow from ${d.id}.${a.from}, which is not drawn`, HIDDEN_HINT);
+    else { const c = closest(a.from, d.ref.keys()); err(a.line, `${d.id} has no interface "${a.from}"`, c && `did you mean ${c}?`); }
+  }
   const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d, nodes, leaseOf));
   const client = (addr: string) => walk(nodes).find((n) => n.kind === "client" && leaseOf.get(n.id) === addr)?.id;
   const arrowEnd = (id: string, line: number) => {

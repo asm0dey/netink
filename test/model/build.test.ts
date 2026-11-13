@@ -271,3 +271,9 @@ test("a quoted name with / or % is escaped in its id and linked by its name", ()
   expect(node(m, "sw/a%25b")).toBeDefined();
   expect(link(m, "sw/ge-0%2F0%2F0", "x")).toBeDefined();
 });
+
+test("radio lines on one bridge and tag merge into one chip", () => {
+  const m = dsl("device ap\n  bridge br\n    radio wlan1 ssid A\n    radio wlan2 ssid B\n");
+  expect(m.diags).toEqual([]);
+  expect(all(m.nodes).filter((n) => n.kind === "radio").map((n) => [n.id, n.label, n.sub])).toEqual([["ap/radio-br", "wlan1 / wlan2", ["A · B"]]]);
+});
