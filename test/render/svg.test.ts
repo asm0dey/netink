@@ -305,4 +305,6 @@ test("a two-vlan trunk set draws one trunk bar labelled with its name", () => {
   expect(svg.match(/<path d="M[\d.,]+ L200,0"[^>]*stroke-width="8"/g)?.length).toBe(1); // one bar; a lane pair would offset the path
   expect(svg).toContain(">up</text>");
   expect(svg).not.toContain("VLAN 10");
+  expect(svg).toContain("trunk: named set or more than 4 VLANs");
+  expect(svg).not.toContain("trunk, more than 4 VLANs");
 });

@@ -1,7 +1,7 @@
 import { textWidth } from "../layout/measure";
 import { laneOfStyle, NAMED } from "../model/style";
 import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
-import { f, jumpArcs, jumpPath, lanesFor } from "./geometry";
+import { f, jumpArcs, jumpPath, lanesFor, TRUNK_AT } from "./geometry";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
@@ -186,7 +186,13 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
   const carried = new Set(model.links.flatMap((l) => l.lanes));
   const kinds: Entry[] = [
     { key: "wire", label: "plain cable", lane: "wire" },
-    { key: "trunk", label: "trunk, more than 4 VLANs", lane: "trunk" },
+    {
+      key: "trunk",
+      label: model.links.some((l) => l.trunk)
+        ? "trunk: named set or more than 4 VLANs"
+        : `trunk, more than ${TRUNK_AT} VLANs`,
+      lane: "trunk",
+    },
     { key: "route", label: nats(model.nodes) ? "routed / NAT" : "routed", lane: "route" },
     { key: "allow", label: "firewall allows", lane: "allow" },
   ];
@@ -364,7 +370,7 @@ export function renderSvg(model: Model, placed: Placed): string {
   for (const pl of placed.links) {
     const l = link.get(pl.id);
     if (!l || pl.points.length < 2) continue;
-    const trunk = l.lanes.length > 4 || !!l.trunk;
+    const trunk = l.lanes.length > TRUNK_AT || !!l.trunk;
     const ids = trunk && !l.trunk ? model.vlans.filter((v) => l.lanes.includes(v.name)) : [];
     const vlanText = l.trunk
       ? l.trunk

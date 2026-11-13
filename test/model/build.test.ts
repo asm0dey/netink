@@ -468,3 +468,8 @@ test("trunk errors: unknown trunk, unknown vlan, name clash", () => {
     expect.objectContaining({ level: "error", line: 5, message: 'trunk "a" clashes with vlan "a"' }),
   );
 });
+test("a trunk defined twice is an error", () => {
+  expect(diagsOf(`${TR}trunk up vlans a\ntrunk up vlans b\n`)).toContainEqual(
+    expect.objectContaining({ level: "error", line: 6, message: 'duplicate trunk "up"', hint: expect.any(String) }),
+  );
+});

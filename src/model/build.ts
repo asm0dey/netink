@@ -168,13 +168,15 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   });
 
   const trunks = of("trunk").map((t) => ({ name: t.name, vlans: t.vlans, line: t.line }));
-  for (const t of trunks) {
+  trunks.forEach((t, i) => {
+    if (trunks.findIndex((x) => x.name === t.name) < i)
+      err(t.line, `duplicate trunk "${t.name}"`, "give each trunk set one definition");
     if (vlans.some((v) => v.name === t.name))
       err(t.line, `trunk "${t.name}" clashes with vlan "${t.name}"`, "use a different name");
     for (const name of t.vlans)
       if (!vlans.some((x) => x.name === name))
         err(t.line, `unknown vlan "${name}"`, `declare it with vlan ${name} <ids>`);
-  }
+  });
   for (const l of links)
     if (l.trunk && !trunks.some((t) => t.name === l.trunk)) {
       const c = closest(
