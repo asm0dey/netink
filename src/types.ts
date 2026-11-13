@@ -29,7 +29,8 @@ export type DeviceFacts = { name: string; file: string; identity?: string; model
   warnings: Diag[] };
 export type MNodeKind = "cloud" | "device" | "client" | "group" | "port" | "iface" | "router" | "radio";
 export type MNode = { id: string; kind: MNodeKind; style: string; label: string; sub: string[]; children: MNode[]; tier: number };
-export type MLink = { id: string; from: string; to: string; lanes: string[]; label?: string; line: number };
+export type MLink = { id: string; from: string; to: string; lanes: string[]; label?: string; line: number;
+  /** Set only for links with explicit `vlans`: lanes the imported ends' facts imply, for `check`. */ inferred?: string[] };
 export type MArrow = { id: string; from: string; to: string; kind: "route" | "allow"; label?: string };
 export type VlanDef = { name: string; ids: number[] | "untagged"; color: string; subnet?: string };
 export type LegendSpec = { mode: "auto" | "off"; add: { style: string; text: string }[]; remove: string[]; notes: string[]; position: "bottom" | "right" };

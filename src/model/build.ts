@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
+import { closest } from "./check";
 import type { DeviceFacts, Diag, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 
 type Opts = { all?: boolean; file?: string };
@@ -14,6 +15,7 @@ type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; 
 
 const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
   ({ id, kind, style, label, sub, children: [], tier });
+const ID_RE = /^[a-z0-9_-]+$/;
 const LANE_STYLES = ["lan", "guest", "lte"];
 const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
@@ -133,6 +135,9 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   const vlanName = (id?: number) => vlans.find((v) => v.ids !== "untagged" && id !== undefined && v.ids.includes(id))?.name;
   const untagged = vlans.filter((v) => v.ids === "untagged").map((v) => v.name);
 
+  const badId = (id: string, line: number) => { if (!ID_RE.test(id)) err(line, `bad id "${id}"`, "ids use a-z, 0-9, _ and -"); };
+  for (const s of stmts) { if (s.kind === "node") badId(s.id, s.line); if (s.kind === "import") badId(s.as, s.line); }
+
   // Imported devices
   const seen = new Set<string>();
   const imports = of("import").filter((s) => {
@@ -186,10 +191,10 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (d) {
       if (!e.port) return "bare";
       const id = d.ref.get(e.port);
-      if (!id) { err(line, `${e.node} has no interface "${e.port}"`); return undefined; }
+      if (!id) { const c = closest(e.port, d.ref.keys()); err(line, `${e.node} has no interface "${e.port}"`, c && `did you mean ${e.node}.${c}?`); return undefined; }
       return { id, dev: d, iface: d.ifaceOf.get(id) ?? d.f.ifaces.find((i) => i.name === e.port) };
     }
-    if (!nodeType.has(e.node)) { err(line, `unknown node "${e.node}"`, "declare it with cloud, device or client, or import it"); return undefined; }
+    if (!nodeType.has(e.node)) { const c = closest(e.node, [...nodeType.keys(), ...devs.keys()]); err(line, `unknown node "${e.node}"`, c ? `did you mean ${c}?` : "declare it with cloud, device or client, or import it"); return undefined; }
     if (e.port) { err(line, `"${e.node}" is not imported, so it has no port "${e.port}"`, `link ${e.node} without a port`); return undefined; }
     return { id: e.node, nodeType: nodeType.get(e.node) };
   };
@@ -217,7 +222,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     }
   });
   /** VLAN ids tagged on an end; an end without facts carries none (tagged lanes to it need explicit `vlans`). */
-  const carried = (e: End): Set<number> => {
+  const carried = (e: End, withExtra = true): Set<number> => {
     if (!e.dev) return new Set();
     const f = e.dev.f, i = e.iface;
     if (!i) return new Set();
@@ -225,7 +230,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (isRadio(i)) return new Set(e.dev.radios.find((r) => r.id === e.id)!.ifaces.flatMap((x) => (x.useTag !== undefined ? [x.useTag] : [])));
     if (i.type === "vlan") return new Set(i.vlanId !== undefined ? [i.vlanId] : []);
     const ids = f.ifaces.filter((x) => x.type === "vlan" && x.vlanId !== undefined && (x.parent === i.name || (i.bridge && x.parent === i.bridge))).map((x) => x.vlanId!);
-    if (i.bridge) ids.push(...f.ifaces.filter((x) => isRadio(x) && x.bridge === i.bridge && x.useTag !== undefined).map((x) => x.useTag!), ...(extra.get(`${e.dev.id} ${i.bridge}`) ?? []));
+    if (i.bridge) ids.push(...f.ifaces.filter((x) => isRadio(x) && x.bridge === i.bridge && x.useTag !== undefined).map((x) => x.useTag!), ...(withExtra ? extra.get(`${e.dev.id} ${i.bridge}`) ?? [] : []));
     return new Set(ids);
   };
   const member = (e: End) => !e.dev || !!e.iface?.bridge || e.dev.radios.some((r) => r.id === e.id);
@@ -246,17 +251,31 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   };
   const push = (from: string, to: string, lanes: string[], line: number, label?: string) =>
     out.push({ id: linkId(from, to), from, to, lanes, ...(label ? { label } : {}), line });
+  /** Lanes the imported ends' facts imply for a link with explicit `vlans`; ends without facts are ignored. Own explicit vlans don't count as carried. */
+  const inferExplicit = (a: End, b: End): string[] | undefined => {
+    const imp = [a, b].filter((e) => e.dev);
+    if (!imp.length) return undefined;
+    const lanes = vlans.filter((v) => (v.ids === "untagged" ? member(a) && member(b) : imp.every((e) => (v.ids as number[]).some((id) => carried(e, false).has(id))))).map((v) => v.name);
+    return lanes.length ? lanes : ["wire"];
+  };
   const trunkIds = new Map<string, Set<number>>();
+  const portUse = new Map<string, number>();
   ends.forEach((pair, k) => {
     const [a, b] = pair as (End | undefined)[], l: LinkStmt = links[k]!;
     if (!a || !b) return;
-    let r = infer(a, b);
+    let r = infer(a, b), inferred: string[] | undefined;
+    for (const e of [a, b]) if (e.dev && e.iface && !isRadio(e.iface)) { // radios legitimately take many client links
+      if (portUse.has(e.id)) err(l.line, `${e.id} is already linked on line ${portUse.get(e.id)}`, "a port takes one link; use a switch or another port");
+      else portUse.set(e.id, l.line);
+    }
     if (l.vlans) {
+      inferred = inferExplicit(a, b);
       const defs = vlans.filter((v) => l.vlans!.includes(v.name)); // unknown names were reported above
       r = { lanes: defs.length ? defs.map((v) => v.name) : ["wire"], ids: defs.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)) };
     }
     for (const e of [a, b]) trunkIds.set(e.id, new Set([...(trunkIds.get(e.id) ?? []), ...r.ids]));
     push(a.id, b.id, r.lanes, l.line, l.label);
+    if (inferred) out.at(-1)!.inferred = inferred;
   });
 
   // Internal links: trunk port → vlan iface it carries, vlan iface → the bridge it is a member of, uplink port → radio (no router).
@@ -290,6 +309,13 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   for (const n of walk(nodes)) {
     if (ids.has(n.id)) err(0, `duplicate node id "${n.id}"`, "rename the interface or node so ids stay unique");
     ids.add(n.id);
+  }
+
+  // Hints must name a known node (or a port of one)
+  const known = new Set([...ids, ...nodeType.keys()]);
+  for (const s of of("hint")) {
+    const h = s.hint, names = h.type === "near" ? [h.a, h.b] : h.type === "row" ? h.ids : [h.device];
+    for (const n of names) if (!known.has(n) && !known.has(n.split(".")[0]!)) { const c = closest(n, known); err(s.line, `${h.type === "near" ? "place" : h.type} names unknown node "${n}"`, c ? `did you mean ${c}?` : undefined); }
   }
 
   // Notes
