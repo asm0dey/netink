@@ -19,7 +19,8 @@ function print(ts: Target[], level: number, own: boolean): string[] {
 
 /** Pure in-place edit of DSL `text`: every byte outside the edited statement is kept. */
 export function edit(text: string, file: string, req: EditRequest): EditResult {
-  const { noun, verb, args } = req;
+  const { noun, verb } = req;
+  const args: Args = { ...req.args, verb };
   const values = [args.parent, ...args.pos, ...Object.values(args.flags)];
   if (values.some((v) => typeof v === "string" && /[\r\n]/.test(v))) return { ok: false, error: "values cannot contain a newline" };
   const { stmts, diags, spans } = parseDsl(text, file);
