@@ -20,8 +20,17 @@ test("core: 4 route arrows + 1 allow arrow", () => {
   expect(allows).toEqual([{ id: "allow:core/br-guest->printer", from: "core/br-guest", to: "printer", kind: "allow", label: "printer" }]);
 });
 
-test("other devices: lte gets no arrows", () => {
-  expect(mine(loadModel(HOME), "lte")).toEqual([]);
+test("lte: masquerade out of WAN makes lte1 the internet route; the router reaches the addressed vlan60 chip", () => {
+  const lte = mine(loadModel(HOME), "lte");
+  expect(lte.map((a) => [a.kind, a.from, a.to, a.label])).toEqual([
+    ["route", "lte/lte1", "lte/router", "to internet"],
+    ["route", "lte/router", "lte/vlan60", "LAN"],
+  ]);
+});
+
+test("router-less APs get no arrows", () => {
+  const m = loadModel(HOME);
+  expect([...mine(m, "ap1"), ...mine(m, "ap2")]).toEqual([]);
 });
 
 test("DSL route/allow add arrows; hide removes by arrow id or node id", () => {

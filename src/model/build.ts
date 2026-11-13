@@ -13,6 +13,7 @@ type LinkStmt = Extract<Stmt, { kind: "link" }>;
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
 type Radio = { id: string; bridge?: string; phys: string[]; ssids: string[]; ifaces: Iface[] };
 type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
+  /** WAN member name → distance of the default route matched to it. */ wanRoutes: Map<string, number>;
   /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
 
 const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
@@ -61,7 +62,7 @@ function placeCaps(devs: { id: string; f: DeviceFacts; radios: Radio[] }[], warn
 }
 
 function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]): Dev {
-  const ref = new Map<string, string>(), ifaceOf = new Map<string, Iface>();
+  const ref = new Map<string, string>(), ifaceOf = new Map<string, Iface>(), wanRoutes = new Map<string, number>();
   const byName = new Map(f.ifaces.map((i) => [i.name, i]));
   const wan = f.lists.WAN ?? [];
   const lanIp = f.addresses.find((a) => (f.lists.LAN ?? []).includes(a.iface));
@@ -86,6 +87,7 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     for (const i of ifs) if (!routes.get(i)) { const r = defaults.find((x) => !used.has(x)); if (r) { used.add(r); routes.set(i, r); } }
     for (const i of ifs) {
       const r = routes.get(i), dhcp = f.dhcpClients.find((c) => c.iface === i.name);
+      if (r) wanRoutes.set(i.name, r.distance);
       const sub = [r && `${r.comment ?? r.dst} · distance ${r.distance}`, dhcp && `DHCP ${dhcp.address ?? "client"}`].filter((s): s is string => !!s);
       // a WAN VLAN chip is styled by its VLAN def (render colours it like that lane)
       const vstyle = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.name ?? "lte";
@@ -127,7 +129,7 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     ((r.bridge && groups.get(r.bridge)) || node).children.push(n);
     for (const i of r.ifaces) ref.set(i.name, r.id);
   }
-  return { id, f, node, ref, ifaceOf, radios, hasRouter, hidden: new Set() };
+  return { id, f, node, ref, ifaceOf, radios, hasRouter, wanRoutes, hidden: new Set() };
 }
 
 export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts: Opts = {}): Model {
@@ -158,7 +160,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
 
   // Nodes in declaration order
   const nodes: MNode[] = [], nodeType = new Map<string, NodeStmt["type"]>();
-  const declaredLeases = new Set<string>();
+  const declaredLeases = new Set<string>(), leaseOf = new Map<string, string>();
   for (const s of stmts) {
     if (s.kind === "import" && imports.includes(s)) nodes.push(devs.get(s.as)!.node);
     if (s.kind !== "node") continue;
@@ -178,6 +180,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     }
     if (s.note) sub.push(s.note);
     nodes.push(mk(s.id, s.type, s.type === "cloud" ? "cloud" : "box", label, sub));
+    if (s.lease) leaseOf.set(s.id, s.lease);
   }
   if (opts.all) for (const d of devs.values()) for (const l of d.f.leases) {
     if (declaredLeases.has(`${d.id} ${l.address}`)) continue;
@@ -187,6 +190,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     for (let n = 2; nodeType.has(id) || devs.has(id); n++) id = `${base}-${n}`;
     nodeType.set(id, "client");
     nodes.push(mk(id, "client", "box", l.comment ?? l.address, [l.address]));
+    leaseOf.set(id, l.address);
   }
 
   // Endpoints: ports first, so a bare device id can resolve to its single unlinked port.
@@ -392,7 +396,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   for (const l of out) if ((tier.get(l.from) ?? 0) > (tier.get(l.to) ?? 0)) [l.from, l.to] = [l.to, l.from];
 
   // L3 arrows: derived per device, then DSL route/allow, then hide (arrow id or node id).
-  const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d.id, d.f, nodes, stmts));
+  const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d.id, d.f, nodes, d.wanRoutes, leaseOf));
   const arrowEnd = (id: string, line: number) => {
     const [node, port] = id.split(".", 2) as [string, string | undefined];
     const r = resolve({ node, ...(port ? { port } : {}) }, line);
