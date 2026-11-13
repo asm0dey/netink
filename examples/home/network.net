@@ -1,0 +1,35 @@
+# network.net — the anonymised home network
+title "Home network"
+imports rsc core.rsc as core, ap1.rsc as ap1,
+            ap2.rsc as ap2, lte.rsc as lte
+
+vlan lan   untagged color green  "192.168.0.0/24"
+vlan guest 50,51    color blue   "10.50.0.0/24"
+vlan lte   60       color orange "192.168.88.0/24"
+
+cloud internet "Internet"
+device isp "ISP box"
+cloud mobile "Mobile network"
+device switch "Switch" kind switch
+client hub "Hub .130" lease 192.168.0.130
+client pi2 "Pi 2 .153" lease 192.168.0.153 note "DNS server"
+client printer lease 192.168.0.200
+client media lease 192.168.0.227
+client tv lease 192.168.0.28
+
+link internet -- isp -- core.ether1  label "primary uplink"
+link mobile -- lte
+link core.ether2 -- switch
+link switch -- hub, pi2
+link core.ether3 -- ap1.ether1       # VLANs inferred from rsc
+link core.ether4 -- ap2.ether1
+link lte.ether1  -- ap2.ether2       vlans lte  label "tagged 60"
+link core.wifi1 -- printer, media, tv
+
+note core.ether1 "CAKE shaping"
+note mobile "Mobile ISP"
+place lte near isp
+row ap1, ap2
+
+legend auto
+legend note "Failover: when 9.9.9.9 stops answering via ether1, wan2-lte takes over."
