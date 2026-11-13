@@ -361,6 +361,24 @@ The other deferred minor (a device with `items: []` prints as `device d`, which 
 - [ ] **Step 2: Verify:** `mise run build && dist/netdraw --help` exits 0 and prints the help; `dist/netdraw check --file examples/home/network.net` exits 0; `SHELL=/bin/zsh dist/netdraw completion` prints a script naming `netdraw`. `mise run build-all` writes 8 files under `dist/` (needs network the first time: bun downloads each target's runtime); `file dist/*` shows the expected OS/arch for each.
 - [ ] **Step 3: Privacy check, commit** `build: mise tasks for host and cross-compiled binaries`
 
+### Task 13b: Man page (owner request, 2026-11-13)
+
+No package turns yargs definitions into a man page, so netdraw renders a markdown man page from its own definitions and `marked-man` (devDependency, ^2.1.1) converts it to roff.
+
+**Files:**
+- Create: `src/man.ts`, `test/man.test.ts`
+- Modify: `src/cli.ts` (hidden `__man` command), `package.json`, `bun.lock`, `mise.toml`
+
+**Interfaces:**
+- Produces: `manPage(): string` in `src/man.ts` — marked-man flavoured markdown: `netdraw(1) -- render network diagrams from a DSL`, then SYNOPSIS, DESCRIPTION, COMMANDS (render/check/show/import/init/completion with the same descriptions yargs shows), EDITING COMMANDS (one entry per `NOUNS[i]`: its `help` usage line and each flag's `--name` + `help`), the epilogue sections (exit codes, `--json` shapes, error shape, Editing paragraph, completion install), and DSL (GRAMMAR). All text comes from the definitions already in src/cli.ts and src/edit/table.ts — export what's needed rather than copying strings.
+- `netdraw __man` prints `manPage()`; hidden from `--help` and completion.
+
+- [ ] **Step 1: Failing tests** (`test/man.test.ts`): `manPage()` starts with `netdraw(1) --`; contains `## SYNOPSIS`, `## COMMANDS`, `## EDITING COMMANDS`, `## EXIT STATUS`; contains every `NOUNS[i].help` and every top-level command name; contains the GRAMMAR text. `bun src/cli.ts __man` exits 0 and prints the same text; `bun src/cli.ts --help` does not mention `__man`.
+- [ ] **Step 2: Implement**; `bun add -d marked-man`.
+- [ ] **Step 3:** mise task `man` = `mkdir -p dist && bun src/cli.ts __man > dist/netdraw.md && bunx marked-man dist/netdraw.md > dist/netdraw.1`; `build` and `build-all` depend on `man`.
+- [ ] **Step 4: Verify** `mise run test && mise run typecheck` PASS; `mise run man && man -l dist/netdraw.1 | head -40` shows NAME, SYNOPSIS, COMMANDS rendered (no raw markdown); `mandoc -T lint dist/netdraw.1` (or `groff -man -ww -z`) reports no errors.
+- [ ] **Step 5: Privacy check, commit** `feat(cli): generated man page`
+
 ### Task 14: Formatter (owner request, 2026-11-13: Biome)
 
 **Files:**
