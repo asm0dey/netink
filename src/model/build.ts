@@ -4,139 +4,90 @@ import { parseDsl } from "../dsl/parse";
 import { importRsc } from "../rsc/import";
 import { closest } from "./check";
 import { deriveArrows } from "./l3";
-import { collectRadios, hasRouter as routerRule, isRadio, placeCaps, wanRoutes as matchWanRoutes, type Radio } from "../rsc/translate";
+import { translate } from "../rsc/translate";
+import { buildDevice, mk, type Dev, type Radio } from "./device";
 import type { DeviceFacts, Diag, MArrow, Endpoint, Hint, Iface, LegendSpec, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 
 type Opts = { all?: boolean; file?: string };
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type LinkStmt = Extract<Stmt, { kind: "link" }>;
-/** A resolved link endpoint. `dev` is set for ends inside an imported device. */
+/** A resolved link endpoint. `dev` is set for ends inside a device with block lines. */
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
-type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; ifaceOf: Map<string, Iface>; radios: Radio[]; hasRouter: boolean;
-  /** WAN member name → distance of the default route matched to it. */ wanRoutes: Map<string, number>;
-  /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
 
 /** VLAN-derived node styles live under `vlan:<name>`, so a VLAN named like a built-in style (wan, dev, spare) cannot be drawn as one. */
 export const vlanStyle = (name: string): string => `vlan:${name}`;
 export const laneOfStyle = (style: string): string | undefined => style.startsWith("vlan:") ? style.slice(5) : undefined;
 /** A fallback style (guest/lan/lte) still takes the colours of a VLAN def of the same name. */
-const fallbackIn = (vlans: VlanDef[]) => (name: string): string => vlans.some((v) => v.name === name) ? vlanStyle(name) : name;
-const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
-  ({ id, kind, style, label, sub, children: [], tier });
+export const fallbackIn = (vlans: VlanDef[]) => (name: string): string => vlans.some((v) => v.name === name) ? vlanStyle(name) : name;
 const ID_RE = /^[a-z0-9_-]+$/;
+const IPV4_RE = /^\d+\.\d+\.\d+\.\d+$/;
 const HIDDEN_HINT = "unlinked ports on devices without a router are hidden; use --all";
 const leaves = (n: MNode): MNode[] => (n.children.length ? n.children.flatMap(leaves) : [n]);
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
+const vlanDefs = (stmts: Stmt[]): VlanDef[] =>
+  stmts.flatMap((v) => (v.kind === "vlan" ? [{ name: v.name, ids: v.ids, color: v.color ?? "grey", subnets: v.subnets }] : []));
 
-function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]): Dev {
-  const fallback = fallbackIn(vlans);
-  const ref = new Map<string, string>(), ifaceOf = new Map<string, Iface>(), wanRoutes = new Map<string, number>();
-  const wan = f.lists.WAN ?? [];
-  const lanIp = f.addresses.find((a) => (f.lists.LAN ?? []).includes(a.iface));
-  const label = [id.toUpperCase(), f.model, lanIp?.cidr.split("/")[0], f.version && `RouterOS ${f.version}`].filter(Boolean).join(" · ");
-  const node = mk(id, "device", "dev", label);
-  const bridges = f.ifaces.filter((i) => i.type === "bridge" && !wan.includes(i.name));
-  const addrOf = (n: string) => f.addresses.find((a) => a.iface === n)?.cidr;
-  const hasRouter = routerRule(f);
-  const add = (parent: MNode, n: MNode, i?: Iface) => { parent.children.push(n); if (i) { ref.set(i.name, n.id); ifaceOf.set(n.id, i); } };
-
-  if (wan.length) {
-    const g = mk(`${id}/wan`, "group", "wan", "WAN list", [], 1);
-    const matched = matchWanRoutes(f, vlans);
-    const ifs = matched.map((w) => w.iface), routes = new Map(matched.map((w) => [w.iface, w.route] as const));
-    for (const i of ifs) {
-      const r = routes.get(i), dhcp = f.dhcpClients.find((c) => c.iface === i.name);
-      if (r) wanRoutes.set(i.name, r.distance);
-      const sub = [r && `${r.comment ?? r.dst} · distance ${r.distance}`, dhcp && `DHCP ${dhcp.address ?? "client"}`].filter((s): s is string => !!s);
-      // a WAN VLAN chip is styled by its VLAN def (render colours it like that lane)
-      const vdef = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId));
-      const vstyle = vdef ? vlanStyle(vdef.name) : fallback("lte");
-      add(g, mk(`${id}/${i.name}`, i.type === "vlan" ? "iface" : "port", i.type === "vlan" ? vstyle : "box", i.name, sub, 1), i);
-    }
-    node.children.push(g);
-  }
-  if (hasRouter) node.children.push(mk(`${id}/router`, "router", "router", "routing · NAT · firewall", [], 2));
-
-  const groups = new Map<string, MNode>();
-  for (const b of bridges) {
-    const guest = f.hotspots.includes(b.name) || (f.lists.GUEST ?? []).includes(b.name);
-    // a bridge is styled by the tagged VLAN its vlan-iface members belong to
-    const def = vlans.find((v) => v.ids !== "untagged" && f.ifaces.some((i) => i.type === "vlan" && i.bridge === b.name && i.vlanId !== undefined && (v.ids as number[]).includes(i.vlanId)));
-    // untagged def for a plain bridge; "guest"/"lan" only when no def applies
-    const untagged = vlans.find((v) => v.ids === "untagged");
-    const style = def ? vlanStyle(def.name) : guest ? fallback("guest") : untagged ? vlanStyle(untagged.name) : fallback("lan");
-    const cidr = addrOf(b.name);
-    const g = mk(`${id}/${b.name}`, "group", style, cidr ? `${b.name} · ${cidr}` : b.name, f.hotspots.includes(b.name) ? ["hotspot"] : [], 3);
-    groups.set(b.name, g);
-    node.children.push(g);
-    ref.set(b.name, g.id);
-  }
-  // Ports first (their placement decides where vlan ifaces on top of them go), then vlan ifaces, then radios.
-  const placed = new Map<string, MNode>();
-  for (const i of f.ifaces) {
-    if (wan.includes(i.name) || i.type === "bridge" || i.type === "vlan" || isRadio(i)) continue;
-    if (i.type !== "ether" && !i.bridge) continue;
-    const parent = (i.bridge && groups.get(i.bridge)) || node;
-    add(parent, mk(`${id}/${i.name}`, "port", "port", i.name, [], 4), i);
-    placed.set(i.name, parent);
-  }
-  for (const i of f.ifaces) {
-    if (i.type !== "vlan" || wan.includes(i.name)) continue;
-    const parent = (i.parent && (groups.get(i.parent) ?? placed.get(i.parent))) || node;
-    add(parent, mk(`${id}/${i.name}`, "iface", "vif", i.name, [], 3), i);
-  }
-  for (const r of radios) {
-    // a tagged chip names its interfaces (the physical radios are shared with the untagged chip) and takes its VLAN's style
-    const def = r.tag !== undefined ? vlans.find((v) => v.ids !== "untagged" && v.ids.includes(r.tag!)) : undefined;
-    const label = r.tag !== undefined ? `${r.ifaces.map((i) => i.name).join(" / ")} · use-tag ${r.tag}` : r.phys.join(" / ");
-    const n = mk(r.id, "radio", def ? vlanStyle(def.name) : "port", label, r.ssids.length ? [r.ssids.join(" · ")] : [], 4);
-    ((r.bridge && groups.get(r.bridge)) || node).children.push(n);
-    for (const i of r.ifaces) ref.set(i.name, r.id);
-  }
-  return { id, f, node, ref, ifaceOf, radios, hasRouter, wanRoutes, hidden: new Set() };
-}
-
+/** Imports are translated to `device` blocks, spliced in place of their `import` line, and built like hand-written ones. */
 export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts: Opts = {}): Model {
   const file = opts.file ?? "";
   const diags: Diag[] = [];
   const err = (line: number, message: string, hint?: string) => diags.push({ level: "error", file, line, message, ...(hint ? { hint } : {}) });
-  const of = <K extends Stmt["kind"]>(k: K) => stmts.filter((s): s is Extract<Stmt, { kind: K }> => s.kind === k);
-
-  const vlans: VlanDef[] = of("vlan").map((v) => ({ name: v.name, ids: v.ids, color: v.color ?? "grey", subnets: v.subnets }));
-  const vlanName = (id?: number) => vlans.find((v) => v.ids !== "untagged" && id !== undefined && v.ids.includes(id))?.name;
-  const untagged = vlans.filter((v) => v.ids === "untagged").map((v) => v.name);
-
-  const badId = (id: string, line: number) => { if (!ID_RE.test(id)) err(line, `bad id "${id}"`, "ids use a-z, 0-9, _ and -"); };
-  for (const s of stmts) { if (s.kind === "node") badId(s.id, s.line); if (s.kind === "import") badId(s.as, s.line); }
-
-  // Imported devices
   const seen = new Set<string>();
-  const imports = of("import").filter((s) => {
+  const imports = stmts.filter((s): s is Extract<Stmt, { kind: "import" }> => s.kind === "import").filter((s) => {
     if (seen.has(s.as)) { err(s.line, `"${s.as}" is imported twice`, "give each import its own alias"); return false; }
     seen.add(s.as);
     if (facts.has(s.as)) return true;
     err(s.line, `no facts loaded for import "${s.as}"`);
     return false;
   });
-  const pre = imports.map((s) => ({ id: s.as, f: facts.get(s.as)!, radios: collectRadios(s.as, facts.get(s.as)!) }));
-  placeCaps(pre, (f, message, hint) => diags.push({ level: "warning", file: f, line: 0, message, hint }));
-  const devs = new Map(pre.map((p) => [p.id, buildDevice(p.id, p.f, p.radios, vlans)]));
+  const t = translate(imports.map((s) => ({ id: s.as, line: s.line, f: facts.get(s.as)! })), vlanDefs(stmts));
+  diags.push(...t.diags);
+  const spliced = stmts.map((s): Stmt => {
+    if (s.kind === "import") return imports.includes(s) ? t.stmts[imports.indexOf(s)]! : s; // a rejected import stays, for its id check
+    const imp = s.kind === "node" && s.items ? imports.find((i) => i.as === s.id) : undefined;
+    if (!imp || s.kind !== "node") return s;
+    err(s.line, `"${s.id}" is imported; its internals come from ${imp.file}`, `run netdraw import ${imp.file} to get an editable block`);
+    const { items: _, ...rest } = s;
+    return rest;
+  });
+  const m = buildFromStmts(spliced, opts);
+  m.diags = [...diags, ...m.diags];
+  return m;
+}
+
+export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
+  const file = opts.file ?? "";
+  const diags: Diag[] = [];
+  const err = (line: number, message: string, hint?: string) => diags.push({ level: "error", file, line, message, ...(hint ? { hint } : {}) });
+  const of = <K extends Stmt["kind"]>(k: K) => stmts.filter((s): s is Extract<Stmt, { kind: K }> => s.kind === k);
+
+  const vlans = vlanDefs(stmts);
+  const vlanName = (id?: number) => vlans.find((v) => v.ids !== "untagged" && id !== undefined && v.ids.includes(id))?.name;
+  const untagged = vlans.filter((v) => v.ids === "untagged").map((v) => v.name);
+
+  const badId = (id: string, line: number) => { if (!ID_RE.test(id)) err(line, `bad id "${id}"`, "ids use a-z, 0-9, _ and -"); };
+  for (const s of stmts) { if (s.kind === "node") badId(s.id, s.line); if (s.kind === "import") badId(s.as, s.line); }
+
+  // Devices with block lines; a later `device` line on the same id without them overrides its label and note.
+  const devs = new Map<string, Dev>(), blocks = new Set<Stmt>();
+  for (const s of stmts) if (s.kind === "node" && s.items && !devs.has(s.id)) { devs.set(s.id, buildDevice(s, vlans, err)); blocks.add(s); }
 
   // Nodes in declaration order
   const nodes: MNode[] = [], nodeType = new Map<string, NodeStmt["type"]>();
   const declaredLeases = new Set<string>(), leaseOf = new Map<string, string>();
   for (const s of stmts) {
-    if (s.kind === "import" && imports.includes(s)) nodes.push(devs.get(s.as)!.node);
     if (s.kind !== "node") continue;
+    if (blocks.has(s)) { nodes.push(devs.get(s.id)!.node); continue; }
     const d = devs.get(s.id);
-    if (d) { if (s.label) d.node.label = s.label; if (s.note) d.node.sub.push(s.note); continue; }
+    if (d && !s.items) { if (s.label) d.node.label = s.label; if (s.note) d.node.sub.push(s.note); continue; }
+    if (d) { err(s.line, `duplicate node "${s.id}"`); continue; }
     if (nodeType.has(s.id)) { err(s.line, `duplicate node "${s.id}"`); continue; }
     nodeType.set(s.id, s.type);
     let label = s.label ?? s.id;
     const sub: string[] = [];
     if (s.lease) {
-      const owner = [...devs.values()].find((x) => x.f.leases.some((l) => l.address === s.lease));
-      const lease = owner?.f.leases.find((l) => l.address === s.lease);
+      const owner = [...devs.values()].find((x) => x.leases.some((l) => l.address === s.lease));
+      const lease = owner?.leases.find((l) => l.address === s.lease);
       if (owner) declaredLeases.add(`${owner.id} ${s.lease}`);
       else diags.push({ level: "warning", file, line: s.line, message: `no imported device has a lease for ${s.lease}` });
       label = s.label ?? lease?.comment ?? s.lease;
@@ -146,7 +97,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     nodes.push(mk(s.id, s.type, s.type === "cloud" ? "cloud" : "box", label, sub));
     if (s.lease) leaseOf.set(s.id, s.lease);
   }
-  if (opts.all) for (const d of devs.values()) for (const l of d.f.leases) {
+  if (opts.all) for (const d of devs.values()) for (const l of d.leases) {
     if (declaredLeases.has(`${d.id} ${l.address}`)) continue;
     declaredLeases.add(`${d.id} ${l.address}`);
     const base = `${d.id}-${l.address.replace(/\W/g, "-")}`;
@@ -166,7 +117,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
       const id = d.ref.get(e.port);
       if (!id && d.hidden.has(e.port)) { err(line, `${e.node}.${e.port} is not drawn`, HIDDEN_HINT); return undefined; }
       if (!id) { const c = closest(e.port, d.ref.keys()); err(line, `${e.node} has no interface "${e.port}"`, c && `did you mean ${e.node}.${c}?`); return undefined; }
-      return { id, dev: d, iface: d.ifaceOf.get(id) ?? d.f.ifaces.find((i) => i.name === e.port) };
+      return { id, dev: d, iface: d.ifaceOf.get(id) ?? d.ifaces.find((i) => i.name === e.port) };
     }
     if (!nodeType.has(e.node)) { const c = closest(e.node, [...nodeType.keys(), ...devs.keys()]); err(line, `unknown node "${e.node}"`, c ? `did you mean ${c}?` : "declare it with cloud, device or client, or import it"); return undefined; }
     if (e.port) { err(line, `"${e.node}" is not imported, so it has no port "${e.port}"`, `link ${e.node} without a port`); return undefined; }
@@ -187,7 +138,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (!vlans.some((x) => x.name === name)) err(l.line, `unknown vlan "${name}"`, `declare it with vlan ${name} <ids>`);
 
   // Tagged-VLAN reachability. A link carries v iff, with that link removed, a consumer of v is reachable from
-  // each end, walking other links and bridges that forward v. Ends without facts neither consume nor forward.
+  // each end, walking other links and bridges that forward v. Ends outside a device block neither consume nor forward.
   const adj = new Map<string, { k: number; to: End }[]>();
   ends.forEach((pair, k) => {
     const [a, b] = pair as (End | undefined)[];
@@ -195,9 +146,8 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   });
   const radioOf = (e: End) => e.dev?.radios.find((r) => r.id === e.id);
   const bridgeOf = (e: End) => radioOf(e)?.bridge ?? (e.iface?.type === "vlan" ? undefined : e.iface?.bridge);
-  const byName = (d: Dev, n: string) => d.f.ifaces.find((x) => x.name === n);
-  // shortcut: `/interface bridge vlan` rows are imported as `<port>.<id>` vlan ifaces; on a bridge port they are VLAN-table rows, not consumers. Upgrade if facts keep the table separately.
-  const isTable = (d: Dev, x: Iface) => x.parent !== undefined && x.name === `${x.parent}.${x.vlanId}` && !!byName(d, x.parent)?.bridge;
+  const byName = (d: Dev, n: string) => d.ifaces.find((x) => x.name === n);
+  const isRadio = (x?: Iface) => x?.type === "wifi";
   const consumes = (e: End, v: number): boolean => {
     const d = e.dev, i = e.iface;
     if (!d) return false;
@@ -206,14 +156,14 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (r?.ifaces.some((x) => x.useTag === v)) return true;
     // on a vlan-filtering bridge, the bridge's own vlan iface reaches only ports listed for v
     const viaBridge = br !== undefined && (!byName(d, br)?.vlanFiltering || listed(e, v));
-    return d.f.ifaces.some((x) => (x.type === "vlan" && x.vlanId === v && !isTable(d, x) && (x.parent === port || (viaBridge && x.parent === br)))
+    return d.ifaces.some((x) => (x.type === "vlan" && x.vlanId === v && !d.table.has(x.name) && (x.parent === port || (viaBridge && x.parent === br)))
       || (br !== undefined && isRadio(x) && x.bridge === br && x.useTag === v));
   };
   const listed = (e: End, v: number) => {
     const r = radioOf(e);
     if (r) return r.ifaces.some((x) => x.useTag === v);
     const n = e.iface!.name;
-    return e.iface!.useTag === v || e.dev!.f.ifaces.some((x) => x.type === "vlan" && x.parent === n && x.vlanId === v);
+    return e.iface!.useTag === v || e.dev!.ifaces.some((x) => x.type === "vlan" && x.parent === n && x.vlanId === v);
   };
   const siblings = (e: End, v: number): End[] => {
     const d = e.dev, br = bridgeOf(e);
@@ -235,8 +185,8 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     return false;
   };
   const member = (e: End) => !e.dev || !!e.iface?.bridge || !!radioOf(e);
-  /** Lanes the facts imply for link k, and the tagged ids it carries (which vlan ifaces a trunk port feeds). */
-  /** With `forCheck`, a fact-less end accepts every tagged id, so `inferred` judges only the ends we have facts for. */
+  /** Lanes the device blocks imply for link k, and the tagged ids it carries (which vlan ifaces a trunk port feeds). */
+  /** With `forCheck`, an end outside a device block accepts every tagged id, so `inferred` judges only the ends with blocks. */
   const infer = (a: End, b: End, k: number, forCheck = false): { lanes: string[]; ids: number[] } => {
     if (!a.dev && !b.dev) return { lanes: ["wire"], ids: [] };
     const all = [...new Set(vlans.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))].sort((x, y) => x - y);
@@ -275,13 +225,12 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   });
 
   // Internal links: trunk port → vlan iface it carries, vlan iface → the bridge it is a member of, uplink port → radio (no router).
-  const importLine = new Map(imports.map((s) => [s.as, s.line]));
   for (const d of devs.values()) {
-    const line = importLine.get(d.id)!;
-    const vifs = d.f.ifaces.filter((i) => i.type === "vlan" && d.ref.has(i.name));
+    const line = d.line, wanNames = new Set(d.wan.map((w) => w.iface));
+    const vifs = d.ifaces.filter((i) => i.type === "vlan" && d.ref.has(i.name));
     for (const p of leaves(d.node).filter((n) => n.kind === "port" && linked.has(n.id))) {
       const i = d.ifaceOf.get(p.id)!;
-      if ((d.f.lists.WAN ?? []).includes(i.name)) continue;
+      if (wanNames.has(i.name)) continue;
       const ids = trunkIds.get(p.id) ?? new Set();
       for (const v of vifs) {
         const name = vlanName(v.vlanId);
@@ -302,7 +251,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
         if (up) push(up.id, r.id, untagged.length ? untagged : ["wire"], line);
       }
     }
-    const spare = (p: MNode) => p.kind === "port" && !linked.has(p.id) && !!d.ifaceOf.get(p.id)?.bridge && !(d.f.lists.WAN ?? []).includes(d.ifaceOf.get(p.id)!.name);
+    const spare = (p: MNode) => p.kind === "port" && !linked.has(p.id) && !!d.ifaceOf.get(p.id)?.bridge && !wanNames.has(d.ifaceOf.get(p.id)!.name);
     // A router shows its free ports as spare; on a router-less device (an AP) they are noise unless --all.
     const prune = (n: MNode) => {
       n.children = n.children.filter((c) => { if (!spare(c)) return true; const name = d.ifaceOf.get(c.id)!.name; d.ref.delete(name); d.hidden.add(name); return false; });
@@ -364,8 +313,11 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   for (const l of out) if ((tier.get(l.from) ?? 0) > (tier.get(l.to) ?? 0)) [l.from, l.to] = [l.to, l.from];
 
   // L3 arrows: derived per device, then DSL route/allow, then hide (arrow id or node id).
-  const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d.id, d.f, nodes, d.wanRoutes, leaseOf));
+  const arrows: MArrow[] = [...devs.values()].flatMap((d) => deriveArrows(d, nodes, leaseOf));
+  const client = (addr: string) => walk(nodes).find((n) => n.kind === "client" && leaseOf.get(n.id) === addr)?.id;
   const arrowEnd = (id: string, line: number) => {
+    // an address end is the client leased it; without one the arrow is dropped silently
+    if (IPV4_RE.test(id)) return client(id);
     const [node, port] = id.split(".", 2) as [string, string | undefined];
     const r = resolve({ node, ...(port ? { port } : {}) }, line);
     return r === "bare" ? node : r?.id;

@@ -243,3 +243,31 @@ test("fallback styles take a same-named VLAN def's style, else stay built-in", (
   expect(style(synth(wan, 'imports rsc x.rsc as x\nvlan lte 52 color orange "10.52.0.0/24"\n'), "x/vlan9")).toBe("vlan:lte");
   expect(style(synth(wan, "imports rsc x.rsc as x\n"), "x/vlan9")).toBe("lte");
 });
+
+test("hand-written AP block behaves like an imported router-less AP", () => {
+  const src = "device sw\ndevice ap\n  bridge br\n    ports ether1, ether2\n    radio wlan1 ssid X\nlink sw -- ap.ether1\n";
+  const ids = (m: Model) => all(m.nodes).map((n) => n.id);
+  const m = dsl(src);
+  expect(m.diags).toEqual([]);
+  expect(ids(m)).not.toContain("ap/ether2");
+  expect(ids(dsl(src, { all: true }))).toContain("ap/ether2");
+  expect(m.links.some((l) => l.from === "ap/ether1" && l.to === "ap/radio-br")).toBe(true);
+});
+
+test("internals on an imported id is an error", () => {
+  const m = synth("/interface bridge add name=br1\n", "imports rsc x.rsc as x\ndevice x\n  router\n");
+  expect(m.diags).toContainEqual({ level: "error", file: "", line: 2, message: '"x" is imported; its internals come from x.rsc', hint: "run netdraw import x.rsc to get an editable block" });
+});
+
+test("tagged names an unknown vlan", () => {
+  const m = dsl("device sw\n  bridge br\n    ports ether1 tagged nope\n");
+  expect(m.diags).toContainEqual(expect.objectContaining({ level: "error", line: 3, message: 'unknown vlan "nope"' }));
+});
+
+test("a quoted name with / or % is escaped in its id and linked by its name", () => {
+  const m = dsl('device sw\n  ports "ge-0/0/0", "a%b"\ndevice x\nlink sw.ge-0/0/0 -- x\n');
+  expect(m.diags).toEqual([]);
+  expect(node(m, "sw/ge-0%2F0%2F0")!.label).toBe("ge-0/0/0");
+  expect(node(m, "sw/a%25b")).toBeDefined();
+  expect(link(m, "sw/ge-0%2F0%2F0", "x")).toBeDefined();
+});

@@ -3,25 +3,25 @@ import type { DevItem, DeviceFacts, Diag, IfFlags, Iface, Stmt, VlanDef } from "
 type NodeStmt = Extract<Stmt, { kind: "node" }>;
 type Route = DeviceFacts["routes"][number];
 /** One chip per bridge and VLAN tag: radios on a `use-tag` get their own chip, apart from the bridge's untagged ones. */
-export type Radio = { id: string; bridge?: string; tag?: number; phys: string[]; ssids: string[]; ifaces: Iface[] };
+type Radio = { bridge?: string; tag?: number; phys: string[]; ssids: string[]; ifaces: Iface[] };
 
-export const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
+const isRadio = (i: Iface) => i.type === "wifi" || i.type === "wireless";
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
 export const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
 const ipNum = (ip: string) => ip.split(".").reduce((a, o) => a * 256 + Number(o), 0);
-export function inCidr(ip: string, cidr?: string): boolean {
+function inCidr(ip: string, cidr?: string): boolean {
   if (!cidr || !/^\d+\.\d+\.\d+\.\d+$/.test(ip)) return false;
   const [net, len] = cidr.split("/");
   const size = 2 ** (32 - Number(len ?? 32));
   return Math.floor(ipNum(ip) / size) === Math.floor(ipNum(net!) / size);
 }
 
-export function collectRadios(id: string, f: DeviceFacts): Radio[] {
+function collectRadios(f: DeviceFacts): Radio[] {
   const out: Radio[] = [];
   for (const i of f.ifaces) {
     if (!isRadio(i) || i.name.startsWith("cap-") || (f.lists.WAN ?? []).includes(i.name)) continue;
     let r = out.find((x) => x.bridge === i.bridge && x.tag === i.useTag);
-    if (!r) out.push((r = { id: `${id}/radio${i.bridge ? "-" + i.bridge : ""}${i.useTag !== undefined ? "-tag" + i.useTag : ""}`, bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), phys: [], ssids: [], ifaces: [] }));
+    if (!r) out.push((r = { bridge: i.bridge, ...(i.useTag !== undefined ? { tag: i.useTag } : {}), phys: [], ssids: [], ifaces: [] }));
     r.ifaces.push(i);
     if (!r.phys.includes(physOf(i.name))) r.phys.push(physOf(i.name));
     if (i.ssid && !r.ssids.includes(i.ssid)) r.ssids.push(i.ssid);
@@ -30,7 +30,7 @@ export function collectRadios(id: string, f: DeviceFacts): Radio[] {
 }
 
 /** CAPsMAN `cap-*` radios move to the imported device holding a radio with one of their MACs. */
-export function placeCaps(devs: { id: string; f: DeviceFacts; radios: Radio[] }[], warn: (file: string, msg: string, hint: string) => void) {
+function placeCaps(devs: { id: string; f: DeviceFacts; radios: Radio[] }[], warn: (file: string, msg: string, hint: string) => void) {
   for (const d of devs) {
     const caps = new Map<string, Iface[]>();
     for (const i of d.f.ifaces) if (isRadio(i) && i.name.startsWith("cap-")) caps.set(physOf(i.name), [...(caps.get(physOf(i.name)) ?? []), i]);
@@ -46,10 +46,10 @@ export function placeCaps(devs: { id: string; f: DeviceFacts; radios: Radio[] }[
 
 const bridgesOf = (f: DeviceFacts) => f.ifaces.filter((i) => i.type === "bridge" && !(f.lists.WAN ?? []).includes(i.name));
 const addrOf = (f: DeviceFacts, n: string) => f.addresses.find((a) => a.iface === n)?.cidr;
-export const hasRouter = (f: DeviceFacts) => f.masqueradeOutLists.length > 0 || bridgesOf(f).filter((b) => addrOf(f, b.name)).length > 1;
+const hasRouter = (f: DeviceFacts) => f.masqueradeOutLists.length > 0 || bridgesOf(f).filter((b) => addrOf(f, b.name)).length > 1;
 
 /** The default route matched to each WAN member, aligned with `lists.WAN`. */
-export function wanRoutes(f: DeviceFacts, vlans: VlanDef[]): { iface: Iface; route?: Route }[] {
+function wanRoutes(f: DeviceFacts, vlans: VlanDef[]): { iface: Iface; route?: Route }[] {
   const byName = new Map(f.ifaces.map((i) => [i.name, i]));
   const defaults = f.routes.filter((r) => r.dst === "0.0.0.0/0").sort((a, b) => a.distance - b.distance);
   const used = new Set<object>();
@@ -90,9 +90,10 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
   // Ports: non-WAN, not bridge/vlan/radio, non-ether only when bridged. Bridge VLAN-table rows are tagged ids on their port.
   const ports = f.ifaces.filter((i) => !wan.includes(i.name) && i.type !== "bridge" && i.type !== "vlan" && !isRadio(i) && (i.type === "ether" || !!i.bridge));
   const portNames = new Set(ports.map((p) => p.name));
-  // shortcut: `<port>.<id>` vlan ifaces on a bridge port are table rows (build.ts isTable); a row whose port has no ports line stays a vif.
+  // shortcut: `/interface bridge vlan` rows are imported as `<port>.<id>` vlan ifaces; on a bridged port with a ports line they are table rows. Upgrade if facts keep the table separately.
   const isTable = (x: Iface) => x.parent !== undefined && x.name === `${x.parent}.${x.vlanId}` && !!byName.get(x.parent)?.bridge && portNames.has(x.parent);
-  const vifs = f.ifaces.filter((i) => i.type === "vlan" && !wan.includes(i.name) && !isTable(i));
+  // shortcut: a non-WAN vlan iface without a vlan-id has no vif spelling and is not drawn; upgrade if exports without vlan-id turn up.
+  const vifs = f.ifaces.filter((i) => i.type === "vlan" && i.vlanId !== undefined && !wan.includes(i.name) && !isTable(i));
   const portLines = (ps: Iface[]): DevItem[] => {
     const lines: Extract<DevItem, { kind: "ports" }>[] = [];
     for (const p of ps) {
@@ -135,7 +136,7 @@ function items(line: number, f: DeviceFacts, radios: Radio[], vlans: VlanDef[]):
 /** RouterOS facts → one `device` block per import, in input order. CAPsMAN radios are matched across all of them. */
 export function translate(devs: { id: string; line: number; f: DeviceFacts }[], vlans: VlanDef[]): { stmts: NodeStmt[]; diags: Diag[] } {
   const diags: Diag[] = [];
-  const pre = devs.map((d) => ({ ...d, radios: collectRadios(d.id, d.f) }));
+  const pre = devs.map((d) => ({ ...d, radios: collectRadios(d.f) }));
   placeCaps(pre, (file, message, hint) => diags.push({ level: "warning", file, line: 0, message, hint }));
   const stmts = pre.map((d): NodeStmt => ({ line: d.line, kind: "node", type: "device", id: d.id,
     ...(d.f.model !== undefined ? { model: d.f.model } : {}), ...(d.f.version !== undefined ? { os: `RouterOS ${d.f.version}` } : {}),

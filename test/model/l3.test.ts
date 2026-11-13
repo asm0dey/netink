@@ -48,3 +48,12 @@ test("DSL route/allow add arrows; hide removes by arrow id or node id", () => {
   expect(bad.diags.find((d) => d.level === "error")).toMatchObject({ line: 6, message: expect.stringContaining("nope") });
 });
 
+
+test("allow to an unleased address draws nothing", () => {
+  const src = (lease: string) => `device r\n  router\n  bridge lan address 10.0.0.1/24\n  ${lease}\n  allow lan -> 10.0.0.9 "x"\nclient c lease 10.0.0.8\nallow r.lan -> 10.0.0.9\n`;
+  const m = buildModel(parseDsl(src("lease 10.0.0.8"), "t.net").stmts, new Map());
+  expect(m.diags).toEqual([]);
+  expect(m.arrows.filter((a) => a.kind === "allow")).toEqual([]);
+  const ok = buildModel(parseDsl(src("lease 10.0.0.9").replace("lease 10.0.0.8\nallow", "lease 10.0.0.9\nallow"), "t.net").stmts, new Map());
+  expect(ok.arrows.filter((a) => a.kind === "allow")).toEqual([{ id: "allow:r/lan->c", from: "r/lan", to: "c", kind: "allow", label: "x" }]);
+});

@@ -97,3 +97,8 @@ test("core translation prints as a parseable block", () => {
   const { stmts } = home();
   expect(parseDsl(printStmts(stmts), "t").diags).toEqual([]);
 });
+
+test("a vlan iface without a vlan-id is not emitted as a vif", () => {
+  const { stmts } = translate([{ id: "x", line: 1, f: importRsc("/interface vlan add interface=ether1 name=v0\n", "x.rsc", "x") }], []);
+  expect(JSON.stringify(stmts[0]!.items)).not.toContain('"v0"');
+});
