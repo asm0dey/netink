@@ -1,5 +1,5 @@
 import { NAMED } from "../render/svg";
-import type { Diag, Endpoint, Stmt } from "../types";
+import type { DevItem, Diag, Endpoint, Stmt, VlanRef } from "../types";
 
 type Tok = { t: "w" | "s" | "p"; v: string }; // word, string, punctuation (, =)
 
@@ -150,10 +150,11 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
         if (!/^\d+$/.test(n)) throw new DslError(`bad vlan id "${n}"`);
         return Number(n);
       });
-      const s: Stmt = { line, kind: "vlan", name, ids };
+      const s: Stmt = { line, kind: "vlan", name, ids, subnets: [] };
       while (!c.done()) {
         if (c.isWord("color")) { c.i++; s.color = color(c); }
-        else s.subnet = c.str("subnet");
+        else if (c.isWord("subnet")) { c.i++; s.subnets.push(...c.list("subnet")); }
+        else s.subnets.push(c.str("subnet")); // legacy bare string
       }
       return [s];
     }
@@ -162,8 +163,8 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
     case "client": {
       const id = c.word("id");
       const label = c.isStr() ? c.str("label") : undefined;
-      const o = opts(c, kw === "client" ? { lease: "w", note: "s" } : kw === "device" ? { kind: "w", model: "s", note: "s" } : {});
-      return [{ line, kind: "node", type: kw, id, label, role: o.kind, note: o.note, lease: o.lease, model: o.model }];
+      const o = opts(c, kw === "client" ? { lease: "w", note: "s" } : kw === "device" ? { kind: "w", model: "s", os: "s", note: "s" } : {});
+      return [{ line, kind: "node", type: kw, id, label, role: o.kind, note: o.note, lease: o.lease, model: o.model, ...(o.os !== undefined ? { os: o.os } : {}) }];
     }
     case "link": {
       const path: Endpoint[] = [ep(c.word("endpoint"))];
@@ -238,6 +239,109 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
   throw new DslError(`unknown keyword "${kw}"`, `valid keywords: ${KEYWORDS.join(", ")}`);
 }
 
+const FLAGS = ["lan", "guest", "hotspot"] as const;
+const IP_RE = /^(\d+\.\d+\.\d+\.\d+|[0-9a-f]*:[0-9a-f:.]*)(\/\d+)?$/i;
+
+/** A block name: a word or a quoted string. */
+const nm = (c: Cur, what: string) => (c.isStr() ? c.str(what) : c.word(what));
+const nmList = (c: Cur, what: string) => {
+  const r = [nm(c, what)];
+  while (c.isP(",")) { c.i++; r.push(nm(c, what)); }
+  return r;
+};
+const int = (c: Cur, what: string) => {
+  const w = c.word(what);
+  if (!/^\d+$/.test(w)) throw new DslError(`bad ${what} "${w}"`);
+  return Number(w);
+};
+const vref = (c: Cur): VlanRef => { const w = nm(c, "vlan"); return /^\d+$/.test(w) ? Number(w) : w; };
+
+/** One device-block line (keyword already read). */
+function parseItem(kw: string, c: Cur, line: number): DevItem {
+  const flags: { lan?: true; guest?: true; hotspot?: true } = {};
+  const flag = () => { for (const f of FLAGS) if (c.isWord(f)) { c.i++; flags[f] = true; return true; } return false; };
+  const bad = () => new DslError(`unexpected "${c.peek()!.v}"`);
+  switch (kw) {
+    case "wan": {
+      const it: Extract<DevItem, { kind: "wan" }> = { line, kind: "wan", iface: nm(c, "interface") };
+      while (!c.done()) {
+        if (c.isWord("on")) { c.i++; it.on = nm(c, "parent"); }
+        else if (c.isWord("vlan")) { c.i++; it.vlan = int(c, "vlan id"); }
+        else if (c.isWord("route")) { c.i++; it.route = nm(c, "route"); }
+        else if (c.isWord("distance")) { c.i++; it.distance = int(c, "distance"); }
+        else if (c.isWord("dhcp")) {
+          c.i++;
+          const a = c.peek();
+          if (a?.t === "w" && IP_RE.test(a.v)) { c.i++; it.dhcp = a.v; } else it.dhcp = true;
+        } else if (c.isWord("nat")) { c.i++; it.nat = true; }
+        else throw bad();
+      }
+      return it;
+    }
+    case "router": c.end(); return { line, kind: "router" };
+    case "bridge": {
+      const it: Extract<DevItem, { kind: "bridge" }> = { line, kind: "bridge", name: nm(c, "bridge name"), addresses: [], items: [] };
+      while (!c.done()) {
+        if (c.isWord("address")) { c.i++; it.addresses.push(...c.list("address")); }
+        else if (c.isWord("filtering")) { c.i++; it.filtering = true; }
+        else if (!flag()) throw bad();
+      }
+      return Object.assign(it, flags);
+    }
+    case "ports": {
+      const it: Extract<DevItem, { kind: "ports" }> = { line, kind: "ports", names: nmList(c, "port"), tagged: [] };
+      while (!c.done()) {
+        if (c.isWord("untagged")) { c.i++; it.untagged = vref(c); }
+        else if (c.isWord("tagged")) { c.i++; it.tagged.push(vref(c)); while (c.isP(",")) { c.i++; it.tagged.push(vref(c)); } }
+        else if (c.isWord("horizon")) { c.i++; it.horizon = int(c, "horizon"); }
+        else throw bad();
+      }
+      return it;
+    }
+    case "vif": {
+      const it: Extract<DevItem, { kind: "vif" }> = { line, kind: "vif", name: nm(c, "interface"), vlan: -1, addresses: [] };
+      let seen = false;
+      while (!c.done()) {
+        if (c.isWord("on")) { c.i++; it.on = nm(c, "parent"); }
+        else if (c.isWord("vlan")) { c.i++; it.vlan = int(c, "vlan id"); seen = true; }
+        else if (c.isWord("address")) { c.i++; it.addresses.push(...c.list("address")); }
+        else if (!flag()) throw bad();
+      }
+      if (!seen) throw new DslError("vif needs a vlan", "vif <name> [on <parent>] vlan <n>");
+      return Object.assign(it, flags);
+    }
+    case "radio": {
+      const it: Extract<DevItem, { kind: "radio" }> = { line, kind: "radio", ifaces: nmList(c, "interface"), ssids: [] };
+      while (!c.done()) {
+        if (c.isWord("tag")) { c.i++; it.tag = int(c, "tag"); }
+        else if (c.isWord("ssid")) { c.i++; it.ssids.push(...nmList(c, "ssid")); }
+        else throw bad();
+      }
+      return it;
+    }
+    case "address": {
+      const it: Extract<DevItem, { kind: "address" }> = { line, kind: "address", iface: nm(c, "interface"), cidrs: c.list("address") };
+      while (!c.done()) if (!flag()) throw bad();
+      return Object.assign(it, flags);
+    }
+    case "lease": {
+      const address = c.word("address");
+      const comment = c.isStr() ? c.str("comment") : undefined;
+      c.end();
+      return { line, kind: "lease", address, ...(comment !== undefined ? { comment } : {}) };
+    }
+    default: { // allow
+      const from = nm(c, "interface"); c.expectWord("->"); const to = nm(c, "target");
+      const label = c.isStr() ? c.str("label") : undefined;
+      c.end();
+      return { line, kind: "allow", from, to, ...(label !== undefined ? { label } : {}) };
+    }
+  }
+}
+
+const BLOCK = ["wan", "router", "bridge", "ports", "vif", "radio", "address", "lease", "allow"];
+const NESTED = ["ports", "vif", "radio"];
+
 /** Consecutive endpoint pairs of a chain. */
 const pairs = (path: Endpoint[]): Endpoint[][] => path.slice(1).map((e, i) => [path[i]!, e]);
 
@@ -245,8 +349,11 @@ export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Di
   const stmts: Stmt[] = [];
   const diags: Diag[] = [];
   const lines = text.split(/\r?\n/);
+  // the last level-0 device's item list, and its last level-1 bridge
+  let dev: Extract<Stmt, { kind: "node" }> | undefined, bridge: Extract<DevItem, { kind: "bridge" }> | undefined;
   for (let n = 0; n < lines.length; n++) {
     const line = n + 1;
+    const lead = /^[ \t]*/.exec(lines[n]!)![0];
     let src = stripComment(lines[n]!);
     // shortcut: a comment-only line after a trailing comma ends the continuation (it reads as empty), upgrade if that bites
     while (src.endsWith(",") && n + 1 < lines.length) src += " " + stripComment(lines[++n]!).trim();
@@ -254,7 +361,28 @@ export function parseDsl(text: string, file: string): { stmts: Stmt[]; diags: Di
     try {
       const c = new Cur(tokenize(src));
       const kw = c.word("keyword");
-      stmts.push(...parseLine(kw, c, line));
+      if (!lead) {
+        dev = bridge = undefined;
+        const out = parseLine(kw, c, line);
+        const last = out[out.length - 1];
+        if (last?.kind === "node" && last.type === "device") dev = last;
+        stmts.push(...out);
+        continue;
+      }
+      if (lead.includes("\t") || lead.length % 2) throw new DslError("bad indentation", "indent block lines with two spaces");
+      const level = lead.length / 2;
+      if (!BLOCK.includes(kw)) throw new DslError(`${kw} is not a block line`, "unindent it");
+      if (level > 2) throw new DslError("block nested too deep", "blocks nest two levels: device, then bridge");
+      if (!dev) throw new DslError(`${kw} must be inside a device block`, "indent it under a device line");
+      if (level === 1) {
+        const it = parseItem(kw, c, line);
+        (dev.items ??= []).push(it);
+        bridge = it.kind === "bridge" ? it : undefined;
+      } else {
+        if (!bridge) throw new DslError(`${kw} is indented under something that is not a bridge`, "only bridge lines take indented children");
+        if (!NESTED.includes(kw)) throw new DslError(`${kw} cannot be inside a bridge`, "a bridge holds ports, vif and radio lines");
+        bridge.items.push(parseItem(kw, c, line));
+      }
     } catch (e) {
       if (!(e instanceof DslError)) throw e;
       diags.push({ level: "error", file, line, message: e.message, ...(e.hint ? { hint: e.hint } : {}) });

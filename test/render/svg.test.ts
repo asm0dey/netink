@@ -46,7 +46,7 @@ test("home render: LTE lanes, jumps, legend", async () => {
 });
 
 test("more than 4 lanes render as one labelled trunk", () => {
-  const vlans = [10, 11, 12, 13, 40].map((id, i) => ({ name: `v${i}`, ids: [id], color: "green" }));
+  const vlans = [10, 11, 12, 13, 40].map((id, i) => ({ name: `v${i}`, ids: [id], color: "green", subnets: [] as string[] }));
   const [m, p] = tiny("x");
   const svg = renderSvg({ ...m, vlans, links: [{ id: "l", from: "a", to: "a", lanes: vlans.map((v) => v.name), line: 1 }] },
     { ...p, links: [{ id: "l", points: [{ x: 50, y: 160 }, { x: 250, y: 160 }] }] });
@@ -126,7 +126,7 @@ const crossing = (laneVertical: boolean): [Model, Placed] => {
   const H = [{ x: 0, y: 100 }, { x: 200, y: 100 }], V = [{ x: 100, y: 0 }, { x: 100, y: 200 }];
   return [
     { title: "T", nodes: ["a", "b", "c", "d"].map(node), links: [{ id: "l", from: "a", to: "b", lanes: ["guest"], line: 1 }],
-      arrows: [{ id: "x", from: "c", to: "d", kind: "allow" }], vlans: [{ name: "guest", ids: [50], color: "blue" }],
+      arrows: [{ id: "x", from: "c", to: "d", kind: "allow" }], vlans: [{ name: "guest", ids: [50], color: "blue", subnets: [] }],
       legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" }, jumps: "arc", hints: [], diags: [] },
     { width: 300, height: 300, boxes: new Map(), links: [{ id: "l", points: laneVertical ? V : H }], arrows: [{ id: "x", points: laneVertical ? H : V }] },
   ];
@@ -146,7 +146,7 @@ test("every jump is drawn on top of what it crosses: a white halo, then a solid 
 
 test("a vlan:wan group is stroked in the VLAN colour, not the WAN red", async () => {
   const m: Model = { title: "T", nodes: [{ id: "g", kind: "group", style: "vlan:wan", label: "g", sub: [], children: [{ id: "c", kind: "port", style: "port", label: "c", sub: [], children: [], tier: 1 }], tier: 0 }], links: [], arrows: [],
-    vlans: [{ name: "wan", ids: [70], color: "cyan" }], legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" }, jumps: "arc", hints: [], diags: [] };
+    vlans: [{ name: "wan", ids: [70], color: "cyan", subnets: [] }], legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" }, jumps: "arc", hints: [], diags: [] };
   const svg = renderSvg(m, await layout(m));
   expect(svg).toContain("#0097A7");
   expect(svg).not.toContain("#C62828");

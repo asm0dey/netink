@@ -133,7 +133,7 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
   ];
   const entries: Entry[] = [
     ...model.vlans.filter((v) => carried.has(v.name)).map((v) => ({
-      key: v.name, label: `${display(v.name)} (${v.ids === "untagged" ? "untagged" : idList(v.ids)})`, sub: v.subnet, lane: v.name })),
+      key: v.name, label: `${display(v.name)} (${v.ids === "untagged" ? "untagged" : idList(v.ids)})`, sub: v.subnets.length ? v.subnets.join(", ") : undefined, lane: v.name })),
     ...kinds.filter((k) => used.has(k.lane)),
     ...model.legend.add.map((a) => ({ key: a.text, label: a.text, lane: lanes.has(a.style) ? a.style : "wire" })),
   ];

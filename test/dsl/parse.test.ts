@@ -35,7 +35,7 @@ test("parses the home sketch", () => {
   expect(diags).toEqual([]);
   expect(stmts.filter((s) => s.kind === "link").length).toBe(8);
   const guest = stmts.find((s) => s.kind === "vlan" && s.name === "guest");
-  expect(guest).toMatchObject({ ids: [50, 51], color: "blue", subnet: "10.50.0.0/24" });
+  expect(guest).toMatchObject({ ids: [50, 51], color: "blue", subnets: ["10.50.0.0/24"] });
   const imports = stmts.filter((s) => s.kind === "import");
   expect(imports.map((s) => s.kind === "import" && s.as)).toEqual(["core", "ap1", "ap2", "lte"]);
   expect(stmts.find((s) => s.kind === "node" && s.id === "switch")).toMatchObject({ role: "switch", label: "Cisco switch" });
@@ -77,7 +77,7 @@ test("chained link label goes on the last pair only", () => {
 
 test("vlan colours: a named theme colour or a quoted hex; anything else is an error naming the valid ones", () => {
   const vlan = (src: string) => parseDsl(src, "t.net");
-  expect(vlan('vlan a 10 color "#FF0000" "10.0.0.0/24"\n').stmts[0]).toMatchObject({ color: "#FF0000", subnet: "10.0.0.0/24" });
+  expect(vlan('vlan a 10 color "#FF0000" "10.0.0.0/24"\n').stmts[0]).toMatchObject({ color: "#FF0000", subnets: ["10.0.0.0/24"] });
   expect(vlan('vlan a 10 color "#f00"\n').stmts[0]).toMatchObject({ color: "#ff0000" });
   expect(vlan("vlan a 10 color teal\n").stmts[0]).toMatchObject({ color: "teal" });
   const unknown = vlan("vlan a 10 color mauve\n").diags[0]!;
@@ -85,4 +85,88 @@ test("vlan colours: a named theme colour or a quoted hex; anything else is an er
   expect(unknown.hint).toContain("green, blue, orange");
   expect(vlan('vlan a 10 color "red"\n').diags[0]!.message).toBe('bad hex color "red"');
   expect(vlan("vlan a 10 color #ff0000\n").diags[0]!.hint).toContain('color "#ff0000"');
+});
+
+const CORE = `vlan lan   untagged color green  subnet 192.168.0.0/24
+device core model "hAP ax3" os "RouterOS 7.16"
+  wan ether1     route "wan1-main" distance 1 dhcp
+  wan vlan60-lte on bridge vlan 60 route "wan2-lte" distance 2 dhcp nat
+  router
+  bridge bridge address 192.168.0.1/24 lan
+    ports ether2, ether5
+    ports ether3, ether4 tagged 50, 60
+    radio wifi1, wifi2, wifi1-iot, wifi1-5g, wifi2-iot ssid HomeNet, HomeNet-IoT, HomeNet-5
+  # a comment keeps the block open
+
+  bridge br-guest address 10.50.0.1/24 guest hotspot
+    vif vlan50 on bridge vlan 50
+    radio wifi1-guest, wifi2-guest ssid Guest
+  address vlan50 2001:db8:50::1
+  lease 192.168.0.200 "Printer"
+  lease 192.168.0.28 "TV"
+allow core.br-guest -> 192.168.0.200 "printer"
+`;
+const err = (src: string) => parseDsl(src, "f").diags;
+
+test("device block parses into items", () => {
+  const { stmts, diags } = parseDsl(CORE, "f");
+  expect(diags).toEqual([]);
+  const dev = stmts.find((s) => s.kind === "node")!;
+  if (dev.kind !== "node") throw 0;
+  expect(dev).toMatchObject({ model: "hAP ax3", os: "RouterOS 7.16" });
+  const items = dev.items!;
+  expect(items.map((i) => i.kind)).toEqual(["wan", "wan", "router", "bridge", "bridge", "address", "lease", "lease"]);
+  expect(items[1]).toMatchObject({ on: "bridge", vlan: 60, distance: 2, dhcp: true, nat: true });
+  const b = items[3]!;
+  if (b.kind !== "bridge") throw 0;
+  expect(b).toMatchObject({ addresses: ["192.168.0.1/24"], lan: true });
+  expect(b.items.map((i) => i.kind)).toEqual(["ports", "ports", "radio"]);
+  expect(b.items[1]).toMatchObject({ tagged: [50, 60] });
+  const r = b.items[2]!;
+  if (r.kind !== "radio") throw 0;
+  expect([r.ifaces.length, r.ssids.length]).toEqual([5, 3]);
+  expect(stmts.at(-1)).toMatchObject({ kind: "allow" });
+});
+
+test("dhcp takes an optional address; allow is a device item", () => {
+  const { stmts, diags } = parseDsl('device d\n  wan e1 dhcp 203.0.113.5/24 nat\n  allow e1 -> 192.168.0.5 "x"\n', "f");
+  expect(diags).toEqual([]);
+  const d = stmts[0]!;
+  expect(d.kind === "node" && d.items).toMatchObject([{ dhcp: "203.0.113.5/24", nat: true }, { kind: "allow", from: "e1", to: "192.168.0.5", label: "x" }]);
+});
+
+test("quoted port name", () => {
+  const { stmts, diags } = parseDsl('device d\n  ports "ge-0/0/0", ge-0/0/1 untagged lan\n', "f");
+  expect(diags).toEqual([]);
+  const d = stmts[0]!;
+  expect(d.kind === "node" && d.items![0]).toMatchObject({ names: ["ge-0/0/0", "ge-0/0/1"], untagged: "lan" });
+});
+
+test("vlan subnets: list and legacy string", () => {
+  const a = parseDsl('vlan g 50 subnet 10.50.0.0/24, 2001:db8:50::/64\nvlan l untagged "192.168.0.0/24"\nvlan n 5\n', "f");
+  expect(a.diags).toEqual([]);
+  expect(a.stmts.map((s) => s.kind === "vlan" && s.subnets)).toEqual([["10.50.0.0/24", "2001:db8:50::/64"], ["192.168.0.0/24"], []]);
+});
+
+test("indentation errors", () => {
+  for (const src of ["device d\n\trouter\n", "device d\n   router\n"]) {
+    expect(err(src)).toMatchObject([{ line: 2, hint: "indent block lines with two spaces" }]);
+  }
+  expect(err('cloud c\n  ports a\n')).toMatchObject([{ line: 2, message: "ports must be inside a device block" }]);
+  expect(err("device d\n  wan e1\n    ports a\n")).toHaveLength(1);
+  expect(err("device d\n    ports a\n")).toHaveLength(1);
+  expect(err("device d\n  link a -- b\n")).toMatchObject([{ hint: "unindent it" }]);
+});
+
+test("continuation line is not a block line", () => {
+  const { stmts, diags } = parseDsl("imports rsc a.rsc as a,\n            b.rsc as b\n", "f");
+  expect(diags).toEqual([]);
+  expect(stmts.filter((s) => s.kind === "import")).toHaveLength(2);
+});
+
+test("comment and blank lines inside a block keep the block open", () => {
+  const { stmts, diags } = parseDsl("device d\n  bridge b\n\n# c\n    ports a\n  # c\n    ports b\n", "f");
+  expect(diags).toEqual([]);
+  const b = stmts[0]!.kind === "node" && stmts[0]!.items![0]!;
+  expect(b && b.kind === "bridge" && b.items.length).toBe(2);
 });

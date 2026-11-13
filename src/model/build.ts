@@ -85,8 +85,8 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     const defaults = f.routes.filter((r) => r.dst === "0.0.0.0/0").sort((a, b) => a.distance - b.distance);
     const used = new Set<object>();
     const routeFor = (i: Iface) => {
-      const sub = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.subnet;
-      return defaults.find((r) => !used.has(r) && (r.gateway === i.name || inCidr(r.gateway, addrOf(i.name)) || inCidr(r.gateway, sub)));
+      const sub = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.subnets ?? [];
+      return defaults.find((r) => !used.has(r) && (r.gateway === i.name || inCidr(r.gateway, addrOf(i.name)) || sub.some((c) => inCidr(r.gateway, c))));
     };
     const ifs = wan.map((n) => byName.get(n) ?? { name: n, type: "other" as const });
     const routes = new Map(ifs.map((i) => { const r = routeFor(i); if (r) used.add(r); return [i, r] as const; }));
@@ -150,7 +150,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   const err = (line: number, message: string, hint?: string) => diags.push({ level: "error", file, line, message, ...(hint ? { hint } : {}) });
   const of = <K extends Stmt["kind"]>(k: K) => stmts.filter((s): s is Extract<Stmt, { kind: K }> => s.kind === k);
 
-  const vlans: VlanDef[] = of("vlan").map((v) => ({ name: v.name, ids: v.ids, color: v.color ?? "grey", ...(v.subnet ? { subnet: v.subnet } : {}) }));
+  const vlans: VlanDef[] = of("vlan").map((v) => ({ name: v.name, ids: v.ids, color: v.color ?? "grey", subnets: v.subnets }));
   const vlanName = (id?: number) => vlans.find((v) => v.ids !== "untagged" && id !== undefined && v.ids.includes(id))?.name;
   const untagged = vlans.filter((v) => v.ids === "untagged").map((v) => v.name);
 

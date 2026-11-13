@@ -12,9 +12,19 @@ strings are "..." with \\" and \\\\ escapes):
 
   title "T"                      subtitle "T"
   imports rsc <path> as <id> (, <path> as <id>)*
-  vlan <name> (untagged | <n>(,<n>)*) [color <c>] ["subnet"]   c = a name below, or quoted hex "#rrggbb"
+  vlan <name> (untagged | <n>(,<n>)*) [color <c>] [subnet <cidr>(, <cidr>)*]   c = a name below, or quoted hex "#rrggbb"
   cloud <id> ["label"]
-  device <id> ["label"] [kind <role>] [model "m"] [note "n"]
+  device <id> ["label"] [kind <role>] [model "m"] [os "o"] [note "n"]
+    indented blocks (two spaces per level) under a device; names are local, "quoted" allowed:
+      wan <if> [on <parent> vlan <n>] [route "name"] [distance <n>] [dhcp [<addr>]] [nat]
+      router
+      bridge <name> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot] [filtering]   (children indented again: ports, vif, radio)
+      ports <p>(, <p>)* [untagged <vlan>] [tagged <vlan>(, <vlan>)*] [horizon <n>]     <vlan> = name or id
+      vif <name> [on <parent>] vlan <n> [address <cidr>(, <cidr>)*] [lan] [guest] [hotspot]
+      radio <if>(, <if>)* [tag <n>] [ssid <s>(, <s>)*]
+      address <if> <cidr>(, <cidr>)* [lan] [guest] [hotspot]
+      lease <addr> ["comment"]
+      allow <if> -> <addr-or-id> ["label"]
   client <id> ["label"] [lease <ip>] [note "n"]
   link <ep> (-- <ep>)+ [vlans <name>(,<name>)*] [label "l"]     ep = id | id.port ; final ep may be id(, id)* (fan-out)
   note <target> "text"           place <a> near <b>      row <a>(, <b>)+
@@ -82,7 +92,7 @@ function show(model: Model, what: string | undefined, json: boolean, file: strin
     text = model.links.map((l) => `${l.id}: ${l.from} -- ${l.to}  lanes: ${l.lanes.join(", ") || "-"}${l.label ? `  "${l.label}"` : ""}`);
   } else if (what === "vlans") {
     data = model.vlans;
-    text = model.vlans.map((v) => `${v.name}: ${v.ids === "untagged" ? "untagged" : v.ids.join(",")}  ${v.color}${v.subnet ? `  ${v.subnet}` : ""}`);
+    text = model.vlans.map((v) => `${v.name}: ${v.ids === "untagged" ? "untagged" : v.ids.join(",")}  ${v.color}${v.subnets.length ? `  ${v.subnets.join(", ")}` : ""}`);
   } else {
     let node: MNode | undefined;
     walk(model.nodes, (n) => { if (n.id === what) node = n; });
