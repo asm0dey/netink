@@ -337,7 +337,19 @@ The other deferred minor (a device with `items: []` prints as `device d`, which 
 - [ ] **Step 4: Run** `mise run test && mise run typecheck` — Expected: PASS. Then `zsh -c 'autoload -U compinit; compinit; source <(SHELL=/bin/zsh bun src/cli.ts completion); echo ok'` → prints `ok`.
 - [ ] **Step 5: Privacy check, commit** `feat(cli): shell completion`
 
-### Task 13: Wrap-up
+### Task 13: Build binaries (owner request, 2026-11-13)
+
+**Files:**
+- Modify: `mise.toml`, `.gitignore`
+
+- [ ] **Step 1:** add mise tasks (owner precedent: mise tasks for automation):
+  - `build` — `bun build src/cli.ts --compile --outfile dist/netdraw` (host platform).
+  - `build-all` — the same for each of `bun-linux-x64 bun-linux-arm64 bun-linux-x64-musl bun-linux-arm64-musl bun-darwin-x64 bun-darwin-arm64 bun-windows-x64 bun-windows-arm64`, with `--target=<t>` and `--outfile dist/netdraw-<t without the bun- prefix>` (bun appends `.exe` for Windows).
+  - `dist/` in `.gitignore`.
+- [ ] **Step 2: Verify:** `mise run build && dist/netdraw --help` exits 0 and prints the help; `dist/netdraw check --file examples/home/network.net` exits 0; `SHELL=/bin/zsh dist/netdraw completion` prints a script naming `netdraw`. `mise run build-all` writes 8 files under `dist/` (needs network the first time: bun downloads each target's runtime); `file dist/*` shows the expected OS/arch for each.
+- [ ] **Step 3: Privacy check, commit** `build: mise tasks for host and cross-compiled binaries`
+
+### Task 14: Wrap-up
 
 - [ ] Update memory file `milestone2-state.md`: part C done through the last commit; next is part D (scale) / docs.
 - [ ] `mise run test && mise run typecheck`, privacy check, `git status` clean.
