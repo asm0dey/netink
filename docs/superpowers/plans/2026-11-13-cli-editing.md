@@ -280,6 +280,7 @@ The other deferred minor (a device with `items: []` prints as `device d`, which 
 
 **Interfaces:**
 - Consumes: `NOUNS`, `edit`, `loadModel` (`src/load.ts`), `checkModel`, the yargs parser from Task 9.
+- Produces: `parseEditArgv(argv: string[]): { req: EditRequest } | { usage: string }` in `src/edit/command.ts` — parses one editing command line (argv after `netdraw`, starting at the noun) into a request with the same yargs definitions, without running a handler; the command handler uses it, and Task 11 uses it in-process.
 - Produces: `registerEditCommands(y: Argv): Argv` in `src/edit/command.ts` — for each noun, a yargs command `<noun>` (two-word nouns as `legend <sub>` subcommands) with subcommands for its verbs; positionals and options from the table, plus common `--after --before --select-text`. Handler: read file (missing → exit 1 hint `netdraw init`), `edit`, write via `writeFileSync(tmp)` + `renameSync` in the same directory, `loadModel` + `checkModel` on the written file (load failure becomes a diag, not an error), print, exit 0. Human output: the written lines on stdout, diags on stderr in `fmt` form. `--json`: `{ok:true, file, line, text, diags}`. Edit refusal: exit 1, `fail()` shape plus `candidates` when present.
 - `netdraw init [file]`: writes `""` to `file` (default `./network.net`); exists → exit 1 `"<file> exists"`.
 - `--help`: drop "Editing commands come in a later version."; yargs lists the nouns; `netdraw <noun> --help` lists its verbs, positionals and flags with the table's `help` text.
@@ -303,7 +304,7 @@ The other deferred minor (a device with `items: []` prints as `device d`, which 
 - Create: `test/acceptance/cli-rebuild.test.ts`
 
 **Interfaces:**
-- Consumes: `nounOf` + `edit` in-process (no spawn per command), `parseDsl`, `loadModel`, `renderSvg`, `layout`.
+- Consumes: `parseEditArgv` (Task 10) + `edit` in-process (no spawn per command), `parseDsl`, `loadModel`, `renderSvg`, `layout`.
 
 - [ ] **Step 1: Write tests:**
   - `rebuild network-dsl-only.net from commands`: a literal array of argv arrays (one or more per statement, in file order, written by hand from the file — this list *is* the acceptance script) applied to `""`. Result parses with no diags to statements equal to the hand-written file's (strip `line` recursively, as in `test/dsl/print.test.ts`), in the same order; and its SVG equals `test/fixtures/home.golden.svg`.
