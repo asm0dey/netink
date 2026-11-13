@@ -151,3 +151,15 @@ test("a vlan-filtering bridge forwards a VLAN only between ports listed for it",
   expect(link(m, "a/ether1", "s/ether1")?.lanes).toEqual(["lan", "guest"]);
   expect(link(m, "c/ether1", "s/ether3")?.lanes).toEqual(["lan"]);
 });
+
+test("router-on-a-stick with vlan filtering: an access port gets no tagged lane", () => {
+  const r = "/interface bridge add name=bridge vlan-filtering=yes\n/interface bridge port add bridge=bridge interface=ether1\n/interface bridge port add bridge=bridge interface=ether2\n"
+    + "/interface vlan add interface=bridge name=vlan50 vlan-id=50\n/interface bridge vlan add bridge=bridge tagged=bridge,ether1 vlan-ids=50\n";
+  const up = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n";
+  const { stmts } = parseDsl('imports rsc r.rsc as r, a.rsc as a, b.rsc as b\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nlink r.ether1 -- a.ether1\nlink r.ether2 -- b.ether1\n', "t.net");
+  const m = buildModel(stmts, new Map([["r", importRsc(r, "r.rsc", "r")], ...["a", "b"].map((n) => [n, importRsc(up, `${n}.rsc`, n)] as const)]));
+  expect(link(m, "r/ether1", "a/ether1")?.lanes).toEqual(["lan", "guest"]);
+  expect(link(m, "r/ether2", "b/ether1")?.lanes).toEqual(["lan"]);
+  expect(link(m, "r/vlan50", "r/ether1")).toBeDefined();
+  expect(link(m, "r/vlan50", "r/ether2")).toBeUndefined();
+});

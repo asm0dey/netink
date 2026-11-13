@@ -61,7 +61,8 @@ export function importRsc(text: string, file: string, name: string): DeviceFacts
       case "/interface bridge vlan":
         if (c.verb !== "add") break;
         for (const id of vlanIds(p["vlan-ids"])) {
-          for (const port of split(p.tagged)) Object.assign(iface(`${port}.${id}`, "vlan"), { parent: port, vlanId: id });
+          // the bridge itself in `tagged` is the CPU port; its VLAN termination is the /interface vlan on it
+          for (const port of split(p.tagged)) if (port !== p.bridge) Object.assign(iface(`${port}.${id}`, "vlan"), { parent: port, vlanId: id });
           for (const port of split(p.untagged)) iface(port).useTag ??= id;
         }
         break;

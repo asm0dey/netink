@@ -230,7 +230,9 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     if (i?.type === "vlan") return i.vlanId === v;
     const r = radioOf(e), br = bridgeOf(e), port = r ? undefined : i?.name;
     if (r?.ifaces.some((x) => x.useTag === v)) return true;
-    return d.f.ifaces.some((x) => (x.type === "vlan" && x.vlanId === v && !isTable(d, x) && (x.parent === port || (br !== undefined && x.parent === br)))
+    // on a vlan-filtering bridge, the bridge's own vlan iface reaches only ports listed for v
+    const viaBridge = br !== undefined && (!byName(d, br)?.vlanFiltering || listed(e, v));
+    return d.f.ifaces.some((x) => (x.type === "vlan" && x.vlanId === v && !isTable(d, x) && (x.parent === port || (viaBridge && x.parent === br)))
       || (br !== undefined && isRadio(x) && x.bridge === br && x.useTag === v));
   };
   const listed = (e: End, v: number) => {
@@ -260,10 +262,12 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
   };
   const member = (e: End) => !e.dev || !!e.iface?.bridge || !!radioOf(e);
   /** Lanes the facts imply for link k, and the tagged ids it carries (which vlan ifaces a trunk port feeds). */
-  const infer = (a: End, b: End, k: number): { lanes: string[]; ids: number[] } => {
+  /** With `forCheck`, a fact-less end accepts every tagged id, so `inferred` judges only the ends we have facts for. */
+  const infer = (a: End, b: End, k: number, forCheck = false): { lanes: string[]; ids: number[] } => {
     if (!a.dev && !b.dev) return { lanes: ["wire"], ids: [] };
     const all = [...new Set(vlans.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)))].sort((x, y) => x - y);
-    const ids = all.filter((v) => reaches(a, v, k) && reaches(b, v, k));
+    const ok = (e: End, v: number) => (forCheck && !e.dev) || reaches(e, v, k);
+    const ids = all.filter((v) => ok(a, v) && ok(b, v));
     const lanes = vlans.filter((v) => (v.ids === "untagged" ? member(a) && member(b) : v.ids.some((id) => ids.includes(id)))).map((v) => v.name);
     return { lanes: lanes.length ? lanes : ["wire"], ids };
   };
@@ -287,7 +291,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
       else portUse.set(e.id, l.line);
     }
     if (l.vlans) {
-      if (a.dev || b.dev) inferred = r.lanes;
+      if (a.dev || b.dev) inferred = infer(a, b, k, true).lanes;
       const defs = vlans.filter((v) => l.vlans!.includes(v.name)); // unknown names were reported above
       r = { lanes: defs.length ? defs.map((v) => v.name) : ["wire"], ids: defs.flatMap((v) => (v.ids === "untagged" ? [] : v.ids)) };
     }

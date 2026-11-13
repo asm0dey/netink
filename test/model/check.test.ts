@@ -77,3 +77,17 @@ test("explicit vlans on a radio link through a transparent bridge do not warn", 
   expect(m.links[0]!.inferred).toEqual(["lan", "guest"]);
   expect(checkModel(m).filter((x) => x.level === "warning")).toEqual([]);
 });
+
+const CORE50 = "/interface bridge add name=bridge\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan50 vlan-id=50\n";
+const one = (dsl: string) => {
+  const { stmts } = parseDsl('imports rsc core.rsc as core\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\nvlan lte 60 color orange "10.60.0.0/24"\ndevice x\n' + dsl, "t.net");
+  return checkModel(buildModel(stmts, new Map([["core", importRsc(CORE50, "core.rsc", "core")]]), { file: "t.net" })).filter((d) => d.level === "warning");
+};
+
+test("explicit vlans toward a fact-less end do not warn when the imported end carries them", () => {
+  expect(one("link core.ether1 -- x vlans lan,guest\n")).toEqual([]);
+});
+
+test("explicit vlans the imported end does not carry still warn toward a fact-less end", () => {
+  expect(one("link core.ether1 -- x vlans lan,lte\n")).toHaveLength(1);
+});
