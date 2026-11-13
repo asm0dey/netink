@@ -106,7 +106,7 @@ test("group and WAN-chip colours follow the VLAN def, not its name", async () =>
     writeFileSync(join(dir, "n.net"), src);
     const renamed = loadModel(join(dir, "n.net")), orig = loadModel(HOME);
     const style = (m: Model, id: string) => { const w = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...w(n.children)]); return w(m.nodes).find((n) => n.id === id)!.style; };
-    expect(["core/bridge", "core/br-guest", "ap2/br-guest", "core/vlan60-lte"].map((id) => style(renamed, id))).toEqual(["main", "visitors", "visitors", "backup"]);
+    expect(["core/bridge", "core/br-guest", "ap2/br-guest", "core/vlan60-lte"].map((id) => style(renamed, id))).toEqual(["vlan:main", "vlan:visitors", "vlan:visitors", "vlan:backup"]);
     // the header carries the canvas height, which follows the legend's (name-dependent) row count
     const body = async (m: Model) => renderSvg(m, await layout(m)).split('<g class="legend">')[0]!.split("\n").filter((l) => !/^<svg |^<rect width=/.test(l)).join("\n");
     expect(await body(renamed)).toBe(await body(orig));
@@ -142,4 +142,12 @@ test("every jump is drawn on top of what it crosses: a white halo, then a solid 
     expect(halo).toBeGreaterThan(lastLine);
     expect(arc).toBeGreaterThan(halo);
   }
+});
+
+test("a vlan:wan group is stroked in the VLAN colour, not the WAN red", async () => {
+  const m: Model = { title: "T", nodes: [{ id: "g", kind: "group", style: "vlan:wan", label: "g", sub: [], children: [{ id: "c", kind: "port", style: "port", label: "c", sub: [], children: [], tier: 1 }], tier: 0 }], links: [], arrows: [],
+    vlans: [{ name: "wan", ids: [70], color: "cyan" }], legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" }, jumps: "arc", hints: [], diags: [] };
+  const svg = renderSvg(m, await layout(m));
+  expect(svg).toContain("#0097A7");
+  expect(svg).not.toContain("#C62828");
 });

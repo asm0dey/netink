@@ -88,9 +88,9 @@ test("home node ids are unique; bridges styled by their VLAN", () => {
   const m = loadModel(HOME);
   const ids = all(m.nodes).map((n) => n.id);
   expect(new Set(ids).size).toBe(ids.length);
-  expect(node(m, "ap2/br-guest")!.style).toBe("guest");
-  expect(node(m, "core/br-guest")!.style).toBe("guest");
-  expect(node(m, "core/bridge")!.style).toBe("lan");
+  expect(node(m, "ap2/br-guest")!.style).toBe("vlan:guest");
+  expect(node(m, "core/br-guest")!.style).toBe("vlan:guest");
+  expect(node(m, "core/bridge")!.style).toBe("vlan:lan");
 });
 
 const synth = (rsc: string, dsl: string, opts = {}) => {
@@ -217,9 +217,15 @@ test("radios on a use-tag get their own chip in that VLAN's style; the trunk's l
   const radios = all(node(m, "ap1")!.children).filter((n) => n.kind === "radio");
   expect(radios.map((r) => [r.id, r.label, r.style, r.sub])).toEqual([
     ["ap1/radio-bridgeLocal", "wlan1 / wlan2", "port", ["HomeNet · HomeNet-IoT"]],
-    ["ap1/radio-bridgeLocal-tag50", "wlan1-guest / wlan2-guest · use-tag 50", "guest", ["HomeNet-Guest"]],
+    ["ap1/radio-bridgeLocal-tag50", "wlan1-guest / wlan2-guest · use-tag 50", "vlan:guest", ["HomeNet-Guest"]],
   ]);
   expect(link(m, "ap1/ether1", "ap1/radio-bridgeLocal")?.lanes).toEqual(["lan"]);
   expect(link(m, "ap1/ether1", "ap1/radio-bridgeLocal-tag50")?.lanes).toEqual(["guest"]);
   expect(link(m, "core/ether3", "ap1/ether1")?.lanes).toEqual(["lan", "guest"]);
+});
+
+test("a bridge on a VLAN named wan gets style vlan:wan", () => {
+  const rsc = "/interface bridge add name=bridge\n/interface bridge add name=br70\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan70 vlan-id=70\n/interface bridge port add bridge=br70 interface=vlan70\n";
+  const m = synth(rsc, 'imports rsc x.rsc as x\nvlan wan 70 color cyan "10.70.0.0/24"\n');
+  expect(node(m, "x/br70")!.style).toBe("vlan:wan");
 });

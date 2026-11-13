@@ -17,6 +17,9 @@ type Dev = { id: string; f: DeviceFacts; node: MNode; ref: Map<string, string>; 
   /** WAN member name → distance of the default route matched to it. */ wanRoutes: Map<string, number>;
   /** Port names pruned from the drawing (unlinked, router-less device); dropped from `ref`. */ hidden: Set<string> };
 
+/** VLAN-derived node styles live under `vlan:<name>`, so a VLAN named like a built-in style (wan, dev, spare) cannot be drawn as one. */
+export const vlanStyle = (name: string): string => `vlan:${name}`;
+export const laneOfStyle = (style: string): string | undefined => style.startsWith("vlan:") ? style.slice(5) : undefined;
 const mk = (id: string, kind: MNode["kind"], style: string, label: string, sub: string[] = [], tier = 0): MNode =>
   ({ id, kind, style, label, sub, children: [], tier });
 const ID_RE = /^[a-z0-9_-]+$/;
@@ -91,7 +94,8 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
       if (r) wanRoutes.set(i.name, r.distance);
       const sub = [r && `${r.comment ?? r.dst} · distance ${r.distance}`, dhcp && `DHCP ${dhcp.address ?? "client"}`].filter((s): s is string => !!s);
       // a WAN VLAN chip is styled by its VLAN def (render colours it like that lane)
-      const vstyle = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId))?.name ?? "lte";
+      const vdef = vlans.find((v) => v.ids !== "untagged" && i.vlanId !== undefined && v.ids.includes(i.vlanId));
+      const vstyle = vdef ? vlanStyle(vdef.name) : "lte";
       add(g, mk(`${id}/${i.name}`, i.type === "vlan" ? "iface" : "port", i.type === "vlan" ? vstyle : "box", i.name, sub, 1), i);
     }
     node.children.push(g);
@@ -104,7 +108,8 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     // a bridge is styled by the tagged VLAN its vlan-iface members belong to
     const def = vlans.find((v) => v.ids !== "untagged" && f.ifaces.some((i) => i.type === "vlan" && i.bridge === b.name && i.vlanId !== undefined && (v.ids as number[]).includes(i.vlanId)));
     // untagged def for a plain bridge; "guest"/"lan" only when no def applies
-    const style = def?.name ?? (guest ? "guest" : vlans.find((v) => v.ids === "untagged")?.name ?? "lan");
+    const untagged = vlans.find((v) => v.ids === "untagged");
+    const style = def ? vlanStyle(def.name) : guest ? "guest" : untagged ? vlanStyle(untagged.name) : "lan";
     const cidr = addrOf(b.name);
     const g = mk(`${id}/${b.name}`, "group", style, cidr ? `${b.name} · ${cidr}` : b.name, f.hotspots.includes(b.name) ? ["hotspot"] : [], 3);
     groups.set(b.name, g);
@@ -129,7 +134,7 @@ function buildDevice(id: string, f: DeviceFacts, radios: Radio[], vlans: VlanDef
     // a tagged chip names its interfaces (the physical radios are shared with the untagged chip) and takes its VLAN's style
     const def = r.tag !== undefined ? vlans.find((v) => v.ids !== "untagged" && v.ids.includes(r.tag!)) : undefined;
     const label = r.tag !== undefined ? `${r.ifaces.map((i) => i.name).join(" / ")} · use-tag ${r.tag}` : r.phys.join(" / ");
-    const n = mk(r.id, "radio", def?.name ?? "port", label, r.ssids.length ? [r.ssids.join(" · ")] : [], 4);
+    const n = mk(r.id, "radio", def ? vlanStyle(def.name) : "port", label, r.ssids.length ? [r.ssids.join(" · ")] : [], 4);
     ((r.bridge && groups.get(r.bridge)) || node).children.push(n);
     for (const i of r.ifaces) ref.set(i.name, r.id);
   }

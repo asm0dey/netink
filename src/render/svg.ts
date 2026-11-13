@@ -1,6 +1,7 @@
 import { textWidth } from "../layout/measure";
 import type { Box, MNode, Model, P, Placed, VlanDef } from "../types";
 import { f, jumpArcs, jumpPath, lanesFor } from "./geometry";
+import { laneOfStyle } from "../model/build";
 
 const FONT = "Inter, 'DejaVu Sans', Arial, sans-serif";
 const JUMP_R = 5;
@@ -75,7 +76,8 @@ const cloud = ({ x, y, w, h }: Box) => {
 /** Shapes, and their labels separately so they can go on top of the cables (with a halo in the box's own fill). */
 function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, laneOf: Map<string, string>): { shapes: string[]; texts: string[] } {
   const out: string[] = [], texts: string[] = [];
-  const styleStroke = (style: string, fallback: string) => lanes.get(style)?.stroke ?? fallback;
+  const lane = (style: string) => lanes.get(laneOfStyle(style) ?? "");
+  const styleStroke = (style: string, fallback: string) => lane(style)?.stroke ?? fallback;
   const draw = (n: MNode) => {
     const b = placed.boxes.get(n.id);
     if (!b) return;
@@ -95,15 +97,15 @@ function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, lan
       out.push(`<polygon points="${pts}" fill="${TINT.router}" stroke="${ROUTE}" stroke-width="2"/>`);
       centred = true; labelFill = ' fill="#4A148C"'; bg = TINT.router;
     } else if (n.kind === "iface") {
-      const c = lanes.get(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
-      rect(6, lanes.get(n.style)?.tint ?? TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
+      const c = lane(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
+      rect(6, lane(n.style)?.tint ?? TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
     } else if (n.style === "spare") rect(6, "#F5F5F5", { stroke: "#999", w: 1.5, dash: "4 3" });
-    else if (n.kind === "radio" && lanes.get(n.style)?.tint) rect(6, lanes.get(n.style)!.tint!, { stroke: lanes.get(n.style)!.stroke, w: 1.5 }); // a use-tag radio chip
+    else if (n.kind === "radio" && lane(n.style)?.tint) rect(6, lane(n.style)!.tint!, { stroke: lane(n.style)!.stroke, w: 1.5 }); // a use-tag radio chip
     else if (n.style === "dev") rect(10, TINT.dev, { stroke: "#333", w: 2 });
     else if (n.style === "wan") rect(10, TINT.wan, { stroke: "#C62828", w: 1.5 });
     else if (container) {
       const c = styleStroke(n.style, WIRE);
-      rect(10, lanes.get(n.style)?.tint ?? TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
+      rect(10, lane(n.style)?.tint ?? TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
     } else rect(6, "#fff", { stroke: WIRE, w: 1.5 });
 
     const tx = centred ? x + w / 2 : x + 14, anchor = centred ? ' text-anchor="middle"' : "";
