@@ -1,5 +1,6 @@
 #!/usr/bin/env bun
-import { parseArgs } from "node:util";
+import yargs, { type Argv } from "yargs";
+import { hideBin } from "yargs/helpers";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, resolve } from "node:path";
 import { loadModel } from "./load";
@@ -70,12 +71,8 @@ Common options:
 Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
 Errors in --json mode: {"error": string, "file": string, "line": number, "hint"?: string}; diagnostics use
 {"level": "error"|"warning", "file", "line", "message", "hint"?}.
-No command prompts interactively. Editing commands come in a later version.
+No command prompts interactively. Editing commands come in a later version.`;
 
-${GRAMMAR}
-`;
-
-const OPTS = { as: { type: "string" }, file: { type: "string" }, json: { type: "boolean" }, all: { type: "boolean" }, o: { type: "string" }, help: { type: "boolean", short: "h" } } as const;
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : s + "\n");
 const err = (s: string) => process.stderr.write(s + "\n");
 const fmt = (d: Diag) => `${d.file}:${d.line}: ${d.level}: ${d.message}${d.hint ? ` (${d.hint})` : ""}`;
@@ -147,58 +144,90 @@ function importCmd(rsc: string | undefined, as: string | undefined, file: string
   return 0;
 }
 
+type Args = { file: string; json: boolean; as?: string; all?: boolean; o?: string; what?: string; rsc?: string };
+class Usage extends Error {}
+let crash: unknown; // an error a handler threw, rethrown to run()
+let exit = 0; // the running command's exit code, set by its handler
+
+/** The one parser; handlers set `exit`. Validation errors become exit 2 in the documented error shape. */
+export function cli(argv: string[]): Argv {
+  const json = argv.includes("--json");
+  const go = (f: (a: Args) => number | Promise<number>) => async (a: unknown) => {
+    try { exit = await f(a as Args); } catch (e) { crash = e; } // a rejection would escape to the runtime as unhandled
+  };
+  return yargs(argv)
+    .scriptName("netdraw").usage(HELP).epilogue(GRAMMAR).wrap(null)
+    .strict().exitProcess(false).version(false).alias("h", "help")
+    .option("file", { type: "string", default: "./network.net", requiresArg: true, global: true })
+    .option("json", { type: "boolean", default: false, global: true })
+    .option("as", { type: "string", requiresArg: true, global: true })
+    .option("all", { type: "boolean", global: true })
+    .option("o", { type: "string", requiresArg: true, global: true })
+    .fail((msg, e) => {
+      exit = fail(json, 2, { error: (msg || e?.message || "usage error").replace(/^Unknown argument: /, "unexpected argument "), hint: "run netdraw --help" });
+      throw new Usage(msg);
+    })
+    .command("render", false, {}, go((a) => render(a, "render")))
+    .command("check", false, {}, go((a) => render(a, "check")))
+    .command("show [what]", false, (y) => y.positional("what", { type: "string" }), go((a) => withModel(a, (m) => show(m, a.what, a.json, a.file))))
+    .command("import <rsc>", false, (y) => y.positional("rsc", { type: "string" }), go((a) => importCmd(a.rsc, a.as, a.file, a.json)));
+}
+
+function withModel(a: Args, f: (m: Model) => number | Promise<number>): number | Promise<number> {
+  const { file, json } = a;
+  if (a.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
+  if (!existsSync(file)) return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file or create ./network.net" });
+  let model: Model;
+  try { model = loadModel(file, { all: a.all ?? false }); }
+  catch (e) { return fail(json, 1, { error: `cannot load ${file}: ${(e as Error).message.split("\n")[0]!.slice(0, 200)}`, file, hint: "check that the file and its imports are readable" }); }
+  return f(model);
+}
+
+function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
+  return withModel(a, async (model) => {
+    const { file, json } = a;
+    const diags = checkModel(model);
+    const errors = diags.filter((d) => d.level === "error");
+    if (cmd === "check" || errors.length) {
+      if (json) out(JSON.stringify({ ok: errors.length === 0, diags }));
+      else diags.forEach((d) => err(fmt(d)));
+      return errors.length ? 1 : 0;
+    }
+    let svg: string, width: number, height: number;
+    try {
+      const placed = await layout(model);
+      svg = renderSvg(model, placed);
+      // the SVG's own size: the legend can make it larger than the layout
+      const m = /^<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(svg)!;
+      width = Number(m[1]); height = Number(m[2]);
+    } catch (e) {
+      return fail(json, 1, { error: `layout failed: ${(e instanceof Error ? e.message : String(e)).split("\n")[0]!.slice(0, 200)}`, file, hint: "simplify the diagram (hide/row/place hints) and retry" });
+    }
+    const warnings = diags.filter((d) => d.level === "warning");
+    if (a.o !== undefined) {
+      try { writeFileSync(a.o, svg); }
+      catch (e) { return fail(json, 1, { error: `cannot write ${a.o}: ${(e as Error).message.split("\n")[0]}`, file, hint: "check the output path is writable" }); }
+    }
+    if (json) out(JSON.stringify({ ok: true, output: a.o ?? null, width, height, warnings, ...(a.o === undefined ? { svg } : {}) }));
+    else {
+      warnings.forEach((d) => err(fmt(d)));
+      if (a.o === undefined) process.stdout.write(svg);
+    }
+    return 0;
+  });
+}
+
 async function main(argv: string[]): Promise<number> {
   const json = argv.includes("--json");
-  const [cmd, ...rest] = argv;
+  const cmd = argv[0];
   if (cmd === undefined) { err(HELP); return fail(json, 2, { error: "missing command", hint: "run netdraw --help" }); }
-  if (cmd === "--help" || cmd === "-h" || cmd === "help") { out(HELP); return 0; }
-  if (!["render", "check", "show", "import"].includes(cmd)) return fail(json, 2, { error: `unknown command ${cmd}`, hint: "run netdraw --help" });
-  let v, positionals;
-  try { ({ values: v, positionals } = parseArgs({ args: rest, options: OPTS, allowPositionals: true, strict: true })); }
-  catch (e) { return fail(json, 2, { error: (e as Error).message.replace(/\s*If you want to use it as a positional.*$/, ""), hint: "run netdraw --help" }); }
-  if (v.help) { out(HELP); return 0; }
-  if (positionals.length > 1) return fail(json, 2, { error: `unexpected argument ${positionals[1]}`, hint: "run netdraw --help" });
-  if (cmd === "import") return importCmd(positionals[0], v.as, v.file ?? "./network.net", json);
-  if (cmd !== "show" && positionals.length) return fail(json, 2, { error: `unexpected argument ${positionals[0]}`, hint: "run netdraw --help" });
-  if (v.as !== undefined) return fail(json, 2, { error: "--as only applies to import", hint: "run netdraw --help" });
-  const file = v.file ?? "./network.net";
-  if (!existsSync(file)) return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file or create ./network.net" });
-
-  let model: Model;
-  try { model = loadModel(file, { all: v.all ?? false }); }
-  catch (e) { return fail(json, 1, { error: `cannot load ${file}: ${(e as Error).message.split("\n")[0]!.slice(0, 200)}`, file, hint: "check that the file and its imports are readable" }); }
-
-  if (cmd === "show") return show(model, positionals[0], json, file);
-
-  const diags = checkModel(model);
-  const errors = diags.filter((d) => d.level === "error");
-  if (cmd === "check" || errors.length) {
-    if (json) out(JSON.stringify({ ok: errors.length === 0, diags }));
-    else diags.forEach((d) => err(fmt(d)));
-    return errors.length ? 1 : 0;
-  }
-
-  let svg: string, width: number, height: number;
-  try {
-    const placed = await layout(model);
-    svg = renderSvg(model, placed);
-    // the SVG's own size: the legend can make it larger than the layout
-    const m = /^<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(svg)!;
-    width = Number(m[1]); height = Number(m[2]);
-  } catch (e) {
-    return fail(json, 1, { error: `layout failed: ${(e instanceof Error ? e.message : String(e)).split("\n")[0]!.slice(0, 200)}`, file, hint: "simplify the diagram (hide/row/place hints) and retry" });
-  }
-  const warnings = diags.filter((d) => d.level === "warning");
-  if (v.o !== undefined) {
-    try { writeFileSync(v.o, svg); }
-    catch (e) { return fail(json, 1, { error: `cannot write ${v.o}: ${(e as Error).message.split("\n")[0]}`, file, hint: "check the output path is writable" }); }
-  }
-  if (json) out(JSON.stringify({ ok: true, output: v.o ?? null, width, height, warnings, ...(v.o === undefined ? { svg } : {}) }));
-  else {
-    warnings.forEach((d) => err(fmt(d)));
-    if (v.o === undefined) process.stdout.write(svg);
-  }
-  return 0;
+  if (cmd === "help") argv = ["--help"];
+  else if (!cmd.startsWith("-") && !["render", "check", "show", "import"].includes(cmd)) return fail(json, 2, { error: `unknown command ${cmd}`, hint: "run netdraw --help" });
+  exit = 0; crash = undefined;
+  try { await cli(argv).parseAsync(); }
+  catch (e) { if (!(e instanceof Usage)) throw e; }
+  if (crash) throw crash;
+  return exit;
 }
 
 /** Last resort: any throw no command handled becomes the documented error shape, never a stack trace. */
@@ -211,4 +240,4 @@ async function run(argv: string[]): Promise<number> {
   }
 }
 
-process.exitCode = await run(process.argv.slice(2));
+process.exitCode = await run(hideBin(process.argv));

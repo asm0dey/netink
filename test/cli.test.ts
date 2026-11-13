@@ -148,3 +148,17 @@ test("import of a missing .rsc is exit 1 with the standard error shape", () => {
   expect(r.code).toBe(1);
   expect(JSON.parse(r.out)).toEqual({ error: `cannot read ${join(dir, "nope.rsc")}`, file: join(dir, "nope.rsc"), line: 0, hint: "check the path" });
 });
+
+test("unknown flag exits 2 with json error", () => {
+  const r = run("check", "--frob", "--json");
+  expect(r.code).toBe(2);
+  expect(JSON.parse(r.out)).toMatchObject({ error: expect.any(String), hint: expect.any(String) });
+});
+test("--as outside import exits 2", () => {
+  expect(run("check", "--as", "x", "--file", HOME).code).toBe(2);
+});
+test("--help prints the grammar", () => {
+  const r = run("--help");
+  expect(r.out).toContain("netdraw render");
+  expect(r.out.toLowerCase()).toContain("ids are [a-z0-9_-]+");
+});

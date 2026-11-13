@@ -2,12 +2,16 @@
   "name": "netdraw",
   "type": "module",
   "private": true,
-  "bin": { "netdraw": "src/cli.ts" },
+  "bin": {
+    "netdraw": "src/cli.ts"
+  },
   "devDependencies": {
     "@types/bun": "^1.4.4",
+    "@types/yargs": "^17.0.35",
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "elkjs": "^0.12.1"
+    "elkjs": "^0.12.1",
+    "yargs": "^18.2.0"
   }
 }
