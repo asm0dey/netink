@@ -77,6 +77,15 @@ test("no jump over a vertical that ends 12 px past the horizontal", () => {
   expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 112 }], 5)).toEqual([]);
 });
 
+test.each([3, 5, 8])("no jump over a vertical that ends %i px past the horizontal", (past) => {
+  const h = [
+    { x: 0, y: 100 },
+    { x: 200, y: 100 },
+  ];
+  expect(jumpArcs(h, [{ x: 100, y1: 0, y2: 100 + past }], 5)).toEqual([]);
+  expect(jumpPath(h, [{ x: 100, y1: 0, y2: 100 + past }], 5, "arc")).toBe("M0,100 L200,100");
+});
+
 test("jump over a vertical that extends 16 px past", () => {
   const h = [
     { x: 0, y: 100 },

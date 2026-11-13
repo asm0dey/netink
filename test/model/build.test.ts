@@ -304,11 +304,11 @@ test("radios on a use-tag get their own chip in that VLAN's style; the trunk's l
   expect(link(m, "core/ether3", "ap1/ether1")?.lanes).toEqual(["lan", "guest"]);
 });
 
-test("a bridge on a VLAN named wan gets style vlan:wan", () => {
+test.each(["wan", "dev", "spare"])("a bridge on a VLAN named %s gets style vlan:%s", (name) => {
   const rsc =
     "/interface bridge add name=bridge\n/interface bridge add name=br70\n/interface bridge port add bridge=bridge interface=ether1\n/interface vlan add interface=bridge name=vlan70 vlan-id=70\n/interface bridge port add bridge=br70 interface=vlan70\n";
-  const m = synth(rsc, 'imports rsc x.rsc as x\nvlan wan 70 color cyan "10.70.0.0/24"\n');
-  expect(node(m, "x/br70")!.style).toBe("vlan:wan");
+  const m = synth(rsc, `imports rsc x.rsc as x\nvlan ${name} 70 color cyan "10.70.0.0/24"\n`);
+  expect(node(m, "x/br70")!.style).toBe(`vlan:${name}`);
 });
 
 test("fallback styles take a same-named VLAN def's style, else stay built-in", () => {
