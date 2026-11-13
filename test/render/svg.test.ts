@@ -151,3 +151,16 @@ test("a vlan:wan group is stroked in the VLAN colour, not the WAN red", async ()
   expect(svg).toContain("#0097A7");
   expect(svg).not.toContain("#C62828");
 });
+
+test("legend says NAT only when some router does NAT", async () => {
+  const { parseDsl } = await import("../../src/dsl/parse");
+  const { buildModel } = await import("../../src/model/build");
+  const legendOf = async (src: string) => {
+    const m = buildModel(parseDsl(src, "t.net").stmts, new Map(), { file: "t.net" });
+    const svg = renderSvg(m, await layout(m));
+    return svg.slice(svg.indexOf('<g class="legend"'));
+  };
+  const lan = "  router\n  bridge br lan address 10.0.0.1/24\n    ports ether2\n";
+  expect(await legendOf(`device d\n${lan}`)).toContain(">routed<");
+  expect(await legendOf(`device d\n  wan ether1 nat\n${lan}`)).toContain(">routed / NAT<");
+});

@@ -106,7 +106,7 @@ export function buildDevice(s: NodeStmt, vlans: VlanDef[], err: (line: number, m
     }
     node.children.push(g);
   }
-  if (hasRouter) node.children.push(mk(`${id}/router`, "router", "router", "routing · NAT · firewall", [], 2));
+  if (hasRouter) node.children.push(mk(`${id}/router`, "router", "router", wan.some((w) => w.nat) ? "routing · NAT · firewall" : "routing · firewall", [], 2));
 
   const groups = new Map<string, MNode>();
   for (const b of bridges) {

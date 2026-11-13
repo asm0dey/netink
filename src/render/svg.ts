@@ -122,13 +122,16 @@ function drawNodes(model: Model, placed: Placed, lanes: Map<string, Stroke>, lan
 type Line = { owner: string; lane: string; points: P[] };
 type Entry = { key: string; label: string; sub?: string; lane: string };
 
+// the router chip label is the only place the model records NAT
+const nats = (ns: MNode[]) => walk(ns).some((n) => n.kind === "router" && n.label.includes("NAT"));
+
 function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]): Entry[] {
   const used = new Set(lines.map((l) => l.lane));
   const carried = new Set(model.links.flatMap((l) => l.lanes));
   const kinds: Entry[] = [
     { key: "wire", label: "plain cable", lane: "wire" },
     { key: "trunk", label: "trunk, more than 4 VLANs", lane: "trunk" },
-    { key: "route", label: "routed / NAT", lane: "route" },
+    { key: "route", label: nats(model.nodes) ? "routed / NAT" : "routed", lane: "route" },
     { key: "allow", label: "firewall allows", lane: "allow" },
   ];
   const entries: Entry[] = [

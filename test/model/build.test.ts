@@ -305,3 +305,7 @@ test("diagnostics do not assume internals come from imports", () => {
     { level: "error", file: "t.net", line: 3, message: 'unknown node "nowhere"', hint: "declare it with cloud, device or client" },
   ]);
 });
+test("router label names NAT only when a wan line has nat", () => {
+  expect(node(dslModel("device d\n  router\n  bridge br\n    ports ether2\n"), "d/router")!.label).toBe("routing · firewall");
+  expect(node(dslModel("device d\n  wan ether1 nat\n  router\n"), "d/router")!.label).toBe("routing · NAT · firewall");
+});
