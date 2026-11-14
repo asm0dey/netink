@@ -1,0 +1,21 @@
+title "Maple Street Studio"
+vlan office untagged color green subnet 192.168.1.0/24
+vlan guest 20 color blue subnet 10.20.0.0/24
+cloud internet "Internet"
+device gw model "Edge 5"
+  wan ether1 dhcp nat
+  router
+  bridge lan address 192.168.1.1/24 lan
+    ports ether2
+  vlan-iface vlan20 on lan vlan 20 address 10.20.0.1/24 guest
+device sw "Switch"
+  bridge br
+    ports p1, p2
+device ap "Ceiling AP"
+  bridge br
+    ports eth0
+    radio wlan0 ssid Studio
+    radio wlan0-guest tag 20 ssid StudioGuest
+link internet -- gw.ether1
+link gw.ether2 -- sw.p1
+link sw.p2 -- ap.eth0

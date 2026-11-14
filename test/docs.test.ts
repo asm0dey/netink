@@ -1,10 +1,13 @@
 import { expect, test } from "bun:test";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, normalize } from "node:path";
 import { BLOCK, KEYWORDS } from "../src/dsl/parse";
 import { NOUNS } from "../src/edit/table";
 import { DESC, GRAMMAR } from "../src/help";
+import { layout } from "../src/layout/elk";
+import { loadModel } from "../src/load";
+import { renderSvg } from "../src/render/svg";
 import { blocks, headingCodes, relLinks, runExamples, sections } from "./helpers/docs";
 
 const dsl = () => readFileSync("docs/dsl.md", "utf8");
@@ -41,8 +44,7 @@ test("example failures name file and line", async () => {
 test("relative links resolve to tracked files", () => {
   const tracked = new Set(Bun.spawnSync(["git", "ls-files"]).stdout.toString().split("\n"));
   const bad: string[] = [];
-  // shortcut: docs that don't exist yet are skipped; Task 7 removes the skip
-  for (const doc of ["README.md", "docs/dsl.md", "docs/cli.md"].filter((d) => existsSync(d)))
+  for (const doc of ["README.md", "docs/dsl.md", "docs/cli.md"])
     for (const l of relLinks(readFileSync(doc, "utf8"))) {
       if (l.startsWith("../../releases")) continue;
       const p = normalize(join(dirname(doc), l));
@@ -102,3 +104,20 @@ test("every flag is documented in its section", () => {
 test("cli.md examples run", async () => {
   expect(await runExamples("docs/cli.md")).toEqual([]);
 }, 120_000);
+
+const QUICK = "examples/quickstart/network.net";
+
+// Regenerate after an intended render change: mise run render-quickstart
+test("quickstart svg is current", async () => {
+  const m = loadModel(QUICK);
+  expect(renderSvg(m, await layout(m))).toBe(await Bun.file("examples/quickstart/network.svg").text());
+});
+
+test("README shows the quickstart source", () => {
+  const net = blocks(readFileSync("README.md", "utf8")).find((b) => b.lang === "net");
+  expect(net?.body.trim()).toBe(readFileSync(QUICK, "utf8").trim());
+});
+
+test("README examples run", async () => {
+  expect(await runExamples("README.md")).toEqual([]);
+}, 60_000);

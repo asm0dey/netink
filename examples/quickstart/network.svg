@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="603" height="1395" viewBox="0 0 603 1395" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
+<defs>
+<marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1565C0"/></marker>
+<style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>
+</defs>
+<rect width="603" height="1395" fill="#fff"/>
+<text x="40" y="46" font-size="26" font-weight="700">Maple Street Studio</text>
+<path d="M129,186 A21,21 0 0 1 112.5,154 A27,27 0 0 1 153,124.4 A33,33 0 0 1 213,119.6 A25.5,25.5 0 0 1 253.5,154 A19.5,19.5 0 0 1 237,186 Z" fill="#F5F5F5" stroke="#777" stroke-width="1.5"/>
+<rect x="40" y="250" width="286" height="408" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="178.8" y="248" width="8.5" height="4" fill="#FAFAFA"/>
+<rect x="137.8" y="656" width="10" height="4" fill="#FAFAFA"/>
+<rect x="131.3" y="656" width="9" height="4" fill="#FAFAFA"/>
+<rect x="115.8" y="291" width="134.5" height="102" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="178.8" y="289" width="8.5" height="4" fill="#FDECEA"/>
+<rect x="178" y="391" width="10" height="4" fill="#FDECEA"/>
+<rect x="127.8" y="327" width="110.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<polygon points="52,437 72,418 294,418 314,437 294,456 72,456" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="68.3" y="481" width="219" height="160" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="137.8" y="639" width="10" height="4" fill="#E8F5E9"/>
+<rect x="131.3" y="639" width="9" height="4" fill="#E8F5E9"/>
+<rect x="134.3" y="479" width="10" height="4" fill="#E8F5E9"/>
+<rect x="96.1" y="591" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="80.3" y="517" width="118" height="54" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="80.3" y="728" width="208" height="144" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="137.8" y="726" width="10" height="4" fill="#FAFAFA"/>
+<rect x="131.3" y="726" width="9" height="4" fill="#FAFAFA"/>
+<rect x="227.8" y="870" width="10" height="4" fill="#FAFAFA"/>
+<rect x="221.3" y="870" width="9" height="4" fill="#FAFAFA"/>
+<rect x="92.3" y="769" width="184" height="86" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="137.8" y="767" width="10" height="4" fill="#E8F5E9"/>
+<rect x="131.3" y="767" width="9" height="4" fill="#E8F5E9"/>
+<rect x="227.8" y="853" width="10" height="4" fill="#E8F5E9"/>
+<rect x="221.3" y="853" width="9" height="4" fill="#E8F5E9"/>
+<rect x="104.3" y="805" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="194.3" y="805" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="155.3" y="942" width="406.8" height="213" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="227.8" y="940" width="10" height="4" fill="#FAFAFA"/>
+<rect x="221.3" y="940" width="9" height="4" fill="#FAFAFA"/>
+<rect x="167.3" y="983" width="382.8" height="160" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="227.8" y="981" width="10" height="4" fill="#E8F5E9"/>
+<rect x="221.3" y="981" width="9" height="4" fill="#E8F5E9"/>
+<rect x="194.3" y="1019" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="179.3" y="1077" width="76.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="276" y="1077" width="262" height="54" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+<path d="M183,190 L183,327" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M142.8,629 L142.8,805" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M232.8,843 L232.8,1019" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M217.7,1057 L217.7,1077" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M135.8,629 L135.8,805" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M225.8,843 L225.8,1019" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M139.3,571 L139.3,591" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M241,1057 L241,1067 L407,1067 L407,1077" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M183,381 L183,418" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M226.7,456 L226.7,466 L149.3,466 L149.3,481" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M139.3,456 L139.3,517" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="183" y="155" class="h" text-anchor="middle" stroke="#F5F5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Internet</text>
+<text x="54" y="274" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">GW · Edge 5 · 192.168.1.1</text>
+<text x="129.8" y="315" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="141.8" y="351" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
+<text x="141.8" y="368" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DHCP client</text>
+<text x="183" y="442" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
+<text x="82.3" y="505" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">lan · 192.168.1.1/24</text>
+<text x="139.3" y="615" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
+<text x="94.3" y="541" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan20</text>
+<text x="94.3" y="558" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.20.0.1/24</text>
+<text x="94.3" y="752" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">Switch</text>
+<text x="106.3" y="793" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br</text>
+<text x="139.3" y="829" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">p1</text>
+<text x="229.3" y="829" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">p2</text>
+<text x="169.3" y="966" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">Ceiling AP</text>
+<text x="181.3" y="1007" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br</text>
+<text x="229.3" y="1043" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">eth0</text>
+<text x="193.3" y="1101" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan0</text>
+<text x="193.3" y="1118" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Studio</text>
+<text x="290" y="1101" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan0-guest · use-tag 20</text>
+<text x="290" y="1118" class="s" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">StudioGuest</text>
+<text x="189" y="405.4" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
+<text x="155.3" y="477.5" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
+<g class="legend">
+<rect x="40" y="1195" width="522" height="160" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
+<text x="56" y="1223" class="h">Legend</text>
+<path d="M56,1245 L100,1245" fill="none" stroke="#2E7D32" stroke-width="4"/>
+<text x="112" y="1249.5" class="t">Office (untagged) <tspan class="s">192.168.1.0/24</tspan></text>
+<path d="M56,1271 L100,1271" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="112" y="1275.5" class="t">Guest (20) <tspan class="s">10.20.0.0/24</tspan></text>
+<path d="M56,1297 L100,1297" fill="none" stroke="#555" stroke-width="2.5"/>
+<text x="112" y="1301.5" class="t">plain cable</text>
+<path d="M60,1323 L100,1323" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="112" y="1327.5" class="t">routed / NAT</text>
+</g>
+</svg>
