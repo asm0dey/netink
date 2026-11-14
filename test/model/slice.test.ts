@@ -149,3 +149,38 @@ test("--vlan: links without the VLAN become context lanes, never wire", () => {
   for (const l of m.links) if (l.lanes[0] === "wire") expect(was.get(`${l.from}>${l.to}`)).toEqual(["wire"]);
   expect(m.links.some((l) => l.lanes.join() === "other")).toBe(true);
 });
+
+test("--path keeps the shortest chain; every other neighbour of it is a stub", () => {
+  const m = ok(HOME, { path: ["ap1", "internet"] });
+  expect(kept(m).sort()).toEqual(["ap1", "core", "internet", "isp"]);
+  expect(stubs(m).sort()).toEqual(["ap2", "media", "printer", "switch", "tv"]);
+  consistent(m);
+});
+
+test("--path keeps every shortest path; a child id means its device", () => {
+  const dia = buildModel(
+    parseDsl("device a\ndevice b\ndevice c\ndevice d\nlink a -- b\nlink a -- c\nlink b -- d\nlink c -- d\n", "t.net")
+      .stmts,
+    new Map(),
+  );
+  expect(kept(ok(dia, { path: ["a", "d"] })).sort()).toEqual(["a", "b", "c", "d"]);
+  expect(ok(HOME, { path: ["core/ether2", "internet"] })).toEqual(ok(HOME, { path: ["core", "internet"] }));
+});
+
+test("--path errors: unknown id hints, disconnected devices have no path", () => {
+  expect(sliceModel(HOME, { path: ["cor", "internet"] })).toEqual({
+    error: 'unknown device "cor"',
+    hint: "did you mean core?",
+  });
+  const nb = loadModel("test/fixtures/netbox/network.net");
+  expect(sliceModel(nb, { path: ["dmi01-akron-rtr01", "dmi01-albany-rtr01"] })).toEqual({
+    error: "no path between dmi01-akron-rtr01 and dmi01-albany-rtr01",
+  });
+});
+
+test("--path with --around intersects; with --vlan keeps every path device", () => {
+  expect(kept(ok(HOME, { path: ["ap1", "internet"], around: "core", depth: 0 }))).toEqual(["core"]);
+  const m = ok(HOME, { path: ["ap1", "internet"], vlans: ["lte"] });
+  expect(kept(m).sort()).toEqual(["ap1", "core", "internet", "isp"]);
+  expect(m.links.some((l) => l.lanes.includes("other"))).toBe(true);
+});

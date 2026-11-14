@@ -22,7 +22,7 @@ const VALUE_FLAGS = new Set([
 ]);
 const COMMON = ["file", "json", "after", "before", "select-text"];
 // render's slice flags take a value; the rest of render completes nothing
-const RENDER: Record<string, "vlan" | "node" | "view"> = { vlan: "vlan", around: "node", view: "view" };
+const RENDER: Record<string, "vlan" | "node" | "view"> = { vlan: "vlan", around: "node", path: "node", view: "view" };
 
 /** Names the .net file defines; any failure to read it gives none. */
 function names(file: string): { nodes: MNode[]; vlans: string[]; trunks: string[] } {
@@ -72,14 +72,18 @@ function run(all: string[]): string[] {
   // positionals and flag values among the words before the cursor
   const pos: string[] = [];
   let pending: string | undefined; // a flag waiting for its value
+  let left = 0; // values it still wants (--path takes two)
   for (const w of prior) {
     if (pending) {
-      pending = undefined;
+      if (--left <= 0) pending = undefined;
       continue;
     }
     if (w.startsWith("--")) {
       const n = w.slice(2);
-      if (!n.includes("=") && (VALUE_FLAGS.has(n) || (pos[0] === "render" && n in RENDER))) pending = n;
+      if (!n.includes("=") && (VALUE_FLAGS.has(n) || (pos[0] === "render" && n in RENDER))) {
+        pending = n;
+        left = n === "path" && pos[0] === "render" ? 2 : 1;
+      }
     } else pos.push(w);
   }
   const out = (xs: string[]) => [...new Set(xs)].filter((x) => x.startsWith(cur));

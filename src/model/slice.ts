@@ -7,6 +7,7 @@ export type Slice = {
   vlans?: string[];
   around?: string;
   depth?: number;
+  path?: [string, string];
 };
 
 const top = (id: string) => id.split("/")[0]!;
@@ -26,21 +27,32 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
     return { error: `unknown ${what} "${x}"`, ...(c ? { hint: `did you mean ${c}?` } : {}) };
   };
   let keep = new Set(model.nodes.map((n) => n.id));
+  const known = walk(model.nodes).map((n) => n.id);
+  const adj = new Map<string, Set<string>>();
+  for (const l of model.links)
+    for (const [a, b] of [
+      [top(l.from), top(l.to)],
+      [top(l.to), top(l.from)],
+    ] as const)
+      adj.set(a!, (adj.get(a!) ?? new Set()).add(b!));
+  // links from `from` to every reachable top-level device
+  const dist = (from: string) => {
+    const d = new Map([[from, 0]]);
+    for (let ring = [from]; ring.length; )
+      ring = ring.flatMap((id) => [...(adj.get(id) ?? [])].filter((n) => !d.has(n) && d.set(n, d.get(id)! + 1)));
+    return d;
+  };
   if (s.around !== undefined) {
-    const known = walk(model.nodes).map((n) => n.id);
     if (!known.includes(s.around)) return miss("device", s.around, known);
-    const adj = new Map<string, Set<string>>();
-    for (const l of model.links)
-      for (const [a, b] of [
-        [top(l.from), top(l.to)],
-        [top(l.to), top(l.from)],
-      ] as const)
-        adj.set(a!, (adj.get(a!) ?? new Set()).add(b!));
-    let ring = [top(s.around)];
-    const near = new Set(ring);
-    for (let d = 0; d < (s.depth ?? 1); d++)
-      ring = ring.flatMap((id) => [...(adj.get(id) ?? [])].filter((n) => !near.has(n) && near.add(n)));
+    const near = new Set([...dist(top(s.around))].filter(([, d]) => d <= (s.depth ?? 1)).map(([id]) => id));
     keep = new Set([...keep].filter((id) => near.has(id)));
+  }
+  if (s.path) {
+    for (const x of s.path) if (!known.includes(x)) return miss("device", x, known);
+    const [a, b] = s.path.map(top) as [string, string];
+    const [da, db] = [dist(a), dist(b)];
+    if (!da.has(b)) return { error: `no path between ${s.path[0]} and ${s.path[1]}` };
+    keep = new Set([...keep].filter((id) => da.has(id) && da.get(id)! + db.get(id)! === da.get(b)));
   }
   if (s.view === "routing")
     keep = new Set(
@@ -66,7 +78,8 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ...model.links.flatMap((l) => (l.lanes.some((x) => only!.has(x)) ? [top(l.from), top(l.to)] : [])),
       ...model.nodes.filter((n) => walk([n]).some((c) => only!.has(laneOfStyle(c.style) ?? ""))).map((n) => n.id),
     ]);
-    keep = new Set([...keep].filter((id) => has.has(id)));
+    // a path keeps every device on it, carrying the VLAN or not
+    if (!s.path) keep = new Set([...keep].filter((id) => has.has(id)));
   }
   if (!keep.size) return { error: "the slice is empty" };
   const stub = new Set(

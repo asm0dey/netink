@@ -95,6 +95,12 @@ test("render slice flags complete VLAN names and device ids", () => {
   expect(complete(["render", "--o", "x", ""])).toEqual([]);
 });
 
+test("render --path completes device ids for both values", () => {
+  expect(complete(["render", "--file", DSL, "--path", "ap"])).toContain("ap1");
+  expect(complete(["render", "--file", DSL, "--path", "ap1", "ap"])).toContain("ap1");
+  expect(complete(["render", "--file", DSL, "--path", "ap1", "ap2", ""])).toEqual([]);
+});
+
 test("render --view completes the views", () => {
   expect(complete(["render", "--view", ""])).toEqual(["combined", "physical", "vlans", "routing"]);
 });

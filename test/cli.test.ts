@@ -428,6 +428,11 @@ test("render slices: a negative --depth is a usage error, an unknown device a sl
     hint: "did you mean core?",
   });
 });
+test("render --path needs exactly two devices", () => {
+  expect(run("render", "--file", HOME, "--path", "ap1").code).toBe(2);
+  expect(run("render", "--file", HOME, "--path", "ap1", "core", "ap2").code).toBe(2);
+  expect(run("render", "--file", HOME, "--path", "ap1", "internet", "--json").code).toBe(0);
+});
 test("render --around draws stubs dashed, labels small", () => {
   const svg = run("render", "--file", HOME, "--around", "core").out;
   expect(svg).toContain('stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"');

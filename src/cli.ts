@@ -177,7 +177,7 @@ type Args = {
   o?: string;
   what?: string;
   rsc?: string;
-  path?: string;
+  path?: string | string[];
 };
 class Usage extends Error {}
 let crash: unknown; // an error a handler threw, rethrown to run()
@@ -234,7 +234,14 @@ export function cli(argv: string[]): Argv {
           })
           .option("around", { type: "string", requiresArg: true, describe: "keep devices near this device" })
           .option("depth", { type: "number", default: 1, describe: "links from --around to keep" })
+          .option("path", {
+            type: "string",
+            array: true,
+            nargs: 2,
+            describe: "keep devices on any shortest path between two devices",
+          })
           .check((a) => {
+            if (a.path && a.path.length !== 2) throw new Error("--path takes exactly two devices");
             // thrown, not returned: yargs would call .fail() again for the Usage error .fail() throws
             if (!Number.isInteger(a.depth) || a.depth < 0) throw new Error("--depth must be a whole number, 0 or more");
             return true;
@@ -260,7 +267,7 @@ export function cli(argv: string[]): Argv {
       "init [path]",
       DESC.init,
       (y) => y.positional("path", { type: "string", describe: "the file to create" }),
-      go((a) => init(a.path ?? a.file, a.json)),
+      go((a) => init((a.path as string | undefined) ?? a.file, a.json)),
     )
     .command("__man", false, {}, () => {
       out(manPage());
@@ -368,7 +375,13 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
         });
       return errors.length ? 1 : 0;
     }
-    const sliced = sliceModel(model, { view: a.view, vlans: a.vlan, around: a.around, depth: a.depth });
+    const sliced = sliceModel(model, {
+      view: a.view,
+      vlans: a.vlan,
+      around: a.around,
+      depth: a.depth,
+      path: a.path as [string, string] | undefined,
+    });
     if ("error" in sliced) return fail(json, 1, { ...sliced, file });
     let svg: string, width: number, height: number;
     try {

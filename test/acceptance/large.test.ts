@@ -76,12 +76,13 @@ test.each([
   [SCALE, { vlans: ["exSpkr"] }],
   [NETBOX, { around: "dmi01-akron-rtr01", depth: 0 }],
   [NETBOX, { vlans: ["Data-dm-akron"] }],
+  [SCALE, { path: ["confidf", "expoidf"] }],
 ] as [string, Slice][])("%s: slice %o renders with no overlaps", async (f, s) => {
   const r = sliceModel(loadModel(f), s);
   if ("error" in r) throw new Error(r.error);
   const m = collapseSiblings(r.model),
     p = await layout(m);
-  if (s.around) expect(m.nodes.some((n) => n.style === "stub")).toBe(true);
+  if (s.around || s.path) expect(m.nodes.some((n) => n.style === "stub")).toBe(true);
   expect(overlaps(renderSvg(m, p), p)).toEqual([]);
 });
 
