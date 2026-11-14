@@ -15,6 +15,7 @@ test("man page structure", () => {
   for (const c of ["render", "check", "show", "import", "init", "completion"]) expect(m).toContain(c);
   for (const n of NOUNS) expect(m).toContain(n.help);
   expect(m).toContain(GRAMMAR);
+  for (const f of ["--view", "--path"]) expect(m).toContain(f);
 });
 test("__man prints it, hidden from --help", () => {
   const r = run("__man");

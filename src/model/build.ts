@@ -11,6 +11,8 @@ type LinkStmt = Extract<Stmt, { kind: "link" }>;
 type End = { id: string; dev?: Dev; iface?: Iface; nodeType?: NodeStmt["type"] };
 
 const ID_RE = /^[a-z0-9_-]+$/;
+// lane names the renderer draws with its own style
+const RESERVED = new Set(["wire", "trunk", "route", "allow", "other"]);
 const IPV4_RE = /^\d+\.\d+\.\d+\.\d+$/;
 const HIDDEN_HINT = "unlinked ports on devices without a router are hidden; use --all";
 const leaves = (n: MNode): MNode[] => (n.children.length ? n.children.flatMap(leaves) : [n]);
@@ -173,6 +175,20 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     });
   });
 
+  for (const v of of("vlan"))
+    if (RESERVED.has(v.name))
+      err(
+        v.line,
+        `vlan "${v.name}" clashes with a drawing style`,
+        "that name is reserved for a drawing style; rename the vlan",
+      );
+  for (const t of of("trunk"))
+    if (RESERVED.has(t.name))
+      err(
+        t.line,
+        `trunk "${t.name}" clashes with a drawing style`,
+        "that name is reserved for a drawing style; rename the trunk set",
+      );
   const trunks = of("trunk").map((t) => ({ name: t.name, vlans: t.vlans, line: t.line }));
   trunks.forEach((t, i) => {
     if (trunks.findIndex((x) => x.name === t.name) < i)

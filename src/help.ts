@@ -63,7 +63,8 @@ DSL reference: netdraw help dsl`;
 
 /** The one-line command descriptions, shared by --help and the man page. */
 export const DESC = {
-  render: "write the SVG to -o, or to stdout; refuses (exit 1) when check reports errors, warnings do not block",
+  render:
+    "write the SVG to -o, or to stdout; refuses (exit 1) when check reports errors, warnings do not block; slice or filter with --view combined|physical|vlans|routing, --vlan, --around [--depth], --path a b, --address; --no-collapse draws every device",
   check: "exit 0 with no errors, 1 otherwise; diagnostics file:line: level: message (hint) on stderr",
   show: "print the merged model slice: devices, links, vlans, trunks, or one <id> (node subtree, link or arrow)",
   import: "print the device block for a router .rsc export, ready to paste in place of its import",

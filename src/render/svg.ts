@@ -243,7 +243,7 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
     {
       key: "trunk",
       label: model.links.some((l) => l.trunk)
-        ? "trunk: named set or more than 4 VLANs"
+        ? `trunk: named set or more than ${TRUNK_AT} VLANs`
         : `trunk, more than ${TRUNK_AT} VLANs`,
       lane: "trunk",
     },

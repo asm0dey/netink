@@ -222,7 +222,11 @@ export function cli(argv: string[]): Argv {
       (y) =>
         y
           .option("all", all)
-          .option("collapse", { type: "boolean", default: true, describe: "draw identical leaf siblings one by one" })
+          .option("collapse", {
+            type: "boolean",
+            default: true,
+            describe: "merge identical leaf siblings into one box (--no-collapse draws each)",
+          })
           .option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" })
           .option("view", {
             choices: ["combined", "physical", "vlans", "routing"] as const,

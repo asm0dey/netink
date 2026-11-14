@@ -21,8 +21,13 @@ function ranges(ids: string[]): string[] {
 export function collapseSiblings(model: Model): Model {
   const touching = (id: string) => model.links.filter((l) => l.from === id || l.to === id);
   const groups = new Map<string, { n: MNode; l: MLink }[]>();
+  // an arrow endpoint or hinted device keeps its own box, so neither can vanish into a group
+  const pinned = new Set([
+    ...model.arrows.flatMap((a) => [a.from, a.to]),
+    ...model.hints.flatMap((h) => (h.type === "near" ? [h.a, h.b] : h.type === "row" ? h.ids : [h.device])),
+  ]);
   for (const n of model.nodes) {
-    if (n.children.length || (n.kind !== "device" && n.kind !== "client")) continue;
+    if (pinned.has(n.id) || n.children.length || (n.kind !== "device" && n.kind !== "client")) continue;
     const ls = touching(n.id);
     if (ls.length !== 1) continue;
     const l = ls[0]!,
@@ -69,9 +74,5 @@ export function collapseSiblings(model: Model): Model {
     ...model,
     nodes: model.nodes.flatMap((n) => (merged.get(n.id) ? [merged.get(n.id)!] : into.has(n.id) ? [] : [n])),
     links: model.links.flatMap((l) => (links.has(l.id) ? [links.get(l.id)!] : named(l.from, l.to) ? [] : [l])),
-    arrows: model.arrows.filter((a) => !named(a.from, a.to)),
-    hints: model.hints.filter((h) =>
-      h.type === "near" ? !named(h.a, h.b) : h.type === "row" ? !named(...h.ids) : !named(h.device),
-    ),
   };
 }

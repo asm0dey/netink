@@ -61,8 +61,21 @@ test("render --no-collapse draws every SCaLE device, default collapses some", ()
   const full = run("--no-collapse"),
     auto = run();
   const boxes = (s: string) => (s.match(/class="h"/g) ?? []).length;
-  const size = (s: string) => /<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(s)!.slice(1).join("x");
   const top = loadModel("test/fixtures/scale/network.net").nodes.filter((n) => n.kind === "device");
   expect(top.every((n) => full.includes(`>${n.label}<`) || full.includes(n.label))).toBe(true);
   expect(boxes(auto)).toBeLessThan(boxes(full));
+});
+
+test("an arrow endpoint and a hinted member never collapse", () => {
+  const base = "title T\ndevice r\nlink r -- sw\ndevice sw kind switch\n";
+  const hosts = (n: number) => Array.from({ length: n }, (_, i) => `client c${i + 1}\nlink sw -- c${i + 1}`).join("\n");
+  const a = collapseSiblings(model(`${base}${hosts(3)}\nallow c3 -> r "ssh"\n`));
+  expect(a.arrows).toHaveLength(1);
+  expect(a.nodes.some((n) => n.id === "c3")).toBe(true);
+  expect(a.nodes.some((n) => n.members)).toBe(false); // only c1, c2 remain: below three
+  const b = collapseSiblings(model(`${base}${hosts(4)}\nallow c4 -> r "ssh"\n`));
+  expect(b.nodes.find((n) => n.members)!.members).toEqual(["c1", "c2", "c3"]);
+  const h = collapseSiblings(model(`${base}${hosts(4)}\nrow c2, r\n`));
+  expect(h.hints).toHaveLength(1);
+  expect(h.nodes.some((n) => n.id === "c2")).toBe(true);
 });

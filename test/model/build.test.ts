@@ -473,3 +473,19 @@ test("a trunk defined twice is an error", () => {
     expect.objectContaining({ level: "error", line: 6, message: 'duplicate trunk "up"', hint: expect.any(String) }),
   );
 });
+test("vlan and trunk names that are drawing styles are errors", () => {
+  expect(diagsOf("title T\nvlan other 10\n")).toContainEqual(
+    expect.objectContaining({
+      level: "error",
+      line: 2,
+      hint: "that name is reserved for a drawing style; rename the vlan",
+    }),
+  );
+  expect(diagsOf(`${TR}trunk wire vlans a\n`)).toContainEqual(
+    expect.objectContaining({
+      level: "error",
+      line: 5,
+      hint: "that name is reserved for a drawing style; rename the trunk set",
+    }),
+  );
+});
