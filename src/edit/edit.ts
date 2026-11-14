@@ -74,7 +74,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
   // the siblings this noun's statements live among, their print level, and where a new one goes by default
   let pool: Target[] = stmts,
     level = 0,
-    end = (text.match(/[^\n]*\n|[^\n]+$/g) ?? []).length;
+    end = (text.match(/[^\n]*\n|(?:[^\n]+$)/g) ?? []).length;
   if (noun.block && args.parent === undefined) return { ok: false, error: `${noun.name} needs a parent device` };
   if (args.parent !== undefined) {
     const [d, b, deeper] = args.parent.split("/");

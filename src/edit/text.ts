@@ -1,7 +1,7 @@
 import { commentStart } from "../dsl/parse";
 
 /** Physical lines with their terminators, so untouched bytes round-trip. */
-const pieces = (text: string) => text.match(/[^\n]*\n|[^\n]+$/g) ?? [];
+const pieces = (text: string) => text.match(/[^\n]*\n|(?:[^\n]+$)/g) ?? [];
 const eolOf = (text: string) => (text.includes("\r\n") ? "\r\n" : "\n");
 const body = (p: string) => p.replace(/\r?\n$/, "");
 

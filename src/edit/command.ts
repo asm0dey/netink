@@ -179,7 +179,7 @@ export function parseEditArgv(argv: string[]): { req: EditRequest } | { usage: s
       .fail((msg, e) => {
         throw new Usage(usageMessage(msg || e?.message || "usage error", argv));
       });
-    registerEditCommands(y, (r) => {
+    void registerEditCommands(y, (r) => {
       req = r;
     }).parse();
   } catch (e) {
