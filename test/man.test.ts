@@ -10,7 +10,7 @@ const run = (...a: string[]) => {
 
 test("man page structure", () => {
   const m = manPage();
-  expect(m.startsWith("netdraw(1) --")).toBe(true);
+  expect(m.startsWith("netink(1) --")).toBe(true);
   for (const h of ["## SYNOPSIS", "## COMMANDS", "## EDITING COMMANDS", "## EXIT STATUS"]) expect(m).toContain(h);
   for (const c of ["render", "check", "show", "import", "init", "completion"]) expect(m).toContain(c);
   for (const n of NOUNS) expect(m).toContain(n.help);

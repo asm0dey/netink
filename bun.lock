@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "netdraw",
+      "name": "netink",
       "dependencies": {
         "elkjs": "^0.12.1",
         "yargs": "^18.2.0",

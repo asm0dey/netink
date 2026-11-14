@@ -1,9 +1,9 @@
 {
-  "name": "netdraw",
+  "name": "netink",
   "type": "module",
   "private": true,
   "bin": {
-    "netdraw": "src/cli.ts"
+    "netink": "src/cli.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.7",

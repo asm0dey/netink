@@ -258,7 +258,7 @@ test("an absolute imports path is read as is", () => {
   const { mkdtempSync, writeFileSync, rmSync } = require("node:fs"),
     { tmpdir } = require("node:os"),
     { join, resolve } = require("node:path");
-  const dir = mkdtempSync(join(tmpdir(), "netdraw-abs-"));
+  const dir = mkdtempSync(join(tmpdir(), "netink-abs-"));
   try {
     writeFileSync(join(dir, "n.net"), `imports rsc ${resolve("examples/home/lte.rsc")} as lte\n`);
     const m = loadModel(join(dir, "n.net"));
@@ -350,7 +350,7 @@ test("internals on an imported id is an error", () => {
     file: "",
     line: 2,
     message: '"x" is imported; its internals come from x.rsc',
-    hint: "run netdraw import x.rsc to get an editable block",
+    hint: "run netink import x.rsc to get an editable block",
   });
 });
 

@@ -30,7 +30,7 @@ export const base = (argv: string[]): Argv =>
       describe: "machine-readable output on stdout (one JSON document)",
     });
 
-/** yargs's validation message in netdraw's words. */
+/** yargs's validation message in netink's words. */
 export function usageMessage(msg: string, argv: string[]): string {
   if (msg.startsWith("Not enough non-option arguments")) return "missing argument";
   const m = /^Unknown arguments?: (.*)$/.exec(msg);
@@ -159,7 +159,7 @@ export function registerEditCommands(y: Argv, onEdit: OnEdit, plain: Record<stri
             );
           else verbs(z, n, onEdit);
         }
-        return p ? p.builder(z) : z.demandCommand(1, `missing verb: run netdraw ${w} --help`);
+        return p ? p.builder(z) : z.demandCommand(1, `missing verb: run netink ${w} --help`);
       },
       p?.handler,
     );
@@ -169,7 +169,7 @@ export function registerEditCommands(y: Argv, onEdit: OnEdit, plain: Record<stri
 
 class Usage extends Error {}
 
-/** One editing command line (argv after `netdraw`) as a request, with the CLI's definitions; runs nothing and prints nothing. */
+/** One editing command line (argv after `netink`) as a request, with the CLI's definitions; runs nothing and prints nothing. */
 export function parseEditArgv(argv: string[]): { req: EditRequest } | { usage: string } {
   let req: EditRequest | undefined;
   try {

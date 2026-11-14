@@ -154,7 +154,7 @@ test("group and WAN-chip colours follow the VLAN def, not its name", async () =>
   const { mkdtempSync, readFileSync, writeFileSync, rmSync } = require("node:fs"),
     { tmpdir } = require("node:os"),
     { join, resolve } = require("node:path");
-  const dir = mkdtempSync(join(tmpdir(), "netdraw-rename-"));
+  const dir = mkdtempSync(join(tmpdir(), "netink-rename-"));
   try {
     const src = readFileSync(HOME, "utf8")
       .replace(/(\w+)\.rsc as/g, (_: string, n: string) => `${resolve("examples/home", n)}.rsc as`)

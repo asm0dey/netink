@@ -41,7 +41,7 @@ test("add existing fails", () => {
 test("missing match", () => {
   const r = run("vlan a 10\n", "rm", ["zz"]);
   expect(r.ok).toBe(false);
-  if (!r.ok) expect(r.hint).toContain("netdraw show vlans");
+  if (!r.ok) expect(r.hint).toContain("netink show vlans");
 });
 test("parse error refuses", () => {
   const r = run("vlan a\n", "add", ["b", "2"]);
@@ -49,7 +49,7 @@ test("parse error refuses", () => {
   if (!r.ok) {
     expect(r.error).toStartWith("t.net has parse errors; fix them first: ");
     expect(r.line).toBe(1);
-    expect(r.hint).toBe("run netdraw check");
+    expect(r.hint).toBe("run netink check");
   }
 });
 test("an already-exists hint names only verbs the noun has", () => {
@@ -61,7 +61,7 @@ test("an already-exists hint names only verbs the noun has", () => {
     expect(r.hint ?? "").not.toContain("set");
   }
   const v = run("vlan a 1\n", "add", ["a", "2"]);
-  if (!v.ok) expect(v.hint).toBe("use netdraw vlan set to change it");
+  if (!v.ok) expect(v.hint).toBe("use netink vlan set to change it");
 });
 test("--after places", () => {
   expect(ok(run("vlan a 1\nvlan b 2\n", "add", ["c", "3"], { after: "a" })).text).toBe(
@@ -228,7 +228,7 @@ test("block set may split an item into two lines", () => {
 test("block: missing parent", () => {
   const r = run("device d\n", "add", [], {}, router, "zz");
   expect(r.ok).toBe(false);
-  if (!r.ok) expect(r.hint).toContain("netdraw show devices");
+  if (!r.ok) expect(r.hint).toContain("netink show devices");
 });
 
 // review round 1

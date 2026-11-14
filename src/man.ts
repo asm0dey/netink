@@ -12,14 +12,14 @@ export function manPage(): string {
     const flags = n.flags.map((f) => `  * \`--${f.name}\`: ${f.help}`).join("\n");
     return `* \`${n.help}\`${flags ? `\n${flags}` : ""}`;
   }).join("\n");
-  return `netdraw(1) -- render network diagrams from a DSL
+  return `netink(1) -- render network diagrams from a DSL
 ==================================================
 
 ## SYNOPSIS
 
-\`netdraw\` <command> [options]
+\`netink\` <command> [options]
 
-\`netdraw\` <noun> add|set|rm <key...> [flags]
+\`netink\` <noun> add|set|rm <key...> [flags]
 
 ## DESCRIPTION
 

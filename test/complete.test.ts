@@ -43,13 +43,13 @@ test("zsh script", () => {
   const r = run({ SHELL: "/bin/zsh" }, "completion");
   expect(r.code).toBe(0);
   expect(r.out).toContain("compdef");
-  expect(r.out).toContain("netdraw");
+  expect(r.out).toContain("netink");
 });
 test("end to end", () => {
   const r = run({}, "--get-yargs-completions", "vlan", "set", "--file", "examples/home/network.net", "");
   expect(r.code).toBe(0);
   expect(r.out.split("\n")).toContain("guest");
-  const s = run({}, "--get-yargs-completions", "netdraw", "v");
+  const s = run({}, "--get-yargs-completions", "netink", "v");
   expect(s.code).toBe(0);
   expect(s.out.split("\n")).toContain("vlan");
 });

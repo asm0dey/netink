@@ -6,7 +6,7 @@ import { type Slice, sliceModel } from "../../src/model/slice";
 import { renderSvg } from "../../src/render/svg";
 import { overlaps } from "../helpers/overlap";
 
-// Same path as `netdraw render`: load -> sliceModel -> collapseSiblings -> layout -> renderSvg.
+// Same path as `netink render`: load -> sliceModel -> collapseSiblings -> layout -> renderSvg.
 // Regenerate after an intended render change (owner's yes first):
 //   UPDATE_GOLDENS=1 bun test test/acceptance/large-goldens.test.ts
 const CASES: [string, string, Slice][] = [

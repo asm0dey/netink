@@ -40,7 +40,7 @@ function find(ns: MNode[], id: string): MNode | undefined {
   }
 }
 
-/** Completion candidates for `words` (the arguments after `netdraw`; the last is the partial word). Never throws. */
+/** Completion candidates for `words` (the arguments after `netink`; the last is the partial word). Never throws. */
 export function complete(words: string[]): string[] {
   try {
     return run(words);

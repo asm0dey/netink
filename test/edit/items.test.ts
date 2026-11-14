@@ -76,13 +76,13 @@ test("imported parent refused", () => {
   expect(r.ok).toBe(false);
   if (!r.ok) {
     expect(r.error).toBe('"core" is imported; its internals come from x.rsc');
-    expect(r.hint).toContain("netdraw import x.rsc");
+    expect(r.hint).toContain("netink import x.rsc");
   }
 });
 test("missing parent and too deep", () => {
   const r = run("device d\n", "router", "add", "zz", []);
   expect(r.ok).toBe(false);
-  if (!r.ok) expect(r.hint).toBe("run netdraw show devices");
+  if (!r.ok) expect(r.hint).toBe("run netink show devices");
   expect(run(BR, "ports", "add", "d/br/x", ["e9"]).ok).toBe(false);
 });
 test("allow --in is an item, without it a statement", () => {

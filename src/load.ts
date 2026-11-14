@@ -37,7 +37,7 @@ export function buildModel(stmts: Stmt[], facts: Map<string, DeviceFacts>, opts:
     err(
       s.line,
       `"${s.id}" is imported; its internals come from ${imp.file}`,
-      `run netdraw import ${imp.file} to get an editable block`,
+      `run netink import ${imp.file} to get an editable block`,
     );
     const { items: _, ...rest } = s;
     return rest;

@@ -61,7 +61,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
       ok: false,
       error: `${file} has parse errors; fix them first: ${err.message}`,
       line: err.line,
-      hint: "run netdraw check",
+      hint: "run netink check",
     };
   const src = text.split(/\r?\n/);
   const sourceOf = (sp: Span) =>
@@ -86,13 +86,13 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
         ok: false,
         error: `"${d}" is imported; its internals come from ${imp.file}`,
         line: spans.get(imp)?.line,
-        hint: `run netdraw import ${imp.file} to get an editable block`,
+        hint: `run netink import ${imp.file} to get an editable block`,
       };
     const dev = stmts.find(
       (s): s is Extract<Stmt, { kind: "node" }> => s.kind === "node" && s.type === "device" && s.id === d,
     );
     const parent = b === undefined ? dev : dev?.items?.find((i) => i.kind === "bridge" && i.name === b);
-    if (!parent) return { ok: false, error: `no device or bridge "${args.parent}"`, hint: "run netdraw show devices" };
+    if (!parent) return { ok: false, error: `no device or bridge "${args.parent}"`, hint: "run netink show devices" };
     pool = parent.kind === "node" ? (parent.items ?? []) : parent.kind === "bridge" ? parent.items : [];
     level = parent.kind === "node" ? 1 : 2;
     end = spans.get(parent)!.end;
@@ -107,7 +107,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
       return {
         ok: false,
         error: `no ${key}`,
-        hint: `run netdraw show${noun.show ? ` ${noun.show}` : ""} to list them`,
+        hint: `run netink show${noun.show ? ` ${noun.show}` : ""} to list them`,
       };
     if (noun.last) return { t: ms[ms.length - 1]!, sp: spans.get(ms[ms.length - 1]!)! };
     const same = verb === "rm" && new Set(ms.map((t) => print([t], level, false).join("\n"))).size === 1;
@@ -134,7 +134,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
         ok: false,
         error: `${noun.name} already exists`,
         line: spans.get(ms[0]!)!.line,
-        ...(noun.verbs.includes("set") ? { hint: `use netdraw ${noun.name} set to change it` } : {}),
+        ...(noun.verbs.includes("set") ? { hint: `use netink ${noun.name} set to change it` } : {}),
       };
     let at = end;
     for (const where of ["after", "before"] as const) {

@@ -102,7 +102,7 @@ function show(model: Model, what: string | undefined, json: boolean, file: strin
       return fail(json, 1, {
         error: `no device, link or arrow with id ${what}`,
         file,
-        hint: "run netdraw show devices|links to list ids",
+        hint: "run netink show devices|links to list ids",
       });
     data = found;
     text = node ? tree(node) : [JSON.stringify(found, null, 2)];
@@ -112,7 +112,7 @@ function show(model: Model, what: string | undefined, json: boolean, file: strin
 }
 
 function importCmd(rsc: string | undefined, as: string | undefined, file: string, json: boolean): number {
-  if (!rsc) return fail(json, 2, { error: "missing argument: <file.rsc>", hint: "run netdraw --help" });
+  if (!rsc) return fail(json, 2, { error: "missing argument: <file.rsc>", hint: "run netink --help" });
   const read = (p: string) => {
     try {
       return readFileSync(p, "utf8");
@@ -197,9 +197,9 @@ export function cli(argv: string[]): Argv {
   };
   const all = { type: "boolean", describe: "include spare/unused parts" } as const;
   const y = base(argv)
-    .scriptName("netdraw")
+    .scriptName("netink")
     .usage(
-      "netdraw - render network diagrams from a DSL plus optional MikroTik .rsc exports.\n\nUsage: netdraw <command> [options]",
+      "netink - render network diagrams from a DSL plus optional MikroTik .rsc exports.\n\nUsage: netink <command> [options]",
     )
     .epilogue(EPILOGUE)
     .alias("h", "help")
@@ -208,7 +208,7 @@ export function cli(argv: string[]): Argv {
     .fail((msg, e) => {
       msg = usageMessage(msg || e?.message || "usage error", argv);
       if (msg === "missing command") y.showHelp((t) => err(t));
-      exit = fail(json, 2, { error: msg, hint: "run netdraw --help" });
+      exit = fail(json, 2, { error: msg, hint: "run netink --help" });
       throw new Usage(msg);
     })
     // yargs's script calls back with `--get-yargs-completions <words>`; the first word is the program name
@@ -305,7 +305,7 @@ function init(file: string, json: boolean): number {
     return fail(json, 1, {
       error: exists ? `${file} exists` : `cannot create ${file}: ${(e as Error).message.split("\n")[0]}`,
       file,
-      ...(exists ? { hint: "edit it with netdraw <noun> add ..." } : {}),
+      ...(exists ? { hint: "edit it with netink <noun> add ..." } : {}),
     });
   }
   if (json) out(JSON.stringify({ ok: true, file }));
@@ -318,7 +318,7 @@ function editCmd(req: EditRequest, file: string, json: boolean): number {
   try {
     text = readFileSync(file, "utf8");
   } catch {
-    return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file, or create it with netdraw init" });
+    return fail(json, 1, { error: `cannot read ${file}`, file, hint: "pass --file, or create it with netink init" });
   }
   const r = edit(text, file, req);
   if (!r.ok) return fail(json, 1, { error: r.error, file, line: r.line, hint: r.hint, candidates: r.candidates });
@@ -453,7 +453,7 @@ async function main(argv: string[]): Promise<number> {
     const topic = argv.slice(1).find((a) => !a.startsWith("-"));
     if (topic === "dsl") return (out(GRAMMAR), 0);
     if (topic !== undefined)
-      return fail(argv.includes("--json"), 2, { error: `unknown help topic ${topic}`, hint: "run netdraw help dsl" });
+      return fail(argv.includes("--json"), 2, { error: `unknown help topic ${topic}`, hint: "run netink help dsl" });
     argv = ["--help"];
   }
   exit = 0;
@@ -478,7 +478,7 @@ async function run(argv: string[]): Promise<number> {
     return fail(argv.includes("--json"), 1, {
       error: `internal error: ${msg}`,
       file: file ?? "",
-      hint: "this is a netdraw bug; please report it with the input that triggers it",
+      hint: "this is a netink bug; please report it with the input that triggers it",
     });
   }
 }

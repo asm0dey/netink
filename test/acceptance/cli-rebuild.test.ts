@@ -24,7 +24,7 @@ const strip = (v: unknown): unknown =>
         )
       : v;
 
-/** Each command applied in turn, in-process, as `netdraw <argv>` would. */
+/** Each command applied in turn, in-process, as `netink <argv>` would. */
 function run(text: string, file: string, cmds: string[][]): string {
   for (const argv of cmds) {
     const p = parseEditArgv(argv);
@@ -157,7 +157,7 @@ const RSC: string[][] = [
 
 /** Rebuild `name` from `cmds` in a temp dir beside the home .rsc files; check statements and SVG against the hand-written file. */
 async function rebuild(name: string, cmds: string[][]) {
-  const dir = mkdtempSync(join(tmpdir(), "netdraw-rebuild-"));
+  const dir = mkdtempSync(join(tmpdir(), "netink-rebuild-"));
   try {
     for (const f of readdirSync(HOME).filter((f) => f.endsWith(".rsc"))) copyFileSync(join(HOME, f), join(dir, f));
     const file = join(dir, name);

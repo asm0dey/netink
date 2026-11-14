@@ -27,7 +27,7 @@ export type Noun = {
   flags: Flag[]; // noun-specific; --file --json --after --before --select-text are common
   repeatable?: true; // several statements may share a key (see spec "Kinds that can repeat")
   help: string; // one usage line for --help
-  show?: string; // the `netdraw show` slice that lists candidates, e.g. "vlans"
+  show?: string; // the `netink show` slice that lists candidates, e.g. "vlans"
   each?(a: Args): Args[]; // one command that is really several edits (legend --mode with --position)
   last?: true; // set/rm act on the last of several matches (title, subtitle: the one the model uses)
   upsert?: true; // set with no match adds `make(a)` (settings: legend, style)

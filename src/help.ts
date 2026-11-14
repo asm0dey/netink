@@ -32,14 +32,14 @@ strings are "..." with \\" and \\\\ escapes):
   Ids are [a-z0-9_-]+; child ids are parent/child (e.g. core/ether3, core/bridge).
   Paths in 'imports' are relative to the .net file.`;
 
-export const EDITING = `Editing: netdraw <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
-  Block nouns (wan, bridge, ports, ...) take the parent first: netdraw ports add core/bridge ether2,ether3 --untagged home.
+export const EDITING = `Editing: netink <noun> add|set|rm <key...> [flags] [--file f] [--json] edits the file in place, one statement per command.
+  Block nouns (wan, bridge, ports, ...) take the parent first: netink ports add core/bridge ether2,ether3 --untagged home.
   allow --in <device> edits the line inside that device's block. Lists are one comma-separated argument.
   --after <key> / --before <key> place a new statement next to a statement of the same kind (default: end of file or block);
   --select-text <s> picks one of several matches; --no-<flag> clears an optional value.
-  For a value starting with -: use --flag=value, or put positionals after --  (netdraw note add d -- '-> uplink').
+  For a value starting with -: use --flag=value, or put positionals after --  (netink note add d -- '-> uplink').
   The written lines go to stdout, then check runs and prints its diagnostics (exit 0 once written).
-  netdraw <noun> --help lists its verbs and flags. netdraw init creates the empty file to start from.`;
+  netink <noun> --help lists its verbs and flags. netink init creates the empty file to start from.`;
 export const JSON_OUT = `--json output:
   render  {ok, output, width, height, warnings} (plus "svg" when no -o); on refusal {ok:false, diags}
   check   {ok, diags}
@@ -50,7 +50,7 @@ export const JSON_OUT = `--json output:
   diag    {"level": "error"|"warning", "file", "line", "message", "hint"?}`;
 export const EXIT = `Exit codes: 0 ok; 1 model/check errors or runtime failure; 2 usage error (unknown command, unknown flag, missing argument).
 No command prompts interactively.`;
-export const COMPLETION = `Shell completion: netdraw completion >> ~/.zshrc  (zsh or bash, from $SHELL; completes commands, nouns, verbs, flags and the ids and vlan names in the --file)`;
+export const COMPLETION = `Shell completion: netink completion >> ~/.zshrc  (zsh or bash, from $SHELL; completes commands, nouns, verbs, flags and the ids and vlan names in the --file)`;
 export const EPILOGUE = `${EDITING}
 
 ${JSON_OUT}
@@ -59,7 +59,7 @@ ${EXIT}
 
 ${COMPLETION}
 
-DSL reference: netdraw help dsl`;
+DSL reference: netink help dsl`;
 
 /** The one-line command descriptions, shared by --help and the man page. */
 export const DESC = {
