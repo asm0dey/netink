@@ -130,6 +130,14 @@ test("a slice names itself in the subtitle; the full picture keeps the file's ow
   expect(ok(HOME, { path: ["core", "isp"] }).subtitle).toStartWith("path core ↔ isp");
 });
 
+test("physical view with --vlan: cables carrying it are plain, the rest are context", () => {
+  const m = ok(HOME, { view: "physical", vlans: ["guest"] });
+  expect(m.slice).toEqual({ vlans: ["guest"], physical: true });
+  const carries = new Map(HOME.links.map((l) => [l.id, l.lanes.includes("guest")]));
+  for (const l of m.links) expect(l.lanes).toEqual([carries.get(l.id) ? "wire" : "other"]);
+  expect(m.links.some((l) => l.lanes[0] === "other")).toBe(true);
+});
+
 test("vlans view: no arrows, lanes unchanged", () => {
   const m = ok(HOME, { view: "vlans" });
   expect(m.arrows).toEqual([]);

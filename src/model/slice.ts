@@ -141,7 +141,7 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
   return {
     model: {
       ...model,
-      ...(only ? { slice: { vlans: [...only] } } : {}),
+      ...(only ? { slice: { vlans: [...only], ...(phys ? { physical: true as const } : {}) } } : {}),
       // a note is free text about the whole network: it may name what the slice or view leaves out
       legend: sliced ? { ...model.legend, notes: [] } : model.legend,
       ...(sliced ? { subtitle: [describe(s), model.subtitle].filter(Boolean).join(" · ") } : {}),
@@ -156,7 +156,12 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
         if (!drawn(l.from) || !drawn(l.to) || (stub.has(top(l.from)) && stub.has(top(l.to)))) return [];
         // inside one device a link is bridging or VLAN wiring, not a cable
         if (phys && top(l.from) === top(l.to)) return [];
-        const lanes = s.view === "physical" ? ["wire"] : only ? l.lanes.filter((x) => only!.has(x)) : l.lanes;
+        // physical with a VLAN: a cable that carries it is a plain cable, any other is context
+        const lanes = phys
+          ? [!only || l.lanes.some((x) => only!.has(x)) ? "wire" : "other"]
+          : only
+            ? l.lanes.filter((x) => only!.has(x))
+            : l.lanes;
         const { trunk, ...rest } = l;
         return [
           {

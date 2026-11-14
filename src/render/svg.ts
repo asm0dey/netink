@@ -257,7 +257,11 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
     ...walk(model.nodes).flatMap((n) => laneOfStyle(n.style) ?? []),
   ]);
   const kinds: Entry[] = [
-    { key: "wire", label: "plain cable", lane: "wire" },
+    {
+      key: "wire",
+      label: model.slice?.physical ? `cable carrying ${model.slice.vlans.map(display).join(", ")}` : "plain cable",
+      lane: "wire",
+    },
     {
       key: "other",
       label: `doesn't carry ${(model.slice?.vlans ?? []).map(display).join(", ")}`,
@@ -429,7 +433,22 @@ export function renderSvg(model: Model, placed: Placed): string {
   /** Rects of the labels placed so far: a later label must not touch them. */
   const taken: Rect[] = [];
   /** A label must not touch a leaf box, another label, nor cross a container border (inside a container is fine). */
-  const clean = (r: Rect) =>
+  /** Does any line not owned by `owner` pass through `r`? Lines are orthogonal; a diagonal section is skipped. */
+  const crossed = (r: Rect, owner: string) =>
+    lines.some(
+      (l) =>
+        l.owner !== owner &&
+        l.points.slice(1).some((b, i) => {
+          const a = l.points[i]!;
+          if (Math.abs(a.y - b.y) < 0.5)
+            return a.y > r.y0 && a.y < r.y1 && Math.max(a.x, b.x) > r.x0 && Math.min(a.x, b.x) < r.x1;
+          if (Math.abs(a.x - b.x) < 0.5)
+            return a.x > r.x0 && a.x < r.x1 && Math.max(a.y, b.y) > r.y0 && Math.min(a.y, b.y) < r.y1;
+          return false;
+        }),
+    );
+  const clean = (r: Rect, owner = "") =>
+    !crossed(r, owner) &&
     taken.every((t) => !(r.x1 > t.x0 && r.x0 < t.x1 && r.y1 > t.y0 && r.y0 < t.y1)) &&
     [...placed.boxes.values()].every((b) => {
       const meets = r.x1 > b.x && r.x0 < b.x + b.w && r.y1 > b.y && r.y0 < b.y + b.h;
@@ -440,7 +459,7 @@ export function renderSvg(model: Model, placed: Placed): string {
    * segment first, else the same spots moved away from the line in 14 px steps. `dx`/`dy`: the away direction.
    */
   type Spot = P & { end?: boolean; dx: number; dy: number };
-  const spot = (pts: P[], at: P, s: string): Spot => {
+  const spot = (pts: P[], at: P, s: string, owner: string): Spot => {
     const w = textWidth(s, 12, true),
       rect = (q: P): Rect => ({ x0: q.x, y0: q.y - 11, x1: q.x + w, y1: q.y + 3 });
     const segs = pts
@@ -466,18 +485,18 @@ export function renderSvg(model: Model, placed: Placed): string {
       ),
     ];
     const q =
-      options.find((q) => clean(rect(q))) ??
+      options.find((q) => clean(rect(q), owner)) ??
       Array.from({ length: 10 }, (_, k) =>
         options.map((o) => ({ ...o, x: o.x + o.dx * 14 * (k + 1), y: o.y + o.dy * 14 * (k + 1) })),
       )
         .flat()
-        .find((q) => clean(rect(q))) ??
+        .find((q) => clean(rect(q), owner)) ??
       options[0]!;
     taken.push(rect(q));
     return q;
   };
-  const label = (pts: P[], at: P, s: string, colour: string) => {
-    const q = spot(pts, at, s);
+  const label = (pts: P[], at: P, s: string, colour: string, owner: string) => {
+    const q = spot(pts, at, s, owner);
     labels.push(
       q.end
         ? text(q.x + textWidth(s, 12, true), q.y, s, `class="t" text-anchor="end" fill="${colour}" ${halo}`)
@@ -500,12 +519,12 @@ export function renderSvg(model: Model, placed: Placed): string {
       : l.lanes[0] && l.lanes[0] !== "wire" && l.lanes[0] !== "other"
         ? (lanes.get(l.lanes[0])?.stroke ?? "#333")
         : "#333";
-    if (s) label(pl.points, pl.labelAt ?? mid(pl.points), s, colour);
+    if (s) label(pl.points, pl.labelAt ?? mid(pl.points), s, colour, pl.id);
   }
   for (const pa of placed.arrows) {
     const a = arrow.get(pa.id);
     if (a?.label && pa.points.length >= 2)
-      label(pa.points, pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW);
+      label(pa.points, pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW, pa.id);
   }
 
   const nodes = drawNodes(model, placed, lanes, laneOf, lines);

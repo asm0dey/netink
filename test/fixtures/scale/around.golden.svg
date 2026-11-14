@@ -200,7 +200,7 @@
 <text x="1901.2" y="1589" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">vendor-all</text>
 <text x="2247.9" y="1260.6" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exUplink</text>
 <text x="1026.4" y="1593" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfUplink</text>
-<text x="2079.6" y="1599" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exAP</text>
+<text x="2058" y="1621" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exAP</text>
 <text x="2481.2" y="374.4" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
 <g class="legend">
 <rect x="40" y="1729" width="2578.2" height="1356" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>

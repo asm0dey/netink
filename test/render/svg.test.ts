@@ -392,3 +392,14 @@ test("--vlan context links: faint grey line and a 'doesn't carry' legend entry",
   expect(svg).toContain("doesn't carry Guest");
   expect(svg).not.toContain("plain cable");
 });
+
+test("a label moves off another cable's line, even when its own spot is on it", () => {
+  const [m, p] = crossing(false);
+  m.arrows[0]!.label = "after login";
+  p.arrows[0]!.labelAt = { x: 100, y: 106 }; // default spot: baseline at y 100, on the horizontal guest lane
+  const svg = renderSvg(m, p);
+  const t = svg.match(/<text x="([\d.]+)" y="([\d.]+)"[^>]*>after login</)!;
+  const r = labelRect(Number(t[1]), Number(t[2]), "after login");
+  const onLane = r.y0 < 100 && r.y1 > 100 && r.x0 < 200 && r.x1 > 0;
+  expect(onLane).toBe(false);
+});

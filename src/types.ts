@@ -134,7 +134,10 @@ export type Model = {
   /** Warnings `check` adds to `diags`: unused VLANs, unlinked devices, size. */ usage?: Diag[];
   diags: Diag[] /** the DSL file, for diagnostics */;
   file?: string;
-  /** Set by `--vlan`: the selected VLAN defs, named in the legend. */ slice?: { vlans: string[] };
+  /** Set by `--vlan`: the selected VLAN defs, named in the legend; `physical`: plain cables are the ones that carry them. */ slice?: {
+    vlans: string[];
+    physical?: true;
+  };
 };
 export type P = { x: number; y: number };
 export type Box = { id: string; x: number; y: number; w: number; h: number };

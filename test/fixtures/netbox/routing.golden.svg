@@ -267,31 +267,31 @@
 <text x="16059" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="16302" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="16092.9" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-yonkers-sw01</text>
-<text x="903" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-akron</text>
+<text x="891" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-akron</text>
 <text x="1055.2" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-akron</text>
-<text x="2166.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-albany</text>
+<text x="2154.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-albany</text>
 <text x="2320.3" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-albany</text>
-<text x="3430" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-binghamton</text>
+<text x="3418" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-binghamton</text>
 <text x="3590.3" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-binghamton</text>
-<text x="4693.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-buffalo</text>
+<text x="4681.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-buffalo</text>
 <text x="4848.9" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-buffalo</text>
-<text x="5957" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-camden</text>
+<text x="5945" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-camden</text>
 <text x="6110.8" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-camden</text>
-<text x="7220.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-nashua</text>
+<text x="7208.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-nashua</text>
 <text x="7374.3" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-nashua</text>
-<text x="8484" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-pittsfield</text>
+<text x="8472" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-pittsfield</text>
 <text x="8644.3" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-pittsfield</text>
-<text x="9747.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-rochester</text>
+<text x="9735.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-rochester</text>
 <text x="9904.5" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-rochester</text>
-<text x="11011" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-scranton</text>
+<text x="10999" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-scranton</text>
 <text x="11168" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-scranton</text>
-<text x="12274.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-stamford</text>
+<text x="12262.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-stamford</text>
 <text x="12431.5" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-stamford</text>
-<text x="13538" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-syracuse</text>
+<text x="13526" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-syracuse</text>
 <text x="13695" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-syracuse</text>
-<text x="14801.5" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-utica</text>
+<text x="14789.5" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-utica</text>
 <text x="14953.7" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-utica</text>
-<text x="16065" y="262" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-yonkers</text>
+<text x="16053" y="272" class="t" text-anchor="end" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-yonkers</text>
 <text x="16220.4" y="258" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-yonkers</text>
 <g class="legend">
 <rect x="40" y="382" width="16385.5" height="108" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
