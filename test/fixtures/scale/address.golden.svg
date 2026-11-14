@@ -9,14 +9,22 @@
 <text x="40" y="72" class="s" font-size="14">address 10.0.4.17 · socallinuxexpo/scale-network, full size</text>
 <rect x="2060.5" y="110" width="106" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
 <rect x="2066.2" y="208" width="412" height="377" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2109.8" y="206" width="7.5" height="4" fill="#FAFAFA"/>
+<rect x="2330.7" y="583" width="9" height="4" fill="#FAFAFA"/>
 <rect x="2204.5" y="260" width="202" height="102" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2272.1" y="360" width="7.5" height="4" fill="#FDECEA"/>
+<rect x="2330.2" y="360" width="10" height="4" fill="#FDECEA"/>
 <rect x="2216.5" y="296" width="178" height="54" rx="6" fill="#F7FFE0" stroke="#779E00" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="2204.2,406 2224.2,387 2446.2,387 2466.2,406 2446.2,425 2224.2,425" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="2078.2" y="387" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="2282.2" y="535" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="2234.9" y="445" width="200.5" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="40" y="655" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2330.7" y="653" width="9" height="4" fill="#FAFAFA"/>
+<rect x="152.3" y="1098" width="7.5" height="4" fill="#FAFAFA"/>
+<rect x="2098.1" y="1098" width="7.5" height="4" fill="#FAFAFA"/>
 <rect x="2098.7" y="707" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2295.3" y="823" width="9" height="4" fill="#FDECEA"/>
 <rect x="2110.7" y="743" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="1151.3,806 1171.3,787 1334.8,787 1354.8,806 1334.8,825 1171.3,825" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="2264.5" y="890" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>

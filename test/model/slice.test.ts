@@ -166,6 +166,8 @@ test("physical view of home renders no VLAN in strokes or legend", async () => {
   for (const v of HOME.vlans) expect(legend).not.toMatch(new RegExp(`>${v.name}\\b`, "i"));
   const lanes = laneStyles(HOME.vlans);
   for (const v of HOME.vlans) expect(svg).not.toContain(`stroke="${lanes.get(v.name)!.stroke}"`);
+  // a cable leaving core breaks core's frame (a notch in the frame's fill), so it does not read as a second cable
+  expect(svg).toMatch(/<rect x="[\d.]+" y="[\d.]+" width="[\d.]+" height="4" fill="#[0-9A-F]{6}"\/>/);
 });
 
 test("--vlan: links without the VLAN become context lanes, never wire", () => {

@@ -9,7 +9,11 @@
 <text x="40" y="72" class="s" font-size="14">VLAN exSpkr · socallinuxexpo/scale-network, full size</text>
 <rect x="2277.3" y="110" width="115.8" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
 <rect x="40" y="208" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2331.4" y="206" width="7.5" height="4" fill="#FAFAFA"/>
+<rect x="152.3" y="651" width="7.5" height="4" fill="#FAFAFA"/>
+<rect x="2097.4" y="651" width="9" height="4" fill="#FAFAFA"/>
 <rect x="2098.7" y="260" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2296.1" y="376" width="7.5" height="4" fill="#FDECEA"/>
 <rect x="2110.7" y="296" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="1151.3,359 1171.3,340 1334.8,340 1354.8,359 1334.8,378 1171.3,378" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="2264.5" y="443" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>

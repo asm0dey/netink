@@ -9,7 +9,11 @@
 <text x="40" y="72" class="s" font-size="14">path confidf ↔ expoidf · socallinuxexpo/scale-network, full size</text>
 <rect x="2417.3" y="110" width="115.8" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
 <rect x="180" y="208" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2470.7" y="206" width="9" height="4" fill="#FAFAFA"/>
+<rect x="291.5" y="651" width="9" height="4" fill="#FAFAFA"/>
+<rect x="2234.9" y="651" width="14" height="4" fill="#FAFAFA"/>
 <rect x="2238.7" y="260" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2435.3" y="376" width="9" height="4" fill="#FDECEA"/>
 <rect x="2250.7" y="296" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="1291.3,359 1311.3,340 1474.8,340 1494.8,359 1474.8,378 1311.3,378" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="2404.5" y="443" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
@@ -26,7 +30,10 @@
 <rect x="2184" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#0000ff" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="420" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#aa3a0a" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="40" y="723" width="1754.2" height="405" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="291.5" y="721" width="9" height="4" fill="#FAFAFA"/>
+<rect x="1013.4" y="1126" width="14" height="4" fill="#FAFAFA"/>
 <rect x="52" y="775" width="232" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="163.5" y="891" width="9" height="4" fill="#FDECEA"/>
 <rect x="64" y="811" width="208" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="333.5,874 353.5,855 517,855 537,874 517,893 353.5,893" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="132.7" y="968" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>

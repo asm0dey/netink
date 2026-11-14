@@ -155,6 +155,7 @@ function drawNodes(
   placed: Placed,
   lanes: Map<string, Stroke>,
   laneOf: Map<string, string>,
+  lines: Line[],
 ): { shapes: string[]; texts: string[] } {
   const out: string[] = [],
     texts: string[] = [];
@@ -172,6 +173,26 @@ function drawNodes(
       );
     };
     const container = n.children.length > 0;
+    // a cable through a container's frame breaks it, so the crossing reads as a wall, not as two cables
+    const notches = () => {
+      const r = 10;
+      for (const l of lines) {
+        const half = (lanes.get(l.lane)?.w ?? 3) / 2 + 3;
+        l.points.slice(1).forEach((b, i) => {
+          const a = l.points[i]!;
+          const across = (u0: number, u1: number, e: number) =>
+            Math.min(u0, u1) < e - 0.5 && Math.max(u0, u1) > e + 0.5;
+          if (Math.abs(a.x - b.x) < 0.5 && a.x > x + r && a.x < x + w - r)
+            for (const e of [y, y + h])
+              if (across(a.y, b.y, e))
+                out.push(`<rect x="${f(a.x - half)}" y="${f(e - 2)}" width="${f(2 * half)}" height="4" fill="${bg}"/>`);
+          if (Math.abs(a.y - b.y) < 0.5 && a.y > y + r && a.y < y + h - r)
+            for (const e of [x, x + w])
+              if (across(a.x, b.x, e))
+                out.push(`<rect x="${f(e - 2)}" y="${f(a.y - half)}" width="4" height="${f(2 * half)}" fill="${bg}"/>`);
+        });
+      }
+    };
     let centred = !container && n.sub.length === 0,
       labelFill = "";
     if (n.kind === "cloud") {
@@ -205,6 +226,7 @@ function drawNodes(
       const c = styleStroke(n.style, WIRE);
       rect(10, lane(n.style)?.tint ?? TINT[n.style] ?? tint(c), { stroke: c, w: 1.5 });
     } else rect(6, "#fff", { stroke: WIRE, w: 1.5 });
+    if (container && n.kind !== "cloud") notches();
 
     const tx = centred ? x + w / 2 : x + 14,
       anchor = centred ? ' text-anchor="middle"' : "";
@@ -486,7 +508,7 @@ export function renderSvg(model: Model, placed: Placed): string {
       label(pa.points, pa.labelAt ?? mid(pa.points), a.label, a.kind === "route" ? ROUTE : ALLOW);
   }
 
-  const nodes = drawNodes(model, placed, lanes, laneOf);
+  const nodes = drawNodes(model, placed, lanes, laneOf, lines);
   const legend = drawLegend(model, placed, lanes, lines);
   // whole pixels, rounded up: rounding to 0.1 px could clip the layout by a fraction
   const W = Math.ceil(Math.max(placed.width, legend ? legend.w + 40 : 0)),

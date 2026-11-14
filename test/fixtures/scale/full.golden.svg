@@ -9,14 +9,22 @@
 <text x="40" y="72" class="s" font-size="14">socallinuxexpo/scale-network, full size</text>
 <path d="M5891.5,186 A38,38 0 0 1 5861.6,154 A48.9,48.9 0 0 1 5935,124.4 A59.8,59.8 0 0 1 6043.7,119.6 A46.2,46.2 0 0 1 6117,154 A35.3,35.3 0 0 1 6087.1,186 Z" fill="#F5F5F5" stroke="#777" stroke-width="1.5"/>
 <rect x="5942" y="250" width="412" height="377" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="5984.8" y="248" width="9" height="4" fill="#FAFAFA"/>
+<rect x="6206.5" y="625" width="9" height="4" fill="#FAFAFA"/>
 <rect x="6080.3" y="302" width="202" height="102" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="6147.2" y="402" width="9" height="4" fill="#FDECEA"/>
+<rect x="6206" y="402" width="10" height="4" fill="#FDECEA"/>
 <rect x="6092.3" y="338" width="178" height="54" rx="6" fill="#F7FFE0" stroke="#779E00" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="6080,448 6100,429 6322,429 6342,448 6322,467 6100,467" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="5954" y="429" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="6158" y="577" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="6110.7" y="487" width="200.5" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="3915.8" y="697" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="6206.5" y="695" width="9" height="4" fill="#FAFAFA"/>
+<rect x="4027.3" y="1140" width="9" height="4" fill="#FAFAFA"/>
+<rect x="5970.7" y="1140" width="14" height="4" fill="#FAFAFA"/>
 <rect x="5974.5" y="749" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="6171.2" y="865" width="9" height="4" fill="#FDECEA"/>
 <rect x="5986.5" y="785" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="5027.1,848 5047.1,829 5210.6,829 5230.6,848 5210.6,867 5047.1,867" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="6140.3" y="932" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
@@ -33,7 +41,10 @@
 <rect x="5919.8" y="932" width="200.5" height="70" rx="6" fill="#fff" stroke="#0000ff" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="4155.8" y="932" width="200.5" height="70" rx="6" fill="#fff" stroke="#aa3a0a" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="1147.7" y="1212" width="1754.2" height="405" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="1399.2" y="1210" width="9" height="4" fill="#FAFAFA"/>
+<rect x="2121.1" y="1615" width="14" height="4" fill="#FAFAFA"/>
 <rect x="1159.7" y="1264" width="232" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="1271.2" y="1380" width="9" height="4" fill="#FDECEA"/>
 <rect x="1171.7" y="1300" width="208" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="1441.1,1363 1461.1,1344 1624.6,1344 1644.6,1363 1624.6,1382 1461.1,1382" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
 <rect x="1240.3" y="1457" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
