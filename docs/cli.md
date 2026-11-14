@@ -923,6 +923,7 @@ JSON document on stdout, on success and on failure, and nothing else.
 | `render` | `{ok, output, width, height, warnings}`, plus `svg` when there is no `-o`; refused: `{ok: false, diags}` |
 | `check` | `{ok, diags}` |
 | `show` | the model objects themselves |
+| `init` | `{ok, file}` |
 | `import` | `{ok, stmt, diags}` |
 | editing | `{ok, file, line, text, diags}`: the line number and text written |
 | any failure | `{error, file, line, hint?}`; a refused edit adds `candidates` when the key is ambiguous |

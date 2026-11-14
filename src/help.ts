@@ -45,6 +45,7 @@ export const JSON_OUT = `--json output:
   check   {ok, diags}
   show    the raw model objects
   import  {ok, stmt, diags}
+  init    {ok, file}
   editing {ok, file, line, text, diags}; a refused edit is exit 1 with the error shape plus "candidates" when ambiguous
   error   {"error", "file", "line", "hint"?} on stdout, for every failure
   diag    {"level": "error"|"warning", "file", "line", "message", "hint"?}`;

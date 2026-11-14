@@ -41,6 +41,14 @@ test("example failures name file and line", async () => {
   expect(r[0]).toContain("exit 1");
 });
 
+test("a console command that is not netink is reported", async () => {
+  const f = join(mkdtempSync(join(tmpdir(), "netink-doc-")), "typo.md");
+  writeFileSync(f, "# x\n\n```console\n$ netnik check\n```\n");
+  const r = await runExamples(f);
+  expect(r).toHaveLength(1);
+  expect(r[0]).toMatch(/typo\.md:4: not a netink command/);
+});
+
 test("relative links resolve to tracked files", () => {
   const tracked = new Set(Bun.spawnSync(["git", "ls-files"]).stdout.toString().split("\n"));
   const bad: string[] = [];
@@ -89,13 +97,15 @@ test("every flag is documented in its section", () => {
     // a code span that starts with the flag: `--vlan` or `--vlan <v>`
     for (const f of flags) if (!new RegExp(`\`${f}[\` =]`).test(s)) missing.push(`${name}: ${f}`);
   };
+  let seen = 0;
   for (const cmd of Object.keys(DESC).filter((c) => c !== "completion")) {
-    const help = Bun.spawnSync(["bun", "src/cli.ts", cmd, "--help"]).stdout.toString();
-    need(
-      cmd,
-      [...new Set(help.match(/--[a-z][a-z-]*/g) ?? [])].filter((f) => !GLOBAL.includes(f)),
-    );
+    const p = Bun.spawnSync(["bun", "src/cli.ts", cmd, "--help"]);
+    expect(p.exitCode).toBe(0);
+    const flags = [...new Set(p.stdout.toString().match(/--[a-z][a-z-]*/g) ?? [])].filter((f) => !GLOBAL.includes(f));
+    seen += flags.length;
+    need(cmd, flags);
   }
+  expect(seen).toBeGreaterThan(0);
   for (const n of NOUNS) need(n.name, [...n.flags.map((f) => `--${f.name}`), "--after", "--before", "--select-text"]);
   for (const f of ["--file", "--json", "--version"]) if (!md.includes(`\`${f}\``)) missing.push(`global: ${f}`);
   expect(missing).toEqual([]);

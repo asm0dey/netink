@@ -119,7 +119,10 @@ export async function runExamples(file: string): Promise<string[]> {
       const lines = b.body.split("\n");
       for (let i = 0; i < lines.length; i++) {
         const m = /^\$ netink(?:\s+(.*))?$/.exec(lines[i]!);
-        if (!m) continue;
+        if (!m) {
+          if (lines[i]!.startsWith("$ ")) fails.push(`${file}:${b.line + 1 + i}: not a netink command: ${lines[i]}`);
+          continue;
+        }
         const at = b.line + 1 + i,
           expected: string[] = [];
         while (i + 1 < lines.length && !lines[i + 1]!.startsWith("$ ")) expected.push(lines[++i]!);

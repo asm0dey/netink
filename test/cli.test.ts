@@ -469,10 +469,23 @@ test("--version is listed in --help", () => {
 });
 
 const built = (version?: string) => {
-  const env: Record<string, string | undefined> = { ...process.env, VERSION: version };
-  const b = Bun.spawnSync(["mise", "run", "build"], { env: env as Record<string, string> });
+  // same define quoting as mise.toml's build task, but into a temp dir so dist/ is untouched
+  const out = join(mkdtempSync(join(tmpdir(), "netink-ver-")), "netink");
+  const b = Bun.spawnSync(
+    [
+      "bun",
+      "build",
+      "src/cli.ts",
+      "--compile",
+      "--define",
+      `NETINK_VERSION=${JSON.stringify(version ?? "0.0.0-dev")}`,
+      "--outfile",
+      out,
+    ],
+    { env: process.env as Record<string, string> },
+  );
   expect(b.exitCode).toBe(0);
-  return Bun.spawnSync(["./dist/netink", "--version"]).stdout.toString().trim();
+  return Bun.spawnSync([out, "--version"]).stdout.toString().trim();
 };
 test("compiled build without VERSION is 0.0.0-dev", () => {
   expect(built()).toBe("0.0.0-dev");
