@@ -308,3 +308,48 @@ test("a two-vlan trunk set draws one trunk bar labelled with its name", () => {
   expect(svg).toContain("trunk: named set or more than 4 VLANs");
   expect(svg).not.toContain("trunk, more than 4 VLANs");
 });
+
+test("legend: a VLAN only a node style uses is listed; one nothing uses is not; trunk sets show their VLANs", () => {
+  const [m, p] = tiny("x");
+  m.nodes[0]!.style = "vlan:b";
+  m.vlans = [
+    { name: "a", ids: [10], color: "blue", subnets: [] },
+    { name: "b", ids: [20], color: "red", subnets: [] },
+    { name: "unused", ids: [30], color: "green", subnets: [] },
+  ];
+  m.trunks = [{ name: "up", vlans: ["a", "b"] }];
+  m.links = [{ id: "l", from: "a", to: "a", lanes: ["a"], trunk: "up", line: 1 }];
+  p.links = [
+    {
+      id: "l",
+      points: [
+        { x: 50, y: 170 },
+        { x: 250, y: 170 },
+      ],
+    },
+  ];
+  const legend = renderSvg(m, p).split('<g class="legend">')[1]!;
+  expect(legend).toContain(">A (10)<");
+  expect(legend).toContain(">B (20)<");
+  expect(legend).not.toContain("Unused");
+  // the set entry is drawn with the trunk stroke
+  expect(legend).toMatch(/stroke="#555" stroke-width="8"\/>\n<text [^>]*>up → a, b<\/text>/);
+});
+
+test("a right-hand legend taller than the diagram moves below it", () => {
+  const [m, p] = tiny("x");
+  m.vlans = Array.from({ length: 12 }, (_, i) => ({ name: `v${i}`, ids: [10 + i], color: "blue", subnets: [] }));
+  m.links = [{ id: "l", from: "a", to: "a", lanes: m.vlans.map((v) => v.name), line: 1 }];
+  m.legend.position = "right";
+  p.links = [
+    {
+      id: "l",
+      points: [
+        { x: 50, y: 170 },
+        { x: 250, y: 170 },
+      ],
+    },
+  ];
+  const y = Number(/<g class="legend">\n<rect x="[\d.]+" y="([\d.]+)"/.exec(renderSvg(m, p))![1]);
+  expect(y).toBeGreaterThanOrEqual(p.height);
+});

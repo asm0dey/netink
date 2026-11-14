@@ -51,7 +51,7 @@ const tint = (c: string): string => {
 };
 
 /** Stroke per lane name: one per VLAN def, plus the fixed kinds. */
-function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
+export function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
   const m = new Map<string, Stroke>([
     ["wire", { stroke: WIRE, w: 2.5 }],
     ["trunk", { stroke: WIRE, w: 8 }],
@@ -59,14 +59,36 @@ function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
     ["allow", { stroke: ALLOW, w: 2, dash: "2 4" }],
   ]);
   let tagged = 0;
+  const seen = new Set<string>(),
+    look = (s: Stroke) => `${s.stroke} ${s.w} ${s.dash ?? ""}`;
   vlans.forEach((v, i) => {
     const stroke = hex(v.color, i),
       t = THEME_TINT[stroke.toUpperCase()] ?? tint(stroke);
-    if (v.ids === "untagged") m.set(v.name, { stroke, w: 4, tint: t });
-    else if (v.name === "lte" || stroke === NAMED.orange) m.set(v.name, { stroke, w: 4, dash: "10 4", tint: t });
-    else m.set(v.name, { stroke, w: 3, dash: tagged++ === 0 ? "7 5" : DASHES[(tagged - 2) % DASHES.length], tint: t });
+    const s: Stroke =
+      v.ids === "untagged"
+        ? { stroke, w: 4, tint: t }
+        : v.name === "lte" || stroke === NAMED.orange
+          ? { stroke, w: 4, dash: "10 4", tint: t }
+          : { stroke, w: 3, dash: tagged++ === 0 ? "7 5" : DASHES[(tagged - 2) % DASHES.length], tint: t };
+    // the same look as an earlier VLAN (same colour at scale): step through the dash list until it is unique
+    for (const d of dashes()) {
+      if (!seen.has(look(s))) break;
+      s.dash = d;
+    }
+    seen.add(look(s));
+    m.set(v.name, s);
   });
   return m;
+}
+
+/** Today's dashes, then generated ones: dash/gap pairs, then the same with one or two dots. Never runs out. */
+function* dashes(): Generator<string> {
+  yield* DASHES;
+  const lens = [2, 4, 6, 8, 10, 12, 16, 20, 24, 30],
+    gaps = [3, 6, 4, 5, 2];
+  for (const dots of ["", " 2 G", " 2 G 2 G"])
+    for (const g of gaps) for (const d of lens) yield `${d} ${g}${dots.replaceAll("G", String(g))}`;
+  for (let d = 31; ; d++) yield `${d} 3`;
 }
 
 const strokeAttrs = (s: Stroke) =>
@@ -176,14 +198,18 @@ function drawNodes(
 }
 
 type Line = { owner: string; lane: string; points: P[] };
-type Entry = { key: string; label: string; sub?: string; lane: string };
+/** `list`: a trunk set's VLANs, wrapped onto continuation rows (`more`, no swatch) when long. */
+type Entry = { key: string; label: string; sub?: string; lane: string; list?: string[]; more?: boolean };
 
 // the router chip label is the only place the model records NAT
 const nats = (ns: MNode[]) => walk(ns).some((n) => n.kind === "router" && n.label.includes("NAT"));
 
 function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]): Entry[] {
   const used = new Set(lines.map((l) => l.lane));
-  const carried = new Set(model.links.flatMap((l) => l.lanes));
+  const carried = new Set([
+    ...model.links.flatMap((l) => l.lanes),
+    ...walk(model.nodes).flatMap((n) => laneOfStyle(n.style) ?? []),
+  ]);
   const kinds: Entry[] = [
     { key: "wire", label: "plain cable", lane: "wire" },
     {
@@ -205,6 +231,9 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
         sub: v.subnets.length ? v.subnets.join(", ") : undefined,
         lane: v.name,
       })),
+    ...model.trunks
+      .filter((t) => model.links.some((l) => l.trunk === t.name))
+      .map((t) => ({ key: t.name, label: `${t.name} → ${t.vlans.join(", ")}`, lane: "trunk", list: t.vlans })),
     ...kinds.filter((k) => used.has(k.lane)),
     ...model.legend.add.map((a) => ({ key: a.text, label: a.text, lane: lanes.has(a.style) ? a.style : "wire" })),
   ];
@@ -219,22 +248,42 @@ function drawLegend(
   lines: Line[],
 ): { svg: string; w: number; h: number } | undefined {
   if (model.legend.mode === "off") return undefined;
-  const entries = legendEntries(model, lanes, lines),
+  const all = legendEntries(model, lanes, lines),
     notes = model.legend.notes;
-  if (!entries.length && !notes.length) return undefined;
-  const right = model.legend.position === "right";
+  if (!all.length && !notes.length) return undefined;
   const ew = (e: Entry) => 56 + textWidth(e.label, 13, true) + (e.sub ? 8 + textWidth(e.sub, 12.5, false) : 0) + 28;
+  // a long trunk set wraps to the width of the other entries (at least 400 px of text)
+  const max = Math.max(400, ...all.filter((e) => !e.list).map((e) => ew(e) - 84));
+  const entries = all.flatMap((e): Entry[] => {
+    if (!e.list) return [e];
+    const rows: string[] = [];
+    let cur = `${e.key} →`;
+    e.list.forEach((v, i) => {
+      const piece = i < e.list!.length - 1 ? `${v},` : v;
+      if (!cur.endsWith("→") && textWidth(`${cur} ${piece}`, 13, true) > max) {
+        rows.push(cur);
+        cur = piece;
+      } else cur = `${cur} ${piece}`;
+    });
+    rows.push(cur);
+    return rows.map((label, i) => ({ ...e, label, more: i > 0 }));
+  });
   const colW = Math.max(...entries.map(ew), 0);
   const noteW = Math.max(...notes.map((n) => textWidth(n, 12.5, false)), 0) + 32;
-  const avail = right ? colW + 32 : Math.max(placed.width - 80, colW + 32, noteW);
-  const cols = Math.max(1, Math.min(entries.length, Math.floor((avail - 32) / Math.max(colW, 1))));
-  const rows = Math.ceil(entries.length / cols);
+  const top = 50,
+    rowH = 26;
+  const shape = (right: boolean) => {
+    const avail = right ? colW + 32 : Math.max(placed.width - 80, colW + 32, noteW);
+    const cols = Math.max(1, Math.min(entries.length, Math.floor((avail - 32) / Math.max(colW, 1))));
+    const rows = Math.ceil(entries.length / cols);
+    return { right, avail, rows, h: top + rows * rowH + (notes.length ? 8 + notes.length * 18 : 0) + 6 };
+  };
+  // a right-hand legend taller than the diagram goes below it instead
+  const r = shape(true),
+    { right, avail, rows, h } = model.legend.position === "right" && r.h <= placed.height ? r : shape(false);
   const x = right ? placed.width : 40,
     y = right ? 110 : placed.height;
   const w = right ? Math.max(colW + 32, noteW) : avail;
-  const top = 50,
-    rowH = 26,
-    h = top + rows * rowH + (notes.length ? 8 + notes.length * 18 : 0) + 6;
   const out = [
     `<g class="legend">`,
     `<rect x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>`,
@@ -245,7 +294,8 @@ function drawLegend(
       ey = y + top + (i % rows) * rowH;
     const s = lanes.get(e.lane)!,
       [x0, x1] = e.lane === "route" ? [ex + 4, ex + 44] : [ex, ex + (e.lane === "allow" ? 38 : 44)];
-    out.push(`<path d="M${f(x0)},${f(ey)} L${f(x1)},${f(ey)}" fill="none" ${strokeAttrs(s)}${markers(e.lane)}/>`);
+    if (!e.more)
+      out.push(`<path d="M${f(x0)},${f(ey)} L${f(x1)},${f(ey)}" fill="none" ${strokeAttrs(s)}${markers(e.lane)}/>`);
     out.push(
       `<text x="${f(ex + 56)}" y="${f(ey + 4.5)}" class="t">${esc(e.label)}${e.sub ? ` <tspan class="s">${esc(e.sub)}</tspan>` : ""}</text>`,
     );
@@ -325,39 +375,55 @@ export function renderSvg(model: Model, placed: Placed): string {
       .filter((n) => n.children.length)
       .map((n) => n.id),
   );
-  /** A label must not touch a leaf box nor cross a container border (inside a container is fine). */
+  /** Rects of the labels placed so far: a later label must not touch them. */
+  const taken: Rect[] = [];
+  /** A label must not touch a leaf box, another label, nor cross a container border (inside a container is fine). */
   const clean = (r: Rect) =>
+    taken.every((t) => !(r.x1 > t.x0 && r.x0 < t.x1 && r.y1 > t.y0 && r.y0 < t.y1)) &&
     [...placed.boxes.values()].every((b) => {
       const meets = r.x1 > b.x && r.x0 < b.x + b.w && r.y1 > b.y && r.y0 < b.y + b.h;
       return !meets || (containers.has(b.id) && r.x0 >= b.x && r.x1 <= b.x + b.w && r.y0 >= b.y && r.y1 <= b.y + b.h);
     });
-  /** Baseline start: the default spot (above-right of `at`), else the first clean spot beside a segment, longest segment first. */
-  const spot = (pts: P[], at: P, s: string): P & { end?: boolean } => {
+  /**
+   * Baseline start: the default spot (above-right of `at`), else the first clean spot beside a segment, longest
+   * segment first, else the same spots moved away from the line in 14 px steps. `dx`/`dy`: the away direction.
+   */
+  type Spot = P & { end?: boolean; dx: number; dy: number };
+  const spot = (pts: P[], at: P, s: string): Spot => {
     const w = textWidth(s, 12, true),
       rect = (q: P): Rect => ({ x0: q.x, y0: q.y - 11, x1: q.x + w, y1: q.y + 3 });
     const segs = pts
       .slice(1)
       .map((b, i) => [pts[i]!, b] as const)
       .sort(([a, b], [c, d]) => Math.hypot(d.x - c.x, d.y - c.y) - Math.hypot(b.x - a.x, b.y - a.y));
-    const options = [
-      { x: at.x + 6, y: at.y - 6 },
+    const options: Spot[] = [
+      { x: at.x + 6, y: at.y - 6, dx: 0, dy: -1 },
       ...segs.flatMap(([a, b]) =>
         STEPS.flatMap((t) => {
           const m = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
           return Math.abs(a.y - b.y) < 0.5
             ? [
-                { x: m.x - w / 2, y: m.y - 6 },
-                { x: m.x - w / 2, y: m.y + 16 },
+                { x: m.x - w / 2, y: m.y - 6, dx: 0, dy: -1 },
+                { x: m.x - w / 2, y: m.y + 16, dx: 0, dy: 1 },
               ]
             : // left of a vertical: drawn end-anchored, so a font narrower than the estimate still hugs the line
               [
-                { x: m.x + 6, y: m.y + 4 },
-                { x: m.x - 6 - w, y: m.y + 4, end: true },
+                { x: m.x + 6, y: m.y + 4, dx: 1, dy: 0 },
+                { x: m.x - 6 - w, y: m.y + 4, end: true, dx: -1, dy: 0 },
               ];
         }),
       ),
     ];
-    return options.find((q) => clean(rect(q))) ?? options[0]!;
+    const q =
+      options.find((q) => clean(rect(q))) ??
+      Array.from({ length: 10 }, (_, k) =>
+        options.map((o) => ({ ...o, x: o.x + o.dx * 14 * (k + 1), y: o.y + o.dy * 14 * (k + 1) })),
+      )
+        .flat()
+        .find((q) => clean(rect(q))) ??
+      options[0]!;
+    taken.push(rect(q));
+    return q;
   };
   const label = (pts: P[], at: P, s: string, colour: string) => {
     const q = spot(pts, at, s);
