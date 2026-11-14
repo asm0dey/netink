@@ -1,4 +1,5 @@
 import type { MNode, Model } from "../types";
+import { inPrefix } from "./addr";
 import { closest } from "./check";
 import { laneOfStyle } from "./style";
 
@@ -8,6 +9,7 @@ export type Slice = {
   around?: string;
   depth?: number;
   path?: [string, string];
+  address?: string;
 };
 
 const top = (id: string) => id.split("/")[0]!;
@@ -58,8 +60,29 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
     keep = new Set(
       [...keep].filter((id) => walk(model.nodes.filter((n) => n.id === id)).some((n) => n.kind === "router")),
     );
+  // devices with a link or a node style on one of these VLANs
+  const carrying = (vs: Set<string>) =>
+    new Set([
+      ...model.links.flatMap((l) => (l.lanes.some((x) => vs.has(x)) ? [top(l.from), top(l.to)] : [])),
+      ...model.nodes.filter((n) => walk([n]).some((c) => vs.has(laneOfStyle(c.style) ?? ""))).map((n) => n.id),
+    ]);
   let only: Set<string> | undefined;
+  if (s.address !== undefined) {
+    const x = s.address,
+      near = (a: string) => inPrefix(a, x) || inPrefix(x, a);
+    // a VLAN no link carries has no lane to draw, so an address in its subnet does not select it
+    const vs = new Set(
+      model.vlans
+        .filter((v) => v.subnets.some(near) && model.links.some((l) => l.lanes.includes(v.name)))
+        .map((v) => v.name),
+    );
+    const own = new Set([...model.nodes.filter((n) => n.addresses?.some(near)).map((n) => n.id), ...carrying(vs)]);
+    if (!own.size) return { error: `nothing has an address in ${x}` };
+    keep = new Set([...keep].filter((id) => own.has(id)));
+    if (vs.size) only = vs;
+  }
   if (s.vlans?.length) {
+    const fromAddress = only;
     only = new Set();
     for (const x of s.vlans) {
       const v = model.vlans.find(
@@ -74,10 +97,8 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       if (!model.links.some((l) => l.lanes.includes(v.name))) return { error: `VLAN ${x} is carried by no link` };
       only.add(v.name);
     }
-    const has = new Set([
-      ...model.links.flatMap((l) => (l.lanes.some((x) => only!.has(x)) ? [top(l.from), top(l.to)] : [])),
-      ...model.nodes.filter((n) => walk([n]).some((c) => only!.has(laneOfStyle(c.style) ?? ""))).map((n) => n.id),
-    ]);
+    for (const v of fromAddress ?? []) only.add(v);
+    const has = carrying(only);
     // a path keeps every device on it, carrying the VLAN or not
     if (!s.path) keep = new Set([...keep].filter((id) => has.has(id)));
   }

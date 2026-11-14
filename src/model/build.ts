@@ -61,7 +61,10 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
   for (const s of stmts) {
     if (s.kind !== "node") continue;
     if (blocks.has(s)) {
-      nodes.push(devs.get(s.id)!.node);
+      const d = devs.get(s.id)!,
+        own = [...d.addresses.map((a) => a.cidr), ...d.leases.map((l) => l.address)];
+      if (own.length) d.node.addresses = own;
+      nodes.push(d.node);
       continue;
     }
     const d = devs.get(s.id);
@@ -91,7 +94,10 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
       sub.push(s.lease);
     }
     if (s.note) sub.push(s.note);
-    nodes.push(mk(s.id, s.type, s.type === "cloud" ? "cloud" : "box", label, sub));
+    nodes.push({
+      ...mk(s.id, s.type, s.type === "cloud" ? "cloud" : "box", label, sub),
+      ...(s.lease ? { addresses: [s.lease] } : {}),
+    });
     if (s.lease) leaseOf.set(s.id, s.lease);
   }
   if (opts.all)
@@ -103,7 +109,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
         let id = base;
         for (let n = 2; nodeType.has(id) || devs.has(id); n++) id = `${base}-${n}`;
         nodeType.set(id, "client");
-        nodes.push(mk(id, "client", "box", l.comment ?? l.address, [l.address]));
+        nodes.push({ ...mk(id, "client", "box", l.comment ?? l.address, [l.address]), addresses: [l.address] });
         leaseOf.set(id, l.address);
       }
 

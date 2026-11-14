@@ -184,3 +184,27 @@ test("--path with --around intersects; with --vlan keeps every path device", () 
   expect(kept(m).sort()).toEqual(["ap1", "core", "internet", "isp"]);
   expect(m.links.some((l) => l.lanes.includes("other"))).toBe(true);
 });
+
+test("--address: an IP keeps the devices owning or containing it; a prefix selects its VLAN", () => {
+  expect(kept(ok(HOME, { address: "192.168.0.1" }))).toContain("core");
+  expect(kept(ok(HOME, { address: "192.168.0.200" }))).toContain("printer");
+  const lan = ok(HOME, { address: "192.168.0.0/24" });
+  expect(lan.slice).toEqual({ vlans: ["lan"] });
+  // hub and pi2 lease addresses in it but sit on no lan lane
+  expect(kept(lan).sort()).toEqual([...kept(ok(HOME, { vlans: ["lan"] })), "hub", "pi2"].sort());
+  consistent(lan);
+});
+
+test("--address on SCaLE: IPv4 subnet owners and its VLAN; IPv6 owner", () => {
+  const scale = loadModel("test/fixtures/scale/network.net");
+  const m = ok(scale, { address: "10.0.4.17" });
+  expect(kept(m)).toEqual(expect.arrayContaining(["br-mdf-01", "ex-mdf-01"]));
+  expect(m.slice?.vlans).toContain("exMDF");
+  expect(kept(ok(scale, { address: "2001:470:f026:503::9" }))).toContain("cf-mdf-01");
+  consistent(m);
+});
+
+test("--address: VLANs it selects join --vlan; nothing matching is an error", () => {
+  expect(ok(HOME, { address: "192.168.0.0/24", vlans: ["guest"] }).slice).toEqual({ vlans: ["guest", "lan"] });
+  expect(sliceModel(HOME, { address: "203.0.113.9" })).toEqual({ error: "nothing has an address in 203.0.113.9" });
+});

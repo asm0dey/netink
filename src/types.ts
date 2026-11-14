@@ -99,6 +99,7 @@ export type MNode = {
   children: MNode[];
   tier: number;
   /** Set on a node standing for several identical leaf siblings: their ids, in model order. */ members?: string[];
+  /** A top-level device's or client's own addresses and leases (CIDR or bare IP), for `--address`. */ addresses?: string[];
 };
 export type MLink = {
   id: string;

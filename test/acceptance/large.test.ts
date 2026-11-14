@@ -77,6 +77,8 @@ test.each([
   [NETBOX, { around: "dmi01-akron-rtr01", depth: 0 }],
   [NETBOX, { vlans: ["Data-dm-akron"] }],
   [SCALE, { path: ["confidf", "expoidf"] }],
+  [SCALE, { address: "10.0.4.17" }],
+  [NETBOX, { address: "10.112.129.0/24" }],
 ] as [string, Slice][])("%s: slice %o renders with no overlaps", async (f, s) => {
   const r = sliceModel(loadModel(f), s);
   if ("error" in r) throw new Error(r.error);

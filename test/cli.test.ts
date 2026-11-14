@@ -433,6 +433,13 @@ test("render --path needs exactly two devices", () => {
   expect(run("render", "--file", HOME, "--path", "ap1", "core", "ap2").code).toBe(2);
   expect(run("render", "--file", HOME, "--path", "ap1", "internet", "--json").code).toBe(0);
 });
+test("render --address: a bad address is a usage error, an unmatched one a slice error", () => {
+  expect(run("render", "--file", HOME, "--address", "999.1.1.1", "--json").code).toBe(2);
+  const r = run("render", "--file", HOME, "--address", "203.0.113.9", "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out)).toMatchObject({ error: "nothing has an address in 203.0.113.9" });
+  expect(run("render", "--file", HOME, "--address", "192.168.0.0/24").code).toBe(0);
+});
 test("render --around draws stubs dashed, labels small", () => {
   const svg = run("render", "--file", HOME, "--around", "core").out;
   expect(svg).toContain('stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"');

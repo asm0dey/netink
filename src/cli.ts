@@ -22,6 +22,7 @@ import { DESC, EPILOGUE, GRAMMAR } from "./help";
 import { layout } from "./layout/elk";
 import { loadModel } from "./load";
 import { manPage } from "./man";
+import { parseCidr } from "./model/addr";
 import { checkModel } from "./model/check";
 import { collapseSiblings } from "./model/collapse";
 import { sliceModel } from "./model/slice";
@@ -178,6 +179,7 @@ type Args = {
   what?: string;
   rsc?: string;
   path?: string | string[];
+  address?: string;
 };
 class Usage extends Error {}
 let crash: unknown; // an error a handler threw, rethrown to run()
@@ -240,8 +242,15 @@ export function cli(argv: string[]): Argv {
             nargs: 2,
             describe: "keep devices on any shortest path between two devices",
           })
+          .option("address", {
+            type: "string",
+            requiresArg: true,
+            describe: "keep devices with an address in or around this IP or prefix, and VLANs whose subnet it meets",
+          })
           .check((a) => {
             if (a.path && a.path.length !== 2) throw new Error("--path takes exactly two devices");
+            if (a.address !== undefined && !parseCidr(a.address))
+              throw new Error(`--address "${a.address}" is not an IP address or prefix`);
             // thrown, not returned: yargs would call .fail() again for the Usage error .fail() throws
             if (!Number.isInteger(a.depth) || a.depth < 0) throw new Error("--depth must be a whole number, 0 or more");
             return true;
@@ -381,6 +390,7 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
       around: a.around,
       depth: a.depth,
       path: a.path as [string, string] | undefined,
+      address: a.address,
     });
     if ("error" in sliced) return fail(json, 1, { ...sliced, file });
     let svg: string, width: number, height: number;
