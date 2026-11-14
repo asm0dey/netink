@@ -4,3 +4,4 @@ node_modules/
 !assets/*.png
 examples/home/network.svg
 dist/
+coverage/
