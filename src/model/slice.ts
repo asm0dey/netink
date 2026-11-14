@@ -14,7 +14,6 @@ const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)
 
 /** Keep the devices the slice asks for (spec §6, flags intersect); a cut-off neighbour linked to a kept one becomes a stub. */
 export function sliceModel(model: Model, s: Slice): { model: Model } | { error: string; hint?: string } {
-  if (s.view && s.view !== "combined") return { error: `view ${s.view} is not supported` };
   const miss = (what: string, x: string, among: string[]) => {
     const c = closest(x, among);
     return { error: `unknown ${what} "${x}"`, ...(c ? { hint: `did you mean ${c}?` } : {}) };
@@ -36,6 +35,10 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ring = ring.flatMap((id) => [...(adj.get(id) ?? [])].filter((n) => !near.has(n) && near.add(n)));
     keep = new Set([...keep].filter((id) => near.has(id)));
   }
+  if (s.view === "routing")
+    keep = new Set(
+      [...keep].filter((id) => walk(model.nodes.filter((n) => n.id === id)).some((n) => n.kind === "router")),
+    );
   let only: Set<string> | undefined;
   if (s.vlans?.length) {
     only = new Set();
@@ -79,18 +82,21 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ),
       links: model.links.flatMap((l) => {
         if (!drawn(l.from) || !drawn(l.to) || (stub.has(top(l.from)) && stub.has(top(l.to)))) return [];
-        const lanes = only ? l.lanes.filter((x) => only!.has(x)) : l.lanes;
+        const lanes = s.view === "physical" ? ["wire"] : only ? l.lanes.filter((x) => only!.has(x)) : l.lanes;
         const { trunk, ...rest } = l;
         return [
           {
-            ...(lanes.length === l.lanes.length ? l : rest),
+            ...(lanes.length === l.lanes.length && s.view !== "physical" ? l : rest),
             from: end(l.from),
             to: end(l.to),
             lanes: lanes.length ? lanes : ["wire"],
           },
         ];
       }),
-      arrows: model.arrows.filter((a) => keep.has(top(a.from)) && keep.has(top(a.to))),
+      arrows:
+        s.view === "physical" || s.view === "vlans"
+          ? []
+          : model.arrows.filter((a) => keep.has(top(a.from)) && keep.has(top(a.to))),
       hints: model.hints.filter((h) =>
         (h.type === "near" ? [h.a, h.b] : h.type === "row" ? h.ids : [h.device]).every((i) => keep.has(top(i))),
       ),

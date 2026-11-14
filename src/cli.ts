@@ -170,6 +170,7 @@ type Args = {
   as?: string;
   all?: boolean;
   collapse?: boolean;
+  view?: "combined" | "physical" | "vlans" | "routing";
   vlan?: string[];
   around?: string;
   depth?: number;
@@ -221,6 +222,10 @@ export function cli(argv: string[]): Argv {
           .option("all", all)
           .option("collapse", { type: "boolean", default: true, describe: "draw identical leaf siblings one by one" })
           .option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" })
+          .option("view", {
+            choices: ["combined", "physical", "vlans", "routing"] as const,
+            describe: "physical: wires only; vlans: no route arrows; routing: routers only",
+          })
           .option("vlan", {
             type: "string",
             array: true,
@@ -363,7 +368,7 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
         });
       return errors.length ? 1 : 0;
     }
-    const sliced = sliceModel(model, { vlans: a.vlan, around: a.around, depth: a.depth });
+    const sliced = sliceModel(model, { view: a.view, vlans: a.vlan, around: a.around, depth: a.depth });
     if ("error" in sliced) return fail(json, 1, { ...sliced, file });
     let svg: string, width: number, height: number;
     try {

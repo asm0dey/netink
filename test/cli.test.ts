@@ -24,7 +24,7 @@ test("check bad dsl", () => {
   expect(r.code).toBe(1);
   const j = JSON.parse(r.out);
   expect(j.ok).toBe(false);
-  expect(j.diags[0].line).toBe(3);
+  expect(j.diags.find((d: { level: string }) => d.level === "error").line).toBe(3);
   expect(run("check", "--file", bad).err).toContain("bad.net:3: error:");
 });
 test("render -o writes svg", () => {
@@ -235,7 +235,7 @@ test("init then add", () => {
   expect(readFileSync(f, "utf8")).toBe("");
   const r = run("device", "add", "d", "--label", "D", "--file", f, "--json");
   expect(r.code).toBe(0);
-  expect(JSON.parse(r.out)).toMatchObject({ ok: true, file: f, line: 1, text: 'device d "D"', diags: [] });
+  expect(JSON.parse(r.out)).toMatchObject({ ok: true, file: f, line: 1, text: 'device d "D"' });
   expect(readFileSync(f, "utf8")).toBe('device d "D"\n');
   // human mode: the written lines on stdout
   expect(run("vlan", "add", "home", "10", "--file", f).out).toBe("vlan home 10\n");

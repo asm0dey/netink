@@ -1,4 +1,4 @@
-import type { Diag, Model, VlanDef } from "../types";
+import type { Diag, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 import { addrKey, inPrefix, parseCidr } from "./addr";
 import type { Dev } from "./device";
 import { laneOfStyle } from "./style";
@@ -66,7 +66,7 @@ export function addressDiags(devs: Iterable<Dev>, vlans: VlanDef[], file: string
  */
 export function checkModel(model: Model): Diag[] {
   const file = model.file ?? "";
-  const out = [...model.diags];
+  const out = [...model.diags, ...(model.usage ?? [])];
   for (const l of model.links) {
     if (!l.inferred) continue;
     const a = [...new Set(l.lanes)].sort(),
@@ -82,4 +82,20 @@ export function checkModel(model: Model): Diag[] {
   }
   const cmp = (x: string, y: string) => (x < y ? -1 : x > y ? 1 : 0);
   return out.sort((x, y) => cmp(x.file, y.file) || x.line - y.line || cmp(x.message, y.message));
+}
+
+/** Warnings for a VLAN no link or node style uses, a top-level device with no link, and a model too big to lay out quickly. */
+export function usageDiags(stmts: Stmt[], nodes: MNode[], links: MLink[], file: string): Diag[] {
+  const out: Diag[] = [];
+  const warn = (line: number, message: string) => out.push({ level: "warning", file, line, message });
+  const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
+  const used = new Set([...links.flatMap((l) => l.lanes), ...walk(nodes).flatMap((n) => laneOfStyle(n.style) ?? [])]);
+  for (const v of stmts)
+    if (v.kind === "vlan" && !used.has(v.name)) warn(v.line, `vlan ${v.name} is defined but carried by no link`);
+  const linked = new Set(links.flatMap((l) => [l.from.split("/")[0]!, l.to.split("/")[0]!]));
+  const line = new Map(stmts.flatMap((s) => (s.kind === "node" ? [[s.id, s.line] as const] : [])));
+  const devices = nodes.filter((n) => n.kind === "device" || n.kind === "client");
+  for (const n of devices) if (!linked.has(n.id)) warn(line.get(n.id) ?? 0, `device ${n.id} has no links`);
+  if (devices.length > 200) warn(0, `${devices.length} devices: layout may be slow; render a slice (--around, --vlan)`);
+  return out;
 }

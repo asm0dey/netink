@@ -96,3 +96,37 @@ for (const [file, around] of [
     consistent(ok(m, { around }));
     consistent(ok(m, { vlans: [m.links.find((l) => l.lanes[0] !== "wire")!.lanes[0]!] }));
   });
+
+test("physical view: wires only, no arrows, no trunk", () => {
+  const m = ok(HOME, { view: "physical" });
+  expect(m.arrows).toEqual([]);
+  expect(m.links.every((l) => l.lanes.join() === "wire" && !l.trunk)).toBe(true);
+  expect(m.nodes.map((n) => n.id)).toEqual(HOME.nodes.map((n) => n.id));
+});
+
+test("vlans view: no arrows, lanes unchanged", () => {
+  const m = ok(HOME, { view: "vlans" });
+  expect(m.arrows).toEqual([]);
+  expect(m.links).toEqual(HOME.links);
+});
+
+test.each(["test/fixtures/scale/network.net", "test/fixtures/netbox/network.net"])(
+  "routing view of %s keeps only router devices, plus stubs",
+  (f) => {
+    const m = ok(loadModel(f), { view: "routing" });
+    const real = m.nodes.filter((n) => n.style !== "stub");
+    expect(real.length).toBeGreaterThan(0);
+    for (const n of real) expect(n.children.some((c) => c.kind === "router")).toBe(true);
+    expect(m.links.length).toBeGreaterThan(0);
+  },
+);
+
+test("routing view of a model with no router is empty", () => {
+  expect(
+    sliceModel(buildModel(parseDsl("device a\ndevice b\nlink a -- b\n", "t.net").stmts, new Map()), {
+      view: "routing",
+    }),
+  ).toEqual({
+    error: "the slice is empty",
+  });
+});

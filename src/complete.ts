@@ -22,7 +22,7 @@ const VALUE_FLAGS = new Set([
 ]);
 const COMMON = ["file", "json", "after", "before", "select-text"];
 // render's slice flags take a value; the rest of render completes nothing
-const RENDER: Record<string, "vlan" | "node"> = { vlan: "vlan", around: "node" };
+const RENDER: Record<string, "vlan" | "node" | "view"> = { vlan: "vlan", around: "node", view: "view" };
 
 /** Names the .net file defines; any failure to read it gives none. */
 function names(file: string): { nodes: MNode[]; vlans: string[]; trunks: string[] } {
@@ -89,6 +89,7 @@ function run(all: string[]): string[] {
   if (w0 === "render") {
     const src = pending && RENDER[pending];
     if (!src) return [];
+    if (src === "view") return out(["combined", "physical", "vlans", "routing"]);
     const { nodes, vlans } = names(file);
     return out(src === "vlan" ? vlans : nodes.map((n) => n.id));
   }

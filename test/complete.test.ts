@@ -94,3 +94,7 @@ test("render slice flags complete VLAN names and device ids", () => {
   expect(c.every((x) => x.startsWith("a"))).toBe(true);
   expect(complete(["render", "--o", "x", ""])).toEqual([]);
 });
+
+test("render --view completes the views", () => {
+  expect(complete(["render", "--view", ""])).toEqual(["combined", "physical", "vlans", "routing"]);
+});

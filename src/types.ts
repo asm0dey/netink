@@ -130,6 +130,7 @@ export type Model = {
   legend: LegendSpec;
   jumps: "arc" | "gap" | "none";
   hints: Hint[];
+  /** Warnings `check` adds to `diags`: unused VLANs, unlinked devices, size. */ usage?: Diag[];
   diags: Diag[] /** the DSL file, for diagnostics */;
   file?: string;
 };

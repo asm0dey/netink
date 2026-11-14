@@ -68,6 +68,10 @@ test.each([SCALE, NETBOX])("%s: collapsed render has no overlaps", async (f) => 
 });
 
 test.each([
+  [SCALE, { view: "physical" }],
+  [SCALE, { view: "routing" }],
+  [NETBOX, { view: "physical" }],
+  [NETBOX, { view: "routing" }],
   [SCALE, { around: "ex-mdf-01" }],
   [SCALE, { vlans: ["exSpkr"] }],
   [NETBOX, { around: "dmi01-akron-rtr01", depth: 0 }],

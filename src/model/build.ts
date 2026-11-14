@@ -1,6 +1,6 @@
 import type { Diag, Endpoint, Hint, Iface, LegendSpec, MArrow, MLink, MNode, Model, Stmt, VlanDef } from "../types";
 import { parseCidr } from "./addr";
-import { addressDiags, closest } from "./check";
+import { addressDiags, closest, usageDiags } from "./check";
 import { buildDevice, type Dev, mk, type Radio } from "./device";
 import { deriveArrows } from "./l3";
 
@@ -541,6 +541,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
     jumps: of("style").at(-1)?.value ?? "arc",
     hints: of("hint").map((s): Hint => normHint(s.hint)),
     diags,
+    usage: usageDiags(stmts, nodes, out, file),
     ...(opts.file !== undefined ? { file: opts.file } : {}),
   };
 }

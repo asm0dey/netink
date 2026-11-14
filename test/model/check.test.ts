@@ -3,18 +3,20 @@ import { parseDsl } from "../../src/dsl/parse";
 import { buildModel, loadModel } from "../../src/load";
 import { checkModel } from "../../src/model/check";
 import { importRsc } from "../../src/rsc/import";
+import type { Diag } from "../../src/types";
 
 const RSC = () =>
   [1, 2, 3]
     .map((n) => `/interface bridge port add bridge=bridge interface=ether${n}`)
     .join("\n")
     .replace(/^/, "/interface bridge add name=bridge\n");
+const quiet = (d: Diag[]) => d.filter((x) => !/carried by no link|has no links/.test(x.message));
 function check(dsl: string) {
   const { stmts } = parseDsl(dsl, "t.net");
   const facts = new Map(
     stmts.filter((s) => s.kind === "import").map((s) => [s.as, importRsc(RSC(), `${s.as}.rsc`, s.as)] as const),
   );
-  return checkModel(buildModel(stmts, facts, { file: "t.net" }));
+  return quiet(checkModel(buildModel(stmts, facts, { file: "t.net" })));
 }
 const HEAD = `imports rsc core.rsc as core, ap1.rsc as ap1\nvlan lan untagged color green "10.0.0.0/24"\nvlan guest 50 color blue "10.50.0.0/24"\n`;
 
@@ -98,8 +100,8 @@ const one = (dsl: string) => {
       dsl,
     "t.net",
   );
-  return checkModel(
-    buildModel(stmts, new Map([["core", importRsc(CORE50, "core.rsc", "core")]]), { file: "t.net" }),
+  return quiet(
+    checkModel(buildModel(stmts, new Map([["core", importRsc(CORE50, "core.rsc", "core")]]), { file: "t.net" })),
   ).filter((d) => d.level === "warning");
 };
 
@@ -136,4 +138,35 @@ test("bridge address outside the VLAN its style came from warns", () => {
   );
   expect(w).toHaveLength(1);
   expect(w[0]).toMatchObject({ line: 3 });
+});
+
+const W = (dsl: string) =>
+  checkModel(buildModel(parseDsl(dsl, "t.net").stmts, new Map(), { file: "t.net" })).map(
+    (d) => `${d.line} ${d.message}`,
+  );
+
+test("warns on a VLAN no link or node style uses, and on an unlinked device", () => {
+  expect(
+    W(
+      'vlan a 10 color red "10.0.0.0/24"\nvlan b 20 color blue "10.1.0.0/24"\ncloud net\ndevice d\ndevice e\nlink net -- d vlans a\n',
+    ),
+  ).toEqual(["2 vlan b is defined but carried by no link", "5 device e has no links"]);
+});
+
+test("warns once about a size over 200 devices", () => {
+  const dsl = Array.from({ length: 201 }, (_, i) => `device d${i}\nlink d${i} -- d${i === 0 ? 1 : 0}\n`).join("");
+  expect(W(dsl).filter((m) => m.includes("layout may be slow"))).toEqual([
+    "0 201 devices: layout may be slow; render a slice (--around, --vlan)",
+  ]);
+});
+
+test.each([
+  "examples/home/network.net",
+  "examples/home/network-dsl-only.net",
+  "test/fixtures/scale/network.net",
+  "test/fixtures/netbox/network.net",
+])("%s: no usage warnings", (f) => {
+  expect(checkModel(loadModel(f)).filter((d) => /carried by no link|has no links|layout may/.test(d.message))).toEqual(
+    [],
+  );
 });
