@@ -11,6 +11,8 @@ const ok = (m: Model, s: Slice): Model => {
   if ("error" in r) throw new Error(r.error);
   return r.model;
 };
+/** The model without its subtitle, which echoes the slice as typed. */
+const body = ({ subtitle: _, ...m }: Model) => m;
 const kept = (m: Model) => m.nodes.filter((n) => n.style !== "stub").map((n) => n.id);
 const stubs = (m: Model) => m.nodes.filter((n) => n.style === "stub").map((n) => n.id);
 const ids = (ns: MNode[]): string[] => ns.flatMap((n) => [n.id, ...ids(n.children)]);
@@ -42,7 +44,7 @@ test("--around core keeps core and its neighbours; the next ring are stubs", () 
 });
 
 test("a child id means its device; --depth 0 keeps only it", () => {
-  expect(ok(HOME, { around: "core/ether2" })).toEqual(ok(HOME, { around: "core" }));
+  expect(body(ok(HOME, { around: "core/ether2" }))).toEqual(body(ok(HOME, { around: "core" })));
   const m = ok(HOME, { around: "core", depth: 0 });
   expect(kept(m)).toEqual(["core"]);
   expect(stubs(m).sort()).toEqual(["ap1", "ap2", "isp", "media", "printer", "switch", "tv"]);
@@ -51,7 +53,7 @@ test("a child id means its device; --depth 0 keeps only it", () => {
 
 test("--vlan by name or id: kept links carry only that VLAN", () => {
   const m = ok(HOME, { vlans: ["guest"] });
-  expect(ok(HOME, { vlans: ["50"] })).toEqual(m);
+  expect(body(ok(HOME, { vlans: ["50"] }))).toEqual(body(m));
   expect(kept(m).sort()).toEqual(["ap1", "ap2", "core"]);
   expect(m.nodes.find((n) => n.id === "core")!.children).toEqual(HOME.nodes.find((n) => n.id === "core")!.children);
   expect([...new Set(m.links.flatMap((l) => l.lanes))].sort()).toEqual(["guest", "other"]);
@@ -119,6 +121,15 @@ test("legend notes stay in the full picture and leave every slice and view", () 
     expect(ok(HOME, s).legend.notes).toEqual([]);
 });
 
+test("a slice names itself in the subtitle; the full picture keeps the file's own", () => {
+  expect(ok(HOME, {}).subtitle).toBe(HOME.subtitle);
+  expect(ok(HOME, { view: "physical", around: "core" }).subtitle).toStartWith("physical view · around core (depth 1)");
+  expect(ok(HOME, { vlans: ["guest"], address: "10.50.0.0/24" }).subtitle).toStartWith(
+    "VLAN guest · address 10.50.0.0/24",
+  );
+  expect(ok(HOME, { path: ["core", "isp"] }).subtitle).toStartWith("path core ↔ isp");
+});
+
 test("vlans view: no arrows, lanes unchanged", () => {
   const m = ok(HOME, { view: "vlans" });
   expect(m.arrows).toEqual([]);
@@ -179,7 +190,7 @@ test("--path keeps every shortest path; a child id means its device", () => {
     new Map(),
   );
   expect(kept(ok(dia, { path: ["a", "d"] })).sort()).toEqual(["a", "b", "c", "d"]);
-  expect(ok(HOME, { path: ["core/ether2", "internet"] })).toEqual(ok(HOME, { path: ["core", "internet"] }));
+  expect(body(ok(HOME, { path: ["core/ether2", "internet"] }))).toEqual(body(ok(HOME, { path: ["core", "internet"] })));
 });
 
 test("--path errors: unknown id hints, disconnected devices have no path", () => {

@@ -6,7 +6,7 @@
 </defs>
 <rect width="16466" height="530" fill="#fff"/>
 <text x="40" y="46" font-size="26" font-weight="700">NetBox demo data</text>
-<text x="40" y="72" class="s" font-size="14">netbox-community/netbox-demo-data v4.7</text>
+<text x="40" y="72" class="s" font-size="14">routing view · netbox-community/netbox-demo-data v4.7</text>
 <rect x="40" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
 <rect x="275.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
 <rect x="287.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>

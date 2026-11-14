@@ -22,6 +22,18 @@ const plain = (n: MNode): MNode => ({
   children: n.children.filter((c) => c.kind !== "iface" && c.kind !== "router").map(plain),
 });
 
+/** The slice in words, for the subtitle: "physical view · around lte (depth 1) · VLAN lte". */
+export const describe = (s: Slice): string =>
+  [
+    s.view && s.view !== "combined" ? `${s.view} view` : "",
+    s.around !== undefined ? `around ${s.around} (depth ${s.depth ?? 1})` : "",
+    s.vlans?.length ? `VLAN ${s.vlans.join(", ")}` : "",
+    s.path ? `path ${s.path[0]} ↔ ${s.path[1]}` : "",
+    s.address !== undefined ? `address ${s.address}` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+
 /** Keep the devices the slice asks for (spec §6, flags intersect); a cut-off neighbour linked to a kept one becomes a stub. */
 export function sliceModel(model: Model, s: Slice): { model: Model } | { error: string; hint?: string } {
   const miss = (what: string, x: string, among: string[]) => {
@@ -132,6 +144,7 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ...(only ? { slice: { vlans: [...only] } } : {}),
       // a note is free text about the whole network: it may name what the slice or view leaves out
       legend: sliced ? { ...model.legend, notes: [] } : model.legend,
+      ...(sliced ? { subtitle: [describe(s), model.subtitle].filter(Boolean).join(" · ") } : {}),
       nodes: model.nodes.flatMap((n) =>
         keep.has(n.id)
           ? [s.view === "physical" ? plain(n) : n]
