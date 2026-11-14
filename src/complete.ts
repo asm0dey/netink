@@ -21,6 +21,8 @@ const VALUE_FLAGS = new Set([
   ...NOUNS.flatMap((n) => n.flags.filter((f) => f.type === "string").map((f) => f.name)),
 ]);
 const COMMON = ["file", "json", "after", "before", "select-text"];
+// render's slice flags take a value; the rest of render completes nothing
+const RENDER: Record<string, "vlan" | "node"> = { vlan: "vlan", around: "node" };
 
 /** Names the .net file defines; any failure to read it gives none. */
 function names(file: string): { nodes: MNode[]; vlans: string[]; trunks: string[] } {
@@ -77,13 +79,19 @@ function run(all: string[]): string[] {
     }
     if (w.startsWith("--")) {
       const n = w.slice(2);
-      if (!n.includes("=") && VALUE_FLAGS.has(n)) pending = n;
+      if (!n.includes("=") && (VALUE_FLAGS.has(n) || (pos[0] === "render" && n in RENDER))) pending = n;
     } else pos.push(w);
   }
   const out = (xs: string[]) => [...new Set(xs)].filter((x) => x.startsWith(cur));
   const first = NOUNS.map((n) => n.name.split(" ")[0]!);
   if (pos.length === 0 && !pending) return cur.startsWith("-") ? [] : out([...COMMANDS, ...first]);
   const w0 = pos[0]!;
+  if (w0 === "render") {
+    const src = pending && RENDER[pending];
+    if (!src) return [];
+    const { nodes, vlans } = names(file);
+    return out(src === "vlan" ? vlans : nodes.map((n) => n.id));
+  }
   if (!first.includes(w0)) return [];
   const second = NOUNS.filter((n) => n.name.startsWith(`${w0} `)).map((n) => n.name.split(" ")[1]!);
   let noun: Noun | undefined = NOUNS.find((n) => n.name === w0);

@@ -416,3 +416,20 @@ test("show links --json carries trunk and expanded lanes", () => {
   const l = JSON.parse(run("show", "links", "--file", f, "--json").out);
   expect(l[0]).toMatchObject({ trunk: "up", lanes: ["a", "b"] });
 });
+
+test("render slices: a negative --depth is a usage error, an unknown device a slice error", () => {
+  expect(run("render", "--file", HOME, "--depth", "-1", "--json").code).toBe(2);
+  const r = run("render", "--file", HOME, "--around", "nope", "--json");
+  expect(r.code).toBe(1);
+  expect(JSON.parse(r.out)).toEqual({
+    error: 'unknown device "nope"',
+    file: HOME,
+    line: 0,
+    hint: "did you mean core?",
+  });
+});
+test("render --around draws stubs dashed, labels small", () => {
+  const svg = run("render", "--file", HOME, "--around", "core").out;
+  expect(svg).toContain('stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"');
+  expect(svg).toMatch(/<text [^>]*class="s"[^>]*>internet</);
+});

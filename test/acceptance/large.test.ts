@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
 import { loadModel } from "../../src/load";
 import { collapseSiblings } from "../../src/model/collapse";
+import { type Slice, sliceModel } from "../../src/model/slice";
 import { laneOfStyle } from "../../src/model/style";
 import { esc, laneStyles, renderSvg } from "../../src/render/svg";
 import type { MNode, Model, Placed } from "../../src/types";
@@ -63,6 +64,20 @@ test.each([SCALE, NETBOX])("%s: full render has no overlaps", async (f) => {
 test.each([SCALE, NETBOX])("%s: collapsed render has no overlaps", async (f) => {
   const m = collapseSiblings(loadModel(f)),
     p = await layout(m);
+  expect(overlaps(renderSvg(m, p), p)).toEqual([]);
+});
+
+test.each([
+  [SCALE, { around: "ex-mdf-01" }],
+  [SCALE, { vlans: ["exSpkr"] }],
+  [NETBOX, { around: "dmi01-akron-rtr01", depth: 0 }],
+  [NETBOX, { vlans: ["Data-dm-akron"] }],
+] as [string, Slice][])("%s: slice %o renders with no overlaps", async (f, s) => {
+  const r = sliceModel(loadModel(f), s);
+  if ("error" in r) throw new Error(r.error);
+  const m = collapseSiblings(r.model),
+    p = await layout(m);
+  if (s.around) expect(m.nodes.some((n) => n.style === "stub")).toBe(true);
   expect(overlaps(renderSvg(m, p), p)).toEqual([]);
 });
 

@@ -87,3 +87,10 @@ test("trunk names for --trunk", () => {
   writeFileSync(f, "vlan a 10\ncloud x\ncloud y\ntrunk up vlans a\nlink x -- y trunk up\n");
   expect(complete(["link", "set", "x", "y", "--trunk", "", "--file", f])).toEqual(["up"]);
 });
+test("render slice flags complete VLAN names and device ids", () => {
+  expect(complete(["render", "--file", DSL, "--vlan", ""])).toEqual(["lan", "guest", "lte"]);
+  const c = complete(["render", "--around", "a", "--file", DSL]);
+  expect(c).toContain("ap1");
+  expect(c.every((x) => x.startsWith("a"))).toBe(true);
+  expect(complete(["render", "--o", "x", ""])).toEqual([]);
+});

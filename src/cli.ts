@@ -24,6 +24,7 @@ import { loadModel } from "./load";
 import { manPage } from "./man";
 import { checkModel } from "./model/check";
 import { collapseSiblings } from "./model/collapse";
+import { sliceModel } from "./model/slice";
 import { renderSvg } from "./render/svg";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
@@ -169,6 +170,9 @@ type Args = {
   as?: string;
   all?: boolean;
   collapse?: boolean;
+  vlan?: string[];
+  around?: string;
+  depth?: number;
   o?: string;
   what?: string;
   rsc?: string;
@@ -216,7 +220,20 @@ export function cli(argv: string[]): Argv {
         y
           .option("all", all)
           .option("collapse", { type: "boolean", default: true, describe: "draw identical leaf siblings one by one" })
-          .option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" }),
+          .option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" })
+          .option("vlan", {
+            type: "string",
+            array: true,
+            requiresArg: true,
+            describe: "keep devices carrying this VLAN (name or id; repeatable)",
+          })
+          .option("around", { type: "string", requiresArg: true, describe: "keep devices near this device" })
+          .option("depth", { type: "number", default: 1, describe: "links from --around to keep" })
+          .check((a) => {
+            // thrown, not returned: yargs would call .fail() again for the Usage error .fail() throws
+            if (!Number.isInteger(a.depth) || a.depth < 0) throw new Error("--depth must be a whole number, 0 or more");
+            return true;
+          }),
       go((a) => render(a, "render")),
     )
     .command(
@@ -346,9 +363,11 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
         });
       return errors.length ? 1 : 0;
     }
+    const sliced = sliceModel(model, { vlans: a.vlan, around: a.around, depth: a.depth });
+    if ("error" in sliced) return fail(json, 1, { ...sliced, file });
     let svg: string, width: number, height: number;
     try {
-      const drawn = a.collapse === false ? model : collapseSiblings(model);
+      const drawn = a.collapse === false ? sliced.model : collapseSiblings(sliced.model);
       svg = renderSvg(drawn, await layout(drawn));
       // the SVG's own size: the legend can make it larger than the layout
       const m = /^<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(svg)!;

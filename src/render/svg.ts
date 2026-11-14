@@ -195,6 +195,7 @@ function drawNodes(
       const c = lane(n.style)?.stroke ?? lanes.get(laneOf.get(n.id) ?? "")?.stroke ?? ALLOW;
       rect(6, lane(n.style)?.tint ?? TINT[n.style] ?? "#fff", { stroke: c, w: 1.5, dash: "6 4" });
     } else if (n.style === "spare") rect(6, "#F5F5F5", { stroke: "#999", w: 1.5, dash: "4 3" });
+    else if (n.style === "stub") rect(6, "#fff", { stroke: "#9E9E9E", w: 1.5, dash: "4 3" });
     else if (n.kind === "radio" && lane(n.style)?.tint)
       rect(6, lane(n.style)!.tint!, { stroke: lane(n.style)!.stroke, w: 1.5 }); // a use-tag radio chip
     else if (n.style === "dev") rect(10, TINT.dev, { stroke: "#333", w: 2 });
@@ -208,7 +209,7 @@ function drawNodes(
       anchor = centred ? ' text-anchor="middle"' : "";
     const ty = n.kind === "cloud" ? y + h / 2 + 5 - 8 * n.sub.length : y + (n.kind === "router" ? h / 2 + 5 : 24);
     const h2 = ` stroke="${bg}" stroke-width="3" stroke-linejoin="round" paint-order="stroke"`;
-    texts.push(text(tx, ty, n.label, `class="h"${anchor}${labelFill}${h2}`));
+    texts.push(text(tx, ty, n.label, `class="${n.style === "stub" ? "s" : "h"}"${anchor}${labelFill}${h2}`));
     n.sub.forEach((s, i) => {
       texts.push(text(tx, ty + 17 * (i + 1), s, `class="s"${anchor}${h2}`));
     });
