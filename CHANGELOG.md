@@ -2,7 +2,7 @@
 
 All notable changes to netink are listed here. Versions follow [semver](https://semver.org/).
 
-## [0.1.0] - unreleased
+## [0.1.0] - 2026-11-14
 
 First release.
 
