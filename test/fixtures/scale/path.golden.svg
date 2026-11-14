@@ -1,104 +1,104 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2574" height="2808" viewBox="0 0 2574 2808" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
+<svg xmlns="http://www.w3.org/2000/svg" width="2574" height="3096" viewBox="0 0 2574 3096" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
 <defs>
 <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
 <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1565C0"/></marker>
 <style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>
 </defs>
-<rect width="2574" height="2808" fill="#fff"/>
+<rect width="2574" height="3096" fill="#fff"/>
 <text x="40" y="46" font-size="26" font-weight="700">SCaLE expo network</text>
 <text x="40" y="72" class="s" font-size="14">path confidf ↔ expoidf · socallinuxexpo/scale-network, full size</text>
 <rect x="2417.3" y="110" width="115.8" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="180" y="208" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="180" y="208" width="2342.5" height="621" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
 <rect x="2470.7" y="206" width="9" height="4" fill="#FAFAFA"/>
-<rect x="291.5" y="651" width="9" height="4" fill="#FAFAFA"/>
-<rect x="2234.9" y="651" width="14" height="4" fill="#FAFAFA"/>
+<rect x="291.5" y="827" width="9" height="4" fill="#FAFAFA"/>
+<rect x="2234.9" y="827" width="14" height="4" fill="#FAFAFA"/>
 <rect x="2238.7" y="260" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
 <rect x="2435.3" y="376" width="9" height="4" fill="#FDECEA"/>
 <rect x="2250.7" y="296" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="1291.3,359 1311.3,340 1474.8,340 1494.8,359 1474.8,378 1311.3,378" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="2404.5" y="443" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="243" y="603" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="2188.9" y="603" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="192" y="443" width="208" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1302" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="640.5" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="861" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1963.5" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#649DAE" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1081.5" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1522.5" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1743" y="451" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="2184" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#0000ff" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="420" y="443" width="200.5" height="70" rx="6" fill="#fff" stroke="#aa3a0a" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="40" y="723" width="1754.2" height="405" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="291.5" y="721" width="9" height="4" fill="#FAFAFA"/>
-<rect x="1013.4" y="1126" width="14" height="4" fill="#FAFAFA"/>
-<rect x="52" y="775" width="232" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="163.5" y="891" width="9" height="4" fill="#FDECEA"/>
-<rect x="64" y="811" width="208" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
-<polygon points="333.5,874 353.5,855 517,855 537,874 517,893 353.5,893" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="132.7" y="968" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="967.4" y="1078" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1140.7" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="479.2" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="699.7" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="920.2" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1361.2" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1581.7" y="968" width="200.5" height="70" rx="6" fill="#fff" stroke="#B68F0B" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="258.7" y="976" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="508.7" y="1292" width="260.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="2165.7" y="1188" width="200.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="1500.2" y="1188" width="145" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="809.2" y="1292" width="470.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="2193.7" y="998.3" width="96.3" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="972.3" y="1200" width="96.3" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1685.2" y="1188" width="440.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<rect x="290.7" y="1292" width="178" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
-<path d="M740.8,513 L740.8,583 L2210.1,583 L2210.1,603" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M961.3,513 L961.3,573 L2220.7,573 L2220.7,603" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
-<path d="M1181.8,513 L1181.8,563 L2231.3,563 L2231.3,603" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
-<path d="M1402.3,513 L1402.3,553 L2241.9,553 L2241.9,603" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M2475.2,148 L2475.2,443" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
-<path d="M2439.8,366 L2439.8,443" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
-<path d="M1622.8,513 L1622.8,543 L2252.5,543 L2252.5,603" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
-<path d="M1843.3,505 L1843.3,533 L2263.1,533 L2263.1,603" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
-<path d="M2063.8,513 L2063.8,523 L2273.7,523 L2273.7,603" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M2284.3,513 L2284.3,603" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
-<path d="M520.3,513 L520.3,593 L2199.5,593 L2199.5,603" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
-<path d="M579.4,1038 L579.4,1058 L993.9,1058 L993.9,1078" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
-<path d="M799.9,1038 L799.9,1048 L1007.2,1048 L1007.2,1078" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M1020.4,1038 L1020.4,1078" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
-<path d="M1240.9,1038 L1240.9,1048 L1033.7,1048 L1033.7,1078" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
-<path d="M1461.4,1038 L1461.4,1058 L1046.9,1058 L1046.9,1078" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M1681.9,1038 L1681.9,1068 L1060.2,1068 L1060.2,1078" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
-<path d="M358.9,1030 L358.9,1068 L980.7,1068 L980.7,1078" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
-<path d="M296,641 L296,908 L203.3,908 L203.3,968" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M296,513 L296,603" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M168,881 L168,968" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
-<path d="M1020.4,1238 L1020.4,1262 L639,1262 L639,1292" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M2265.9,1036.3 L2265.9,1188" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M2217.8,1036.3 L2217.8,1148 L1572.7,1148 L1572.7,1188" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M1044.5,1238 L1044.5,1292" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M2241.9,641 L2241.9,998.3" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M1020.4,1116 L1020.4,1200" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M2241.9,1036.3 L2241.9,1158 L1905.4,1158 L1905.4,1188" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M996.4,1238 L996.4,1252 L379.7,1252 L379.7,1292" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<path d="M1309.8,378 L1309.8,393 L296,393 L296,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1402.3,378 L1402.3,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1346.8,378 L1346.8,413 L740.8,413 L740.8,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1365.3,378 L1365.3,423 L961.3,423 L961.3,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1457.8,378 L1457.8,403 L2063.8,403 L2063.8,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1383.8,378 L1383.8,433 L1181.8,433 L1181.8,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1420.8,378 L1420.8,423 L1622.8,423 L1622.8,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1439.3,378 L1439.3,413 L1843.3,413 L1843.3,451" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1476.3,378 L1476.3,393 L2284.3,393 L2284.3,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1328.3,378 L1328.3,403 L520.3,403 L520.3,443" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M460.7,893 L460.7,928 L1240.9,928 L1240.9,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M384.4,893 L384.4,958 L579.4,958 L579.4,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M409.8,893 L409.8,948 L799.9,948 L799.9,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M435.2,893 L435.2,938 L1020.4,938 L1020.4,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M486.1,893 L486.1,918 L1461.4,918 L1461.4,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M511.5,893 L511.5,908 L1681.9,908 L1681.9,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M358.9,893 L358.9,976" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<rect x="2404.5" y="507" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="243" y="779" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2188.9" y="779" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="192" y="507" width="208" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1302" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="640.5" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="861" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1963.5" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#649DAE" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1081.5" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1522.5" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1743" y="515" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="2184" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#0000ff" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="420" y="507" width="200.5" height="70" rx="6" fill="#fff" stroke="#aa3a0a" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="40" y="899" width="1754.2" height="517" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="291.5" y="897" width="9" height="4" fill="#FAFAFA"/>
+<rect x="1013.4" y="1414" width="14" height="4" fill="#FAFAFA"/>
+<rect x="52" y="951" width="232" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="163.5" y="1067" width="9" height="4" fill="#FDECEA"/>
+<rect x="64" y="987" width="208" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<polygon points="333.5,1050 353.5,1031 517,1031 537,1050 517,1069 353.5,1069" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="132.7" y="1224" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="967.4" y="1366" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1140.7" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="479.2" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="699.7" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="920.2" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1361.2" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1581.7" y="1224" width="200.5" height="70" rx="6" fill="#fff" stroke="#B68F0B" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="258.7" y="1232" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="508.7" y="1580" width="260.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="2165.7" y="1476" width="200.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="1500.2" y="1476" width="145" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="809.2" y="1580" width="470.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="2193.7" y="1258.3" width="96.3" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="972.3" y="1488" width="96.3" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1685.2" y="1476" width="440.5" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="290.7" y="1580" width="178" height="54" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<path d="M740.8,577 L740.8,743 L2210.1,743 L2210.1,779" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M961.3,577 L961.3,717 L2220.7,717 L2220.7,779" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1181.8,577 L1181.8,691 L2231.3,691 L2231.3,779" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M1402.3,577 L1402.3,665 L2241.9,665 L2241.9,779" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M2475.2,148 L2475.2,507" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M2439.8,366 L2439.8,507" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M1622.8,577 L1622.8,639 L2252.5,639 L2252.5,779" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1843.3,569 L1843.3,613 L2263.1,613 L2263.1,779" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M2063.8,577 L2063.8,587 L2273.7,587 L2273.7,779" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M2284.3,577 L2284.3,779" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M520.3,577 L520.3,769 L2199.5,769 L2199.5,779" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M579.4,1294 L579.4,1330 L993.9,1330 L993.9,1366" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M799.9,1294 L799.9,1304 L1007.2,1304 L1007.2,1366" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M1020.4,1294 L1020.4,1366" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M1240.9,1294 L1240.9,1304 L1033.7,1304 L1033.7,1366" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1461.4,1294 L1461.4,1330 L1046.9,1330 L1046.9,1366" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M1681.9,1294 L1681.9,1356 L1060.2,1356 L1060.2,1366" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M358.9,1286 L358.9,1356 L980.7,1356 L980.7,1366" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M296,817 L296,1084 L203.3,1084 L203.3,1224" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M296,577 L296,779" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M168,1057 L168,1224" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M1020.4,1526 L1020.4,1566 L639,1566 L639,1580" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M2265.9,1296.3 L2265.9,1476" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M2217.8,1296.3 L2217.8,1436 L1572.7,1436 L1572.7,1476" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M1044.5,1526 L1044.5,1580" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M2241.9,817 L2241.9,1258.3" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M1020.4,1404 L1020.4,1488" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M2241.9,1296.3 L2241.9,1462 L1905.4,1462 L1905.4,1476" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M996.4,1526 L996.4,1540 L379.7,1540 L379.7,1580" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M1309.8,378 L1309.8,393 L296,393 L296,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1402.3,378 L1402.3,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1346.8,378 L1346.8,445 L740.8,445 L740.8,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1365.3,378 L1365.3,471 L961.3,471 L961.3,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1457.8,378 L1457.8,419 L2063.8,419 L2063.8,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1383.8,378 L1383.8,497 L1181.8,497 L1181.8,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1420.8,378 L1420.8,471 L1622.8,471 L1622.8,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1439.3,378 L1439.3,445 L1843.3,445 L1843.3,515" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1476.3,378 L1476.3,393 L2284.3,393 L2284.3,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1328.3,378 L1328.3,419 L520.3,419 L520.3,507" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M460.7,1069 L460.7,1136 L1240.9,1136 L1240.9,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M384.4,1069 L384.4,1214 L579.4,1214 L579.4,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M409.8,1069 L409.8,1188 L799.9,1188 L799.9,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M435.2,1069 L435.2,1162 L1020.4,1162 L1020.4,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M486.1,1069 L486.1,1110 L1461.4,1110 L1461.4,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M511.5,1069 L511.5,1084 L1681.9,1084 L1681.9,1224" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M358.9,1069 L358.9,1232" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <text x="2475.2" y="134" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">br-mdf-01</text>
 <text x="194" y="232" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">EX-MDF-01</text>
 <text x="194" y="249" class="s" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:103::1</text>
@@ -107,448 +107,448 @@
 <text x="2264.7" y="337" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.4.2/24</text>
 <text x="2264.7" y="354" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:104::2/64</text>
 <text x="1393" y="364" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="2457.5" y="467" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
-<text x="296" y="627" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
-<text x="2241.9" y="627" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/2</text>
-<text x="206" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
-<text x="206" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.1/24</text>
-<text x="206" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::1/64</text>
-<text x="1316" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan103</text>
-<text x="1316" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.3.1/24</text>
-<text x="1316" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:103::1/64</text>
-<text x="654.5" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan100</text>
-<text x="654.5" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.128.1/21</text>
-<text x="654.5" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:100::1/64</text>
-<text x="875" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan101</text>
-<text x="875" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.136.1/21</text>
-<text x="875" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:101::1/64</text>
-<text x="1977.5" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan110</text>
-<text x="1977.5" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.10.1/24</text>
-<text x="1977.5" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:110::1/64</text>
-<text x="1095.5" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan102</text>
-<text x="1095.5" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.2.1/24</text>
-<text x="1095.5" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:102::1/64</text>
-<text x="1536.5" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan105</text>
-<text x="1536.5" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.5.1/24</text>
-<text x="1536.5" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:105::1/64</text>
-<text x="1757" y="475" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan107</text>
-<text x="1757" y="492" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:107::1/64</text>
-<text x="2198" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan112</text>
-<text x="2198" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.144.1/20</text>
-<text x="2198" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:112::1/64</text>
-<text x="434" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan499</text>
-<text x="434" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.1.0.1/24</text>
-<text x="434" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:499::1/64</text>
-<text x="54" y="747" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">CF-MDF-01</text>
-<text x="54" y="764" class="s" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:503::1</text>
-<text x="66" y="799" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="78" y="835" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
-<text x="78" y="852" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.2/24</text>
-<text x="78" y="869" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::2/64</text>
-<text x="435.2" y="879" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="185.7" y="992" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
-<text x="1020.4" y="1102" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
-<text x="1154.7" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan503</text>
-<text x="1154.7" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.3.1/24</text>
-<text x="1154.7" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:503::1/64</text>
-<text x="493.2" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan500</text>
-<text x="493.2" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.128.1/21</text>
-<text x="493.2" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:500::1/64</text>
-<text x="713.7" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan501</text>
-<text x="713.7" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.136.1/21</text>
-<text x="713.7" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:501::1/64</text>
-<text x="934.2" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan502</text>
-<text x="934.2" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.2.1/24</text>
-<text x="934.2" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:502::1/64</text>
-<text x="1375.2" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan505</text>
-<text x="1375.2" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.5.1/24</text>
-<text x="1375.2" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:505::1/64</text>
-<text x="1595.7" y="992" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan506</text>
-<text x="1595.7" y="1009" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.6.1/24</text>
-<text x="1595.7" y="1026" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:506::1/64</text>
-<text x="272.7" y="1000" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan507</text>
-<text x="272.7" y="1017" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:507::1/64</text>
-<text x="522.7" y="1316" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4× devices</text>
-<text x="522.7" y="1333" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">noc, avswitch, room103, room104</text>
-<text x="2179.7" y="1212" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3× devices</text>
-<text x="2179.7" y="1229" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">nw-idf, ne-idf, regdesk</text>
-<text x="1572.7" y="1212" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expo-catwalk</text>
-<text x="823.2" y="1316" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× rm</text>
-<text x="823.2" y="1333" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm105–107, rm207, rm208, rm211, rm215, rm209-210, rm101-102</text>
-<text x="2241.9" y="1022.3" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ExpoIDF</text>
-<text x="1020.4" y="1224" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ConfIDF</text>
-<text x="1699.2" y="1212" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">16× devices</text>
-<text x="1699.2" y="1229" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expob4-a, hall-1–10, ballroomi-1, ballroomj-1, game-1–3</text>
-<text x="304.7" y="1316" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× devices</text>
-<text x="304.7" y="1333" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm205-a, lowconf-1–8</text>
-<text x="790.7" y="1278" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfDownlink</text>
-<text x="2271.9" y="1106.1" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exDownlink</text>
-<text x="1901.2" y="1142" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">vendor-all</text>
-<text x="1050.5" y="1259" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfRoom-up</text>
-<text x="2247.9" y="813.6" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exUplink</text>
-<text x="1026.4" y="1152" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfUplink</text>
-<text x="2058" y="1174" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exAP</text>
-<text x="694" y="1246" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfAP</text>
+<text x="2457.5" y="531" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
+<text x="296" y="803" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
+<text x="2241.9" y="803" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/2</text>
+<text x="206" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
+<text x="206" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.1/24</text>
+<text x="206" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::1/64</text>
+<text x="1316" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan103</text>
+<text x="1316" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.3.1/24</text>
+<text x="1316" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:103::1/64</text>
+<text x="654.5" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan100</text>
+<text x="654.5" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.128.1/21</text>
+<text x="654.5" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:100::1/64</text>
+<text x="875" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan101</text>
+<text x="875" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.136.1/21</text>
+<text x="875" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:101::1/64</text>
+<text x="1977.5" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan110</text>
+<text x="1977.5" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.10.1/24</text>
+<text x="1977.5" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:110::1/64</text>
+<text x="1095.5" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan102</text>
+<text x="1095.5" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.2.1/24</text>
+<text x="1095.5" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:102::1/64</text>
+<text x="1536.5" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan105</text>
+<text x="1536.5" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.5.1/24</text>
+<text x="1536.5" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:105::1/64</text>
+<text x="1757" y="539" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan107</text>
+<text x="1757" y="556" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:107::1/64</text>
+<text x="2198" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan112</text>
+<text x="2198" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.144.1/20</text>
+<text x="2198" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:112::1/64</text>
+<text x="434" y="531" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan499</text>
+<text x="434" y="548" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.1.0.1/24</text>
+<text x="434" y="565" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:499::1/64</text>
+<text x="54" y="923" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">CF-MDF-01</text>
+<text x="54" y="940" class="s" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:503::1</text>
+<text x="66" y="975" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="78" y="1011" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
+<text x="78" y="1028" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.2/24</text>
+<text x="78" y="1045" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::2/64</text>
+<text x="435.2" y="1055" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
+<text x="185.7" y="1248" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
+<text x="1020.4" y="1390" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
+<text x="1154.7" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan503</text>
+<text x="1154.7" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.3.1/24</text>
+<text x="1154.7" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:503::1/64</text>
+<text x="493.2" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan500</text>
+<text x="493.2" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.128.1/21</text>
+<text x="493.2" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:500::1/64</text>
+<text x="713.7" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan501</text>
+<text x="713.7" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.136.1/21</text>
+<text x="713.7" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:501::1/64</text>
+<text x="934.2" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan502</text>
+<text x="934.2" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.2.1/24</text>
+<text x="934.2" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:502::1/64</text>
+<text x="1375.2" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan505</text>
+<text x="1375.2" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.5.1/24</text>
+<text x="1375.2" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:505::1/64</text>
+<text x="1595.7" y="1248" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan506</text>
+<text x="1595.7" y="1265" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.6.1/24</text>
+<text x="1595.7" y="1282" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:506::1/64</text>
+<text x="272.7" y="1256" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan507</text>
+<text x="272.7" y="1273" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:507::1/64</text>
+<text x="522.7" y="1604" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">4× devices</text>
+<text x="522.7" y="1621" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">noc, avswitch, room103, room104</text>
+<text x="2179.7" y="1500" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3× devices</text>
+<text x="2179.7" y="1517" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">nw-idf, ne-idf, regdesk</text>
+<text x="1572.7" y="1500" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expo-catwalk</text>
+<text x="823.2" y="1604" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× rm</text>
+<text x="823.2" y="1621" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm105–107, rm207, rm208, rm211, rm215, rm209-210, rm101-102</text>
+<text x="2241.9" y="1282.3" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ExpoIDF</text>
+<text x="1020.4" y="1512" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ConfIDF</text>
+<text x="1699.2" y="1500" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">16× devices</text>
+<text x="1699.2" y="1517" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expob4-a, hall-1–10, ballroomi-1, ballroomj-1, game-1–3</text>
+<text x="304.7" y="1604" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× devices</text>
+<text x="304.7" y="1621" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm205-a, lowconf-1–8</text>
+<text x="835.7" y="1560" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfDownlink</text>
+<text x="2271.9" y="1380.1" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exDownlink</text>
+<text x="1901.2" y="1430" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">vendor-all</text>
+<text x="1050.5" y="1547" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfRoom-up</text>
+<text x="2247.9" y="1031.6" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exUplink</text>
+<text x="1026.4" y="1440" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfUplink</text>
+<text x="2079.6" y="1456" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exAP</text>
+<text x="694" y="1534" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfAP</text>
 <g class="legend">
-<rect x="40" y="1386" width="2493" height="1382" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
-<text x="56" y="1414" class="h">Legend</text>
-<path d="M56,1436 L100,1436" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5"/>
-<text x="112" y="1440.5" class="t">Exw-SLOW (100) <tspan class="s">10.0.128.0/21, 2001:470:f026:100::/64</tspan></text>
-<path d="M56,1462 L100,1462" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1466.5" class="t">Exw-FAST (101) <tspan class="s">10.0.136.0/21, 2001:470:f026:101::/64</tspan></text>
-<path d="M56,1488 L100,1488" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1492.5" class="t">ExSpkr (102) <tspan class="s">10.0.2.0/24, 2001:470:f026:102::/64</tspan></text>
-<path d="M56,1514 L100,1514" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="1518.5" class="t">ExInfra (103) <tspan class="s">10.0.3.0/24, 2001:470:f026:103::/64</tspan></text>
-<path d="M56,1540 L100,1540" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3"/>
-<text x="112" y="1544.5" class="t">ExMDF (104) <tspan class="s">10.0.4.0/24, 2001:470:f026:104::/64</tspan></text>
-<path d="M56,1566 L100,1566" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1570.5" class="t">EXAV (105) <tspan class="s">10.0.5.0/24, 2001:470:f026:105::/64</tspan></text>
-<path d="M56,1592 L100,1592" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1596.5" class="t">ExSigns (107) <tspan class="s">2001:470:f026:107::/64</tspan></text>
-<path d="M56,1618 L100,1618" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="1622.5" class="t">ExReg (110) <tspan class="s">10.0.10.0/24, 2001:470:f026:110::/64</tspan></text>
-<path d="M56,1644 L100,1644" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3"/>
-<text x="112" y="1648.5" class="t">ExVmVndr (112) <tspan class="s">10.0.144.0/20, 2001:470:f026:112::/64</tspan></text>
-<path d="M56,1670 L100,1670" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1674.5" class="t">Vendor_backbone (499) <tspan class="s">10.1.0.0/24, 2001:470:f026:499::/64</tspan></text>
-<path d="M56,1696 L100,1696" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1700.5" class="t">Cfw-SLOW (500) <tspan class="s">10.128.128.0/21, 2001:470:f026:500::/64</tspan></text>
-<path d="M56,1722 L100,1722" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="1726.5" class="t">Cfw-FAST (501) <tspan class="s">10.128.136.0/21, 2001:470:f026:501::/64</tspan></text>
-<path d="M56,1748 L100,1748" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3"/>
-<text x="112" y="1752.5" class="t">CfSpkr (502) <tspan class="s">10.128.2.0/24, 2001:470:f026:502::/64</tspan></text>
-<path d="M56,1774 L100,1774" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1778.5" class="t">CfInfra (503) <tspan class="s">10.128.3.0/24, 2001:470:f026:503::/64</tspan></text>
-<path d="M56,1800 L100,1800" fill="none" stroke="#000000" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1804.5" class="t">CfCTF (504) <tspan class="s">10.128.4.0/24, 2001:470:f026:504::/64</tspan></text>
-<path d="M56,1826 L100,1826" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="1830.5" class="t">CFAV (505) <tspan class="s">10.128.5.0/24, 2001:470:f026:505::/64</tspan></text>
-<path d="M56,1852 L100,1852" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3"/>
-<text x="112" y="1856.5" class="t">CfNOC (506) <tspan class="s">10.128.6.0/24, 2001:470:f026:506::/64</tspan></text>
-<path d="M56,1878 L100,1878" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1882.5" class="t">CfSigns (507) <tspan class="s">2001:470:f026:507::/64</tspan></text>
-<path d="M56,1904 L100,1904" fill="none" stroke="#EC5DBF" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1908.5" class="t">CfInstl (510) <tspan class="s">10.128.10.0/24, 2001:470:f026:510::/64</tspan></text>
-<path d="M56,1930 L100,1930" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="1934.5" class="t">MDF_LINK (900) <tspan class="s">172.20.0.0/24, 2001:470:f026:8000::/64</tspan></text>
-<path d="M56,1956 L100,1956" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4 3 4"/>
-<text x="112" y="1960.5" class="t">Vendor_vlan_200 (200) <tspan class="s">10.2.0.0/24, 2001:470:f026:200::/64</tspan></text>
-<path d="M56,1982 L100,1982" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4"/>
-<text x="112" y="1986.5" class="t">Vendor_vlan_201 (201) <tspan class="s">10.2.1.0/24, 2001:470:f026:201::/64</tspan></text>
-<path d="M56,2008 L100,2008" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="14 6"/>
-<text x="112" y="2012.5" class="t">Vendor_vlan_202 (202) <tspan class="s">10.2.2.0/24, 2001:470:f026:202::/64</tspan></text>
-<path d="M56,2034 L100,2034" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="7 3 2 3"/>
-<text x="112" y="2038.5" class="t">Vendor_vlan_203 (203) <tspan class="s">10.2.3.0/24, 2001:470:f026:203::/64</tspan></text>
-<path d="M56,2060 L100,2060" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3"/>
-<text x="112" y="2064.5" class="t">Vendor_vlan_204 (204) <tspan class="s">10.2.4.0/24, 2001:470:f026:204::/64</tspan></text>
-<path d="M56,2086 L100,2086" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3"/>
-<text x="112" y="2090.5" class="t">Vendor_vlan_205 (205) <tspan class="s">10.2.5.0/24, 2001:470:f026:205::/64</tspan></text>
-<path d="M56,2112 L100,2112" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3"/>
-<text x="112" y="2116.5" class="t">Vendor_vlan_206 (206) <tspan class="s">10.2.6.0/24, 2001:470:f026:206::/64</tspan></text>
-<path d="M56,2138 L100,2138" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3"/>
-<text x="112" y="2142.5" class="t">Vendor_vlan_207 (207) <tspan class="s">10.2.7.0/24, 2001:470:f026:207::/64</tspan></text>
-<path d="M56,2164 L100,2164" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3"/>
-<text x="112" y="2168.5" class="t">Vendor_vlan_208 (208) <tspan class="s">10.2.8.0/24, 2001:470:f026:208::/64</tspan></text>
-<path d="M56,2190 L100,2190" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3"/>
-<text x="112" y="2194.5" class="t">Vendor_vlan_209 (209) <tspan class="s">10.2.9.0/24, 2001:470:f026:209::/64</tspan></text>
-<path d="M56,2216 L100,2216" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3"/>
-<text x="112" y="2220.5" class="t">Vendor_vlan_210 (210) <tspan class="s">10.2.10.0/24, 2001:470:f026:210::/64</tspan></text>
-<path d="M56,2242 L100,2242" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3"/>
-<text x="112" y="2246.5" class="t">Vendor_vlan_211 (211) <tspan class="s">10.2.11.0/24, 2001:470:f026:211::/64</tspan></text>
-<path d="M56,2268 L100,2268" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3"/>
-<text x="112" y="2272.5" class="t">Vendor_vlan_212 (212) <tspan class="s">10.2.12.0/24, 2001:470:f026:212::/64</tspan></text>
-<path d="M56,2294 L100,2294" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3"/>
-<text x="112" y="2298.5" class="t">Vendor_vlan_213 (213) <tspan class="s">10.2.13.0/24, 2001:470:f026:213::/64</tspan></text>
-<path d="M56,2320 L100,2320" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6"/>
-<text x="112" y="2324.5" class="t">Vendor_vlan_214 (214) <tspan class="s">10.2.14.0/24, 2001:470:f026:214::/64</tspan></text>
-<path d="M56,2346 L100,2346" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6"/>
-<text x="112" y="2350.5" class="t">Vendor_vlan_215 (215) <tspan class="s">10.2.15.0/24, 2001:470:f026:215::/64</tspan></text>
-<path d="M56,2372 L100,2372" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6"/>
-<text x="112" y="2376.5" class="t">Vendor_vlan_216 (216) <tspan class="s">10.2.16.0/24, 2001:470:f026:216::/64</tspan></text>
-<path d="M56,2398 L100,2398" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6"/>
-<text x="112" y="2402.5" class="t">Vendor_vlan_217 (217) <tspan class="s">10.2.17.0/24, 2001:470:f026:217::/64</tspan></text>
-<path d="M56,2424 L100,2424" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6"/>
-<text x="112" y="2428.5" class="t">Vendor_vlan_218 (218) <tspan class="s">10.2.18.0/24, 2001:470:f026:218::/64</tspan></text>
-<path d="M56,2450 L100,2450" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6"/>
-<text x="112" y="2454.5" class="t">Vendor_vlan_219 (219) <tspan class="s">10.2.19.0/24, 2001:470:f026:219::/64</tspan></text>
-<path d="M56,2476 L100,2476" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6"/>
-<text x="112" y="2480.5" class="t">Vendor_vlan_220 (220) <tspan class="s">10.2.20.0/24, 2001:470:f026:220::/64</tspan></text>
-<path d="M56,2502 L100,2502" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6"/>
-<text x="112" y="2506.5" class="t">Vendor_vlan_221 (221) <tspan class="s">10.2.21.0/24, 2001:470:f026:221::/64</tspan></text>
-<path d="M56,2528 L100,2528" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6"/>
-<text x="112" y="2532.5" class="t">Vendor_vlan_222 (222) <tspan class="s">10.2.22.0/24, 2001:470:f026:222::/64</tspan></text>
-<path d="M56,2554 L100,2554" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6"/>
-<text x="112" y="2558.5" class="t">Vendor_vlan_223 (223) <tspan class="s">10.2.23.0/24, 2001:470:f026:223::/64</tspan></text>
-<path d="M56,2580 L100,2580" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4"/>
-<text x="112" y="2584.5" class="t">Vendor_vlan_224 (224) <tspan class="s">10.2.24.0/24, 2001:470:f026:224::/64</tspan></text>
-<path d="M56,2606 L100,2606" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 4"/>
-<text x="112" y="2610.5" class="t">Vendor_vlan_225 (225) <tspan class="s">10.2.25.0/24, 2001:470:f026:225::/64</tspan></text>
-<path d="M56,2632 L100,2632" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 4"/>
-<text x="112" y="2636.5" class="t">Vendor_vlan_226 (226) <tspan class="s">10.2.26.0/24, 2001:470:f026:226::/64</tspan></text>
-<path d="M56,2658 L100,2658" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 4"/>
-<text x="112" y="2662.5" class="t">Vendor_vlan_227 (227) <tspan class="s">10.2.27.0/24, 2001:470:f026:227::/64</tspan></text>
-<path d="M56,2684 L100,2684" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4"/>
-<text x="112" y="2688.5" class="t">Vendor_vlan_228 (228) <tspan class="s">10.2.28.0/24, 2001:470:f026:228::/64</tspan></text>
-<path d="M56,2710 L100,2710" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 4"/>
-<text x="112" y="2714.5" class="t">Vendor_vlan_229 (229) <tspan class="s">10.2.29.0/24, 2001:470:f026:229::/64</tspan></text>
-<path d="M56,2736 L100,2736" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 4"/>
-<text x="112" y="2740.5" class="t">Vendor_vlan_230 (230) <tspan class="s">10.2.30.0/24, 2001:470:f026:230::/64</tspan></text>
-<path d="M603,1436 L647,1436" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 4"/>
-<text x="659" y="1440.5" class="t">Vendor_vlan_231 (231) <tspan class="s">10.2.31.0/24, 2001:470:f026:231::/64</tspan></text>
-<path d="M603,1462 L647,1462" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 4"/>
-<text x="659" y="1466.5" class="t">Vendor_vlan_232 (232) <tspan class="s">10.2.32.0/24, 2001:470:f026:232::/64</tspan></text>
-<path d="M603,1488 L647,1488" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 5"/>
-<text x="659" y="1492.5" class="t">Vendor_vlan_233 (233) <tspan class="s">10.2.33.0/24, 2001:470:f026:233::/64</tspan></text>
-<path d="M603,1514 L647,1514" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 5"/>
-<text x="659" y="1518.5" class="t">Vendor_vlan_234 (234) <tspan class="s">10.2.34.0/24, 2001:470:f026:234::/64</tspan></text>
-<path d="M603,1540 L647,1540" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 5"/>
-<text x="659" y="1544.5" class="t">Vendor_vlan_235 (235) <tspan class="s">10.2.35.0/24, 2001:470:f026:235::/64</tspan></text>
-<path d="M603,1566 L647,1566" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 5"/>
-<text x="659" y="1570.5" class="t">Vendor_vlan_236 (236) <tspan class="s">10.2.36.0/24, 2001:470:f026:236::/64</tspan></text>
-<path d="M603,1592 L647,1592" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 5"/>
-<text x="659" y="1596.5" class="t">Vendor_vlan_237 (237) <tspan class="s">10.2.37.0/24, 2001:470:f026:237::/64</tspan></text>
-<path d="M603,1618 L647,1618" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 5"/>
-<text x="659" y="1622.5" class="t">Vendor_vlan_238 (238) <tspan class="s">10.2.38.0/24, 2001:470:f026:238::/64</tspan></text>
-<path d="M603,1644 L647,1644" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 5"/>
-<text x="659" y="1648.5" class="t">Vendor_vlan_239 (239) <tspan class="s">10.2.39.0/24, 2001:470:f026:239::/64</tspan></text>
-<path d="M603,1670 L647,1670" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 5"/>
-<text x="659" y="1674.5" class="t">Vendor_vlan_240 (240) <tspan class="s">10.2.40.0/24, 2001:470:f026:240::/64</tspan></text>
-<path d="M603,1696 L647,1696" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 5"/>
-<text x="659" y="1700.5" class="t">Vendor_vlan_241 (241) <tspan class="s">10.2.41.0/24, 2001:470:f026:241::/64</tspan></text>
-<path d="M603,1722 L647,1722" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 5"/>
-<text x="659" y="1726.5" class="t">Vendor_vlan_242 (242) <tspan class="s">10.2.42.0/24, 2001:470:f026:242::/64</tspan></text>
-<path d="M603,1748 L647,1748" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 2"/>
-<text x="659" y="1752.5" class="t">Vendor_vlan_243 (243) <tspan class="s">10.2.43.0/24, 2001:470:f026:243::/64</tspan></text>
-<path d="M603,1774 L647,1774" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 2"/>
-<text x="659" y="1778.5" class="t">Vendor_vlan_244 (244) <tspan class="s">10.2.44.0/24, 2001:470:f026:244::/64</tspan></text>
-<path d="M603,1800 L647,1800" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 2"/>
-<text x="659" y="1804.5" class="t">Vendor_vlan_245 (245) <tspan class="s">10.2.45.0/24, 2001:470:f026:245::/64</tspan></text>
-<path d="M603,1826 L647,1826" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 2"/>
-<text x="659" y="1830.5" class="t">Vendor_vlan_246 (246) <tspan class="s">10.2.46.0/24, 2001:470:f026:246::/64</tspan></text>
-<path d="M603,1852 L647,1852" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 2"/>
-<text x="659" y="1856.5" class="t">Vendor_vlan_247 (247) <tspan class="s">10.2.47.0/24, 2001:470:f026:247::/64</tspan></text>
-<path d="M603,1878 L647,1878" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 2"/>
-<text x="659" y="1882.5" class="t">Vendor_vlan_248 (248) <tspan class="s">10.2.48.0/24, 2001:470:f026:248::/64</tspan></text>
-<path d="M603,1904 L647,1904" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 2"/>
-<text x="659" y="1908.5" class="t">Vendor_vlan_249 (249) <tspan class="s">10.2.49.0/24, 2001:470:f026:249::/64</tspan></text>
-<path d="M603,1930 L647,1930" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 2"/>
-<text x="659" y="1934.5" class="t">Vendor_vlan_250 (250) <tspan class="s">10.2.50.0/24, 2001:470:f026:250::/64</tspan></text>
-<path d="M603,1956 L647,1956" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 2"/>
-<text x="659" y="1960.5" class="t">Vendor_vlan_251 (251) <tspan class="s">10.2.51.0/24, 2001:470:f026:251::/64</tspan></text>
-<path d="M603,1982 L647,1982" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 2"/>
-<text x="659" y="1986.5" class="t">Vendor_vlan_252 (252) <tspan class="s">10.2.52.0/24, 2001:470:f026:252::/64</tspan></text>
-<path d="M603,2008 L647,2008" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3 2 3"/>
-<text x="659" y="2012.5" class="t">Vendor_vlan_253 (253) <tspan class="s">10.2.53.0/24, 2001:470:f026:253::/64</tspan></text>
-<path d="M603,2034 L647,2034" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3 2 3"/>
-<text x="659" y="2038.5" class="t">Vendor_vlan_254 (254) <tspan class="s">10.2.54.0/24, 2001:470:f026:254::/64</tspan></text>
-<path d="M603,2060 L647,2060" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3 2 3"/>
-<text x="659" y="2064.5" class="t">Vendor_vlan_255 (255) <tspan class="s">10.2.55.0/24, 2001:470:f026:255::/64</tspan></text>
-<path d="M603,2086 L647,2086" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3 2 3"/>
-<text x="659" y="2090.5" class="t">Vendor_vlan_256 (256) <tspan class="s">10.2.56.0/24, 2001:470:f026:256::/64</tspan></text>
-<path d="M603,2112 L647,2112" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3 2 3"/>
-<text x="659" y="2116.5" class="t">Vendor_vlan_257 (257) <tspan class="s">10.2.57.0/24, 2001:470:f026:257::/64</tspan></text>
-<path d="M603,2138 L647,2138" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3 2 3"/>
-<text x="659" y="2142.5" class="t">Vendor_vlan_258 (258) <tspan class="s">10.2.58.0/24, 2001:470:f026:258::/64</tspan></text>
-<path d="M603,2164 L647,2164" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3 2 3"/>
-<text x="659" y="2168.5" class="t">Vendor_vlan_259 (259) <tspan class="s">10.2.59.0/24, 2001:470:f026:259::/64</tspan></text>
-<path d="M603,2190 L647,2190" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3 2 3"/>
-<text x="659" y="2194.5" class="t">Vendor_vlan_260 (260) <tspan class="s">10.2.60.0/24, 2001:470:f026:260::/64</tspan></text>
-<path d="M603,2216 L647,2216" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3 2 3"/>
-<text x="659" y="2220.5" class="t">Vendor_vlan_261 (261) <tspan class="s">10.2.61.0/24, 2001:470:f026:261::/64</tspan></text>
-<path d="M603,2242 L647,2242" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3 2 3"/>
-<text x="659" y="2246.5" class="t">Vendor_vlan_262 (262) <tspan class="s">10.2.62.0/24, 2001:470:f026:262::/64</tspan></text>
-<path d="M603,2268 L647,2268" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6 2 6"/>
-<text x="659" y="2272.5" class="t">Vendor_vlan_263 (263) <tspan class="s">10.2.63.0/24, 2001:470:f026:263::/64</tspan></text>
-<path d="M603,2294 L647,2294" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6 2 6"/>
-<text x="659" y="2298.5" class="t">Vendor_vlan_264 (264) <tspan class="s">10.2.64.0/24, 2001:470:f026:264::/64</tspan></text>
-<path d="M603,2320 L647,2320" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6 2 6"/>
-<text x="659" y="2324.5" class="t">Vendor_vlan_265 (265) <tspan class="s">10.2.65.0/24, 2001:470:f026:265::/64</tspan></text>
-<path d="M603,2346 L647,2346" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6 2 6"/>
-<text x="659" y="2350.5" class="t">Vendor_vlan_266 (266) <tspan class="s">10.2.66.0/24, 2001:470:f026:266::/64</tspan></text>
-<path d="M603,2372 L647,2372" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6 2 6"/>
-<text x="659" y="2376.5" class="t">Vendor_vlan_267 (267) <tspan class="s">10.2.67.0/24, 2001:470:f026:267::/64</tspan></text>
-<path d="M603,2398 L647,2398" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6 2 6"/>
-<text x="659" y="2402.5" class="t">Vendor_vlan_268 (268) <tspan class="s">10.2.68.0/24, 2001:470:f026:268::/64</tspan></text>
-<path d="M603,2424 L647,2424" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6 2 6"/>
-<text x="659" y="2428.5" class="t">Vendor_vlan_269 (269) <tspan class="s">10.2.69.0/24, 2001:470:f026:269::/64</tspan></text>
-<path d="M603,2450 L647,2450" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6 2 6"/>
-<text x="659" y="2454.5" class="t">Vendor_vlan_270 (270) <tspan class="s">10.2.70.0/24, 2001:470:f026:270::/64</tspan></text>
-<path d="M603,2476 L647,2476" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6 2 6"/>
-<text x="659" y="2480.5" class="t">Vendor_vlan_271 (271) <tspan class="s">10.2.71.0/24, 2001:470:f026:271::/64</tspan></text>
-<path d="M603,2502 L647,2502" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6 2 6"/>
-<text x="659" y="2506.5" class="t">Vendor_vlan_272 (272) <tspan class="s">10.2.72.0/24, 2001:470:f026:272::/64</tspan></text>
-<path d="M603,2528 L647,2528" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4 2 4"/>
-<text x="659" y="2532.5" class="t">Vendor_vlan_273 (273) <tspan class="s">10.2.73.0/24, 2001:470:f026:273::/64</tspan></text>
-<path d="M603,2554 L647,2554" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4 2 4"/>
-<text x="659" y="2558.5" class="t">Vendor_vlan_274 (274) <tspan class="s">10.2.74.0/24, 2001:470:f026:274::/64</tspan></text>
-<path d="M603,2580 L647,2580" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 4 2 4"/>
-<text x="659" y="2584.5" class="t">Vendor_vlan_275 (275) <tspan class="s">10.2.75.0/24, 2001:470:f026:275::/64</tspan></text>
-<path d="M603,2606 L647,2606" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 4 2 4"/>
-<text x="659" y="2610.5" class="t">Vendor_vlan_276 (276) <tspan class="s">10.2.76.0/24, 2001:470:f026:276::/64</tspan></text>
-<path d="M603,2632 L647,2632" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 4 2 4"/>
-<text x="659" y="2636.5" class="t">Vendor_vlan_277 (277) <tspan class="s">10.2.77.0/24, 2001:470:f026:277::/64</tspan></text>
-<path d="M603,2658 L647,2658" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4 2 4"/>
-<text x="659" y="2662.5" class="t">Vendor_vlan_278 (278) <tspan class="s">10.2.78.0/24, 2001:470:f026:278::/64</tspan></text>
-<path d="M603,2684 L647,2684" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 4 2 4"/>
-<text x="659" y="2688.5" class="t">Vendor_vlan_279 (279) <tspan class="s">10.2.79.0/24, 2001:470:f026:279::/64</tspan></text>
-<path d="M603,2710 L647,2710" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 4 2 4"/>
-<text x="659" y="2714.5" class="t">Vendor_vlan_280 (280) <tspan class="s">10.2.80.0/24, 2001:470:f026:280::/64</tspan></text>
-<path d="M603,2736 L647,2736" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 4 2 4"/>
-<text x="659" y="2740.5" class="t">Vendor_vlan_281 (281) <tspan class="s">10.2.81.0/24, 2001:470:f026:281::/64</tspan></text>
-<path d="M1149.9,1436 L1193.9,1436" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 4 2 4"/>
-<text x="1205.9" y="1440.5" class="t">Vendor_vlan_282 (282) <tspan class="s">10.2.82.0/24, 2001:470:f026:282::/64</tspan></text>
-<path d="M1149.9,1462 L1193.9,1462" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 5 2 5"/>
-<text x="1205.9" y="1466.5" class="t">Vendor_vlan_283 (283) <tspan class="s">10.2.83.0/24, 2001:470:f026:283::/64</tspan></text>
-<path d="M1149.9,1488 L1193.9,1488" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 5 2 5"/>
-<text x="1205.9" y="1492.5" class="t">Vendor_vlan_284 (284) <tspan class="s">10.2.84.0/24, 2001:470:f026:284::/64</tspan></text>
-<path d="M1149.9,1514 L1193.9,1514" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 5 2 5"/>
-<text x="1205.9" y="1518.5" class="t">Vendor_vlan_285 (285) <tspan class="s">10.2.85.0/24, 2001:470:f026:285::/64</tspan></text>
-<path d="M1149.9,1540 L1193.9,1540" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 5 2 5"/>
-<text x="1205.9" y="1544.5" class="t">Vendor_vlan_286 (286) <tspan class="s">10.2.86.0/24, 2001:470:f026:286::/64</tspan></text>
-<path d="M1149.9,1566 L1193.9,1566" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 5 2 5"/>
-<text x="1205.9" y="1570.5" class="t">Vendor_vlan_287 (287) <tspan class="s">10.2.87.0/24, 2001:470:f026:287::/64</tspan></text>
-<path d="M1149.9,1592 L1193.9,1592" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 5 2 5"/>
-<text x="1205.9" y="1596.5" class="t">Vendor_vlan_288 (288) <tspan class="s">10.2.88.0/24, 2001:470:f026:288::/64</tspan></text>
-<path d="M1149.9,1618 L1193.9,1618" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 5 2 5"/>
-<text x="1205.9" y="1622.5" class="t">Vendor_vlan_289 (289) <tspan class="s">10.2.89.0/24, 2001:470:f026:289::/64</tspan></text>
-<path d="M1149.9,1644 L1193.9,1644" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 5 2 5"/>
-<text x="1205.9" y="1648.5" class="t">Vendor_vlan_290 (290) <tspan class="s">10.2.90.0/24, 2001:470:f026:290::/64</tspan></text>
-<path d="M1149.9,1670 L1193.9,1670" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 5 2 5"/>
-<text x="1205.9" y="1674.5" class="t">Vendor_vlan_291 (291) <tspan class="s">10.2.91.0/24, 2001:470:f026:291::/64</tspan></text>
-<path d="M1149.9,1696 L1193.9,1696" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 5 2 5"/>
-<text x="1205.9" y="1700.5" class="t">Vendor_vlan_292 (292) <tspan class="s">10.2.92.0/24, 2001:470:f026:292::/64</tspan></text>
-<path d="M1149.9,1722 L1193.9,1722" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 2 2 2"/>
-<text x="1205.9" y="1726.5" class="t">Vendor_vlan_293 (293) <tspan class="s">10.2.93.0/24, 2001:470:f026:293::/64</tspan></text>
-<path d="M1149.9,1748 L1193.9,1748" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 2 2 2"/>
-<text x="1205.9" y="1752.5" class="t">Vendor_vlan_294 (294) <tspan class="s">10.2.94.0/24, 2001:470:f026:294::/64</tspan></text>
-<path d="M1149.9,1774 L1193.9,1774" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 2 2 2"/>
-<text x="1205.9" y="1778.5" class="t">Vendor_vlan_295 (295) <tspan class="s">10.2.95.0/24, 2001:470:f026:295::/64</tspan></text>
-<path d="M1149.9,1800 L1193.9,1800" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 2 2 2"/>
-<text x="1205.9" y="1804.5" class="t">Vendor_vlan_296 (296) <tspan class="s">10.2.96.0/24, 2001:470:f026:296::/64</tspan></text>
-<path d="M1149.9,1826 L1193.9,1826" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 2 2 2"/>
-<text x="1205.9" y="1830.5" class="t">Vendor_vlan_297 (297) <tspan class="s">10.2.97.0/24, 2001:470:f026:297::/64</tspan></text>
-<path d="M1149.9,1852 L1193.9,1852" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 2 2 2"/>
-<text x="1205.9" y="1856.5" class="t">Vendor_vlan_298 (298) <tspan class="s">10.2.98.0/24, 2001:470:f026:298::/64</tspan></text>
-<path d="M1149.9,1878 L1193.9,1878" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 2 2 2"/>
-<text x="1205.9" y="1882.5" class="t">Vendor_vlan_299 (299) <tspan class="s">10.2.99.0/24, 2001:470:f026:299::/64</tspan></text>
-<path d="M1149.9,1904 L1193.9,1904" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 2 2 2"/>
-<text x="1205.9" y="1908.5" class="t">Vendor_vlan_300 (300) <tspan class="s">10.2.100.0/24, 2001:470:f026:300::/64</tspan></text>
-<path d="M1149.9,1930 L1193.9,1930" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 2 2 2"/>
-<text x="1205.9" y="1934.5" class="t">Vendor_vlan_301 (301) <tspan class="s">10.2.101.0/24, 2001:470:f026:301::/64</tspan></text>
-<path d="M1149.9,1956 L1193.9,1956" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 2 2 2"/>
-<text x="1205.9" y="1960.5" class="t">Vendor_vlan_302 (302) <tspan class="s">10.2.102.0/24, 2001:470:f026:302::/64</tspan></text>
-<path d="M1149.9,1982 L1193.9,1982" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3 2 3 2 3"/>
-<text x="1205.9" y="1986.5" class="t">Vendor_vlan_303 (303) <tspan class="s">10.2.103.0/24, 2001:470:f026:303::/64</tspan></text>
-<path d="M1149.9,2008 L1193.9,2008" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3 2 3 2 3"/>
-<text x="1205.9" y="2012.5" class="t">Vendor_vlan_304 (304) <tspan class="s">10.2.104.0/24, 2001:470:f026:304::/64</tspan></text>
-<path d="M1149.9,2034 L1193.9,2034" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3 2 3 2 3"/>
-<text x="1205.9" y="2038.5" class="t">Vendor_vlan_305 (305) <tspan class="s">10.2.105.0/24, 2001:470:f026:305::/64</tspan></text>
-<path d="M1149.9,2060 L1193.9,2060" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3 2 3 2 3"/>
-<text x="1205.9" y="2064.5" class="t">Vendor_vlan_306 (306) <tspan class="s">10.2.106.0/24, 2001:470:f026:306::/64</tspan></text>
-<path d="M1149.9,2086 L1193.9,2086" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3 2 3 2 3"/>
-<text x="1205.9" y="2090.5" class="t">Vendor_vlan_307 (307) <tspan class="s">10.2.107.0/24, 2001:470:f026:307::/64</tspan></text>
-<path d="M1149.9,2112 L1193.9,2112" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3 2 3 2 3"/>
-<text x="1205.9" y="2116.5" class="t">Vendor_vlan_308 (308) <tspan class="s">10.2.108.0/24, 2001:470:f026:308::/64</tspan></text>
-<path d="M1149.9,2138 L1193.9,2138" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3 2 3 2 3"/>
-<text x="1205.9" y="2142.5" class="t">Vendor_vlan_309 (309) <tspan class="s">10.2.109.0/24, 2001:470:f026:309::/64</tspan></text>
-<path d="M1149.9,2164 L1193.9,2164" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3 2 3 2 3"/>
-<text x="1205.9" y="2168.5" class="t">Vendor_vlan_310 (310) <tspan class="s">10.2.110.0/24, 2001:470:f026:310::/64</tspan></text>
-<path d="M1149.9,2190 L1193.9,2190" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3 2 3 2 3"/>
-<text x="1205.9" y="2194.5" class="t">Vendor_vlan_311 (311) <tspan class="s">10.2.111.0/24, 2001:470:f026:311::/64</tspan></text>
-<path d="M1149.9,2216 L1193.9,2216" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3 2 3 2 3"/>
-<text x="1205.9" y="2220.5" class="t">Vendor_vlan_312 (312) <tspan class="s">10.2.112.0/24, 2001:470:f026:312::/64</tspan></text>
-<path d="M1149.9,2242 L1193.9,2242" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6 2 6 2 6"/>
-<text x="1205.9" y="2246.5" class="t">Vendor_vlan_313 (313) <tspan class="s">10.2.113.0/24, 2001:470:f026:313::/64</tspan></text>
-<path d="M1149.9,2268 L1193.9,2268" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6 2 6 2 6"/>
-<text x="1205.9" y="2272.5" class="t">Vendor_vlan_314 (314) <tspan class="s">10.2.114.0/24, 2001:470:f026:314::/64</tspan></text>
-<path d="M1149.9,2294 L1193.9,2294" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6 2 6 2 6"/>
-<text x="1205.9" y="2298.5" class="t">Vendor_vlan_315 (315) <tspan class="s">10.2.115.0/24, 2001:470:f026:315::/64</tspan></text>
-<path d="M1149.9,2320 L1193.9,2320" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6 2 6 2 6"/>
-<text x="1205.9" y="2324.5" class="t">Vendor_vlan_316 (316) <tspan class="s">10.2.116.0/24, 2001:470:f026:316::/64</tspan></text>
-<path d="M1149.9,2346 L1193.9,2346" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6 2 6 2 6"/>
-<text x="1205.9" y="2350.5" class="t">Vendor_vlan_317 (317) <tspan class="s">10.2.117.0/24, 2001:470:f026:317::/64</tspan></text>
-<path d="M1149.9,2372 L1193.9,2372" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6 2 6 2 6"/>
-<text x="1205.9" y="2376.5" class="t">Vendor_vlan_318 (318) <tspan class="s">10.2.118.0/24, 2001:470:f026:318::/64</tspan></text>
-<path d="M1149.9,2398 L1193.9,2398" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6 2 6 2 6"/>
-<text x="1205.9" y="2402.5" class="t">Vendor_vlan_319 (319) <tspan class="s">10.2.119.0/24, 2001:470:f026:319::/64</tspan></text>
-<path d="M1149.9,2424 L1193.9,2424" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6 2 6 2 6"/>
-<text x="1205.9" y="2428.5" class="t">Vendor_vlan_320 (320) <tspan class="s">10.2.120.0/24, 2001:470:f026:320::/64</tspan></text>
-<path d="M1149.9,2450 L1193.9,2450" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6 2 6 2 6"/>
-<text x="1205.9" y="2454.5" class="t">Vendor_vlan_321 (321) <tspan class="s">10.2.121.0/24, 2001:470:f026:321::/64</tspan></text>
-<path d="M1149.9,2476 L1193.9,2476" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6 2 6 2 6"/>
-<text x="1205.9" y="2480.5" class="t">Vendor_vlan_322 (322) <tspan class="s">10.2.122.0/24, 2001:470:f026:322::/64</tspan></text>
-<path d="M1149.9,2502 L1193.9,2502" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4 2 4 2 4"/>
-<text x="1205.9" y="2506.5" class="t">Vendor_vlan_323 (323) <tspan class="s">10.2.123.0/24, 2001:470:f026:323::/64</tspan></text>
-<path d="M1149.9,2528 L1193.9,2528" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4 2 4 2 4"/>
-<text x="1205.9" y="2532.5" class="t">Vendor_vlan_324 (324) <tspan class="s">10.2.124.0/24, 2001:470:f026:324::/64</tspan></text>
-<path d="M1149.9,2554 L1193.9,2554" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1205.9" y="2558.5" class="t">exUplink → exInfra, exw-SLOW, exw-FAST, exReg, exSpkr,</text>
-<text x="1205.9" y="2584.5" class="t">exAV, exSigns, exVmVndr, vendor_backbone</text>
-<path d="M1149.9,2606 L1193.9,2606" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1205.9" y="2610.5" class="t">exDownlink → exInfra, exw-SLOW, exw-FAST, exReg,</text>
-<text x="1205.9" y="2636.5" class="t">exSpkr, exAV, exSigns, exVmVndr, vendor_backbone</text>
-<path d="M1149.9,2658 L1193.9,2658" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1205.9" y="2662.5" class="t">exAP → exInfra, exw-SLOW, exw-FAST</text>
-<path d="M1149.9,2684 L1193.9,2684" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1205.9" y="2688.5" class="t">cfUplink → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV,</text>
-<text x="1205.9" y="2714.5" class="t">cfNOC, cfSigns</text>
-<path d="M1149.9,2736 L1193.9,2736" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1205.9" y="2740.5" class="t">cfDownlink → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr,</text>
-<text x="1752.9" y="1440.5" class="t">cfAV, cfNOC, cfSigns</text>
-<path d="M1696.9,1462 L1740.9,1462" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1752.9" y="1466.5" class="t">cfAP → cfInfra, cfw-SLOW, cfw-FAST</text>
-<path d="M1696.9,1488 L1740.9,1488" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1752.9" y="1492.5" class="t">vendor-all → exInfra, exw-SLOW, exw-FAST, exReg,</text>
-<text x="1752.9" y="1518.5" class="t">exSpkr, exAV, exSigns, exVmVndr, vendor_backbone,</text>
-<text x="1752.9" y="1544.5" class="t">vendor_vlan_200, vendor_vlan_201, vendor_vlan_202,</text>
-<text x="1752.9" y="1570.5" class="t">vendor_vlan_203, vendor_vlan_204, vendor_vlan_205,</text>
-<text x="1752.9" y="1596.5" class="t">vendor_vlan_206, vendor_vlan_207, vendor_vlan_208,</text>
-<text x="1752.9" y="1622.5" class="t">vendor_vlan_209, vendor_vlan_210, vendor_vlan_211,</text>
-<text x="1752.9" y="1648.5" class="t">vendor_vlan_212, vendor_vlan_213, vendor_vlan_214,</text>
-<text x="1752.9" y="1674.5" class="t">vendor_vlan_215, vendor_vlan_216, vendor_vlan_217,</text>
-<text x="1752.9" y="1700.5" class="t">vendor_vlan_218, vendor_vlan_219, vendor_vlan_220,</text>
-<text x="1752.9" y="1726.5" class="t">vendor_vlan_221, vendor_vlan_222, vendor_vlan_223,</text>
-<text x="1752.9" y="1752.5" class="t">vendor_vlan_224, vendor_vlan_225, vendor_vlan_226,</text>
-<text x="1752.9" y="1778.5" class="t">vendor_vlan_227, vendor_vlan_228, vendor_vlan_229,</text>
-<text x="1752.9" y="1804.5" class="t">vendor_vlan_230, vendor_vlan_231, vendor_vlan_232,</text>
-<text x="1752.9" y="1830.5" class="t">vendor_vlan_233, vendor_vlan_234, vendor_vlan_235,</text>
-<text x="1752.9" y="1856.5" class="t">vendor_vlan_236, vendor_vlan_237, vendor_vlan_238,</text>
-<text x="1752.9" y="1882.5" class="t">vendor_vlan_239, vendor_vlan_240, vendor_vlan_241,</text>
-<text x="1752.9" y="1908.5" class="t">vendor_vlan_242, vendor_vlan_243, vendor_vlan_244,</text>
-<text x="1752.9" y="1934.5" class="t">vendor_vlan_245, vendor_vlan_246, vendor_vlan_247,</text>
-<text x="1752.9" y="1960.5" class="t">vendor_vlan_248, vendor_vlan_249, vendor_vlan_250,</text>
-<text x="1752.9" y="1986.5" class="t">vendor_vlan_251, vendor_vlan_252, vendor_vlan_253,</text>
-<text x="1752.9" y="2012.5" class="t">vendor_vlan_254, vendor_vlan_255, vendor_vlan_256,</text>
-<text x="1752.9" y="2038.5" class="t">vendor_vlan_257, vendor_vlan_258, vendor_vlan_259,</text>
-<text x="1752.9" y="2064.5" class="t">vendor_vlan_260, vendor_vlan_261, vendor_vlan_262,</text>
-<text x="1752.9" y="2090.5" class="t">vendor_vlan_263, vendor_vlan_264, vendor_vlan_265,</text>
-<text x="1752.9" y="2116.5" class="t">vendor_vlan_266, vendor_vlan_267, vendor_vlan_268,</text>
-<text x="1752.9" y="2142.5" class="t">vendor_vlan_269, vendor_vlan_270, vendor_vlan_271,</text>
-<text x="1752.9" y="2168.5" class="t">vendor_vlan_272, vendor_vlan_273, vendor_vlan_274,</text>
-<text x="1752.9" y="2194.5" class="t">vendor_vlan_275, vendor_vlan_276, vendor_vlan_277,</text>
-<text x="1752.9" y="2220.5" class="t">vendor_vlan_278, vendor_vlan_279, vendor_vlan_280,</text>
-<text x="1752.9" y="2246.5" class="t">vendor_vlan_281, vendor_vlan_282, vendor_vlan_283,</text>
-<text x="1752.9" y="2272.5" class="t">vendor_vlan_284, vendor_vlan_285, vendor_vlan_286,</text>
-<text x="1752.9" y="2298.5" class="t">vendor_vlan_287, vendor_vlan_288, vendor_vlan_289,</text>
-<text x="1752.9" y="2324.5" class="t">vendor_vlan_290, vendor_vlan_291, vendor_vlan_292,</text>
-<text x="1752.9" y="2350.5" class="t">vendor_vlan_293, vendor_vlan_294, vendor_vlan_295,</text>
-<text x="1752.9" y="2376.5" class="t">vendor_vlan_296, vendor_vlan_297, vendor_vlan_298,</text>
-<text x="1752.9" y="2402.5" class="t">vendor_vlan_299, vendor_vlan_300, vendor_vlan_301,</text>
-<text x="1752.9" y="2428.5" class="t">vendor_vlan_302, vendor_vlan_303, vendor_vlan_304,</text>
-<text x="1752.9" y="2454.5" class="t">vendor_vlan_305, vendor_vlan_306, vendor_vlan_307,</text>
-<text x="1752.9" y="2480.5" class="t">vendor_vlan_308, vendor_vlan_309, vendor_vlan_310,</text>
-<text x="1752.9" y="2506.5" class="t">vendor_vlan_311, vendor_vlan_312, vendor_vlan_313,</text>
-<text x="1752.9" y="2532.5" class="t">vendor_vlan_314, vendor_vlan_315, vendor_vlan_316,</text>
-<text x="1752.9" y="2558.5" class="t">vendor_vlan_317, vendor_vlan_318, vendor_vlan_319,</text>
-<text x="1752.9" y="2584.5" class="t">vendor_vlan_320, vendor_vlan_321, vendor_vlan_322,</text>
-<text x="1752.9" y="2610.5" class="t">vendor_vlan_323, vendor_vlan_324</text>
-<path d="M1696.9,2632 L1740.9,2632" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1752.9" y="2636.5" class="t">cfRoom-up → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV,</text>
-<text x="1752.9" y="2662.5" class="t">cfNOC, cfSigns, cfCTF, cfInstl</text>
-<path d="M1696.9,2684 L1740.9,2684" fill="none" stroke="#555" stroke-width="8"/>
-<text x="1752.9" y="2688.5" class="t">trunk: named set or more than 4 VLANs</text>
-<path d="M1700.9,2710 L1740.9,2710" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<text x="1752.9" y="2714.5" class="t">routed</text>
+<rect x="40" y="1674" width="2493" height="1382" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
+<text x="56" y="1702" class="h">Legend</text>
+<path d="M56,1724 L100,1724" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="112" y="1728.5" class="t">Exw-SLOW (100) <tspan class="s">10.0.128.0/21, 2001:470:f026:100::/64</tspan></text>
+<path d="M56,1750 L100,1750" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="1754.5" class="t">Exw-FAST (101) <tspan class="s">10.0.136.0/21, 2001:470:f026:101::/64</tspan></text>
+<path d="M56,1776 L100,1776" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="1780.5" class="t">ExSpkr (102) <tspan class="s">10.0.2.0/24, 2001:470:f026:102::/64</tspan></text>
+<path d="M56,1802 L100,1802" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="1806.5" class="t">ExInfra (103) <tspan class="s">10.0.3.0/24, 2001:470:f026:103::/64</tspan></text>
+<path d="M56,1828 L100,1828" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="1832.5" class="t">ExMDF (104) <tspan class="s">10.0.4.0/24, 2001:470:f026:104::/64</tspan></text>
+<path d="M56,1854 L100,1854" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="1858.5" class="t">EXAV (105) <tspan class="s">10.0.5.0/24, 2001:470:f026:105::/64</tspan></text>
+<path d="M56,1880 L100,1880" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="1884.5" class="t">ExSigns (107) <tspan class="s">2001:470:f026:107::/64</tspan></text>
+<path d="M56,1906 L100,1906" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="1910.5" class="t">ExReg (110) <tspan class="s">10.0.10.0/24, 2001:470:f026:110::/64</tspan></text>
+<path d="M56,1932 L100,1932" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="1936.5" class="t">ExVmVndr (112) <tspan class="s">10.0.144.0/20, 2001:470:f026:112::/64</tspan></text>
+<path d="M56,1958 L100,1958" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="1962.5" class="t">Vendor_backbone (499) <tspan class="s">10.1.0.0/24, 2001:470:f026:499::/64</tspan></text>
+<path d="M56,1984 L100,1984" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="1988.5" class="t">Cfw-SLOW (500) <tspan class="s">10.128.128.0/21, 2001:470:f026:500::/64</tspan></text>
+<path d="M56,2010 L100,2010" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="2014.5" class="t">Cfw-FAST (501) <tspan class="s">10.128.136.0/21, 2001:470:f026:501::/64</tspan></text>
+<path d="M56,2036 L100,2036" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="2040.5" class="t">CfSpkr (502) <tspan class="s">10.128.2.0/24, 2001:470:f026:502::/64</tspan></text>
+<path d="M56,2062 L100,2062" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="2066.5" class="t">CfInfra (503) <tspan class="s">10.128.3.0/24, 2001:470:f026:503::/64</tspan></text>
+<path d="M56,2088 L100,2088" fill="none" stroke="#000000" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="2092.5" class="t">CfCTF (504) <tspan class="s">10.128.4.0/24, 2001:470:f026:504::/64</tspan></text>
+<path d="M56,2114 L100,2114" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="2118.5" class="t">CFAV (505) <tspan class="s">10.128.5.0/24, 2001:470:f026:505::/64</tspan></text>
+<path d="M56,2140 L100,2140" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="2144.5" class="t">CfNOC (506) <tspan class="s">10.128.6.0/24, 2001:470:f026:506::/64</tspan></text>
+<path d="M56,2166 L100,2166" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="2170.5" class="t">CfSigns (507) <tspan class="s">2001:470:f026:507::/64</tspan></text>
+<path d="M56,2192 L100,2192" fill="none" stroke="#EC5DBF" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="2196.5" class="t">CfInstl (510) <tspan class="s">10.128.10.0/24, 2001:470:f026:510::/64</tspan></text>
+<path d="M56,2218 L100,2218" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="2222.5" class="t">MDF_LINK (900) <tspan class="s">172.20.0.0/24, 2001:470:f026:8000::/64</tspan></text>
+<path d="M56,2244 L100,2244" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="2248.5" class="t">Vendor_vlan_200 (200) <tspan class="s">10.2.0.0/24, 2001:470:f026:200::/64</tspan></text>
+<path d="M56,2270 L100,2270" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="2274.5" class="t">Vendor_vlan_201 (201) <tspan class="s">10.2.1.0/24, 2001:470:f026:201::/64</tspan></text>
+<path d="M56,2296 L100,2296" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="2300.5" class="t">Vendor_vlan_202 (202) <tspan class="s">10.2.2.0/24, 2001:470:f026:202::/64</tspan></text>
+<path d="M56,2322 L100,2322" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="2326.5" class="t">Vendor_vlan_203 (203) <tspan class="s">10.2.3.0/24, 2001:470:f026:203::/64</tspan></text>
+<path d="M56,2348 L100,2348" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3"/>
+<text x="112" y="2352.5" class="t">Vendor_vlan_204 (204) <tspan class="s">10.2.4.0/24, 2001:470:f026:204::/64</tspan></text>
+<path d="M56,2374 L100,2374" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3"/>
+<text x="112" y="2378.5" class="t">Vendor_vlan_205 (205) <tspan class="s">10.2.5.0/24, 2001:470:f026:205::/64</tspan></text>
+<path d="M56,2400 L100,2400" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3"/>
+<text x="112" y="2404.5" class="t">Vendor_vlan_206 (206) <tspan class="s">10.2.6.0/24, 2001:470:f026:206::/64</tspan></text>
+<path d="M56,2426 L100,2426" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3"/>
+<text x="112" y="2430.5" class="t">Vendor_vlan_207 (207) <tspan class="s">10.2.7.0/24, 2001:470:f026:207::/64</tspan></text>
+<path d="M56,2452 L100,2452" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3"/>
+<text x="112" y="2456.5" class="t">Vendor_vlan_208 (208) <tspan class="s">10.2.8.0/24, 2001:470:f026:208::/64</tspan></text>
+<path d="M56,2478 L100,2478" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3"/>
+<text x="112" y="2482.5" class="t">Vendor_vlan_209 (209) <tspan class="s">10.2.9.0/24, 2001:470:f026:209::/64</tspan></text>
+<path d="M56,2504 L100,2504" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3"/>
+<text x="112" y="2508.5" class="t">Vendor_vlan_210 (210) <tspan class="s">10.2.10.0/24, 2001:470:f026:210::/64</tspan></text>
+<path d="M56,2530 L100,2530" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3"/>
+<text x="112" y="2534.5" class="t">Vendor_vlan_211 (211) <tspan class="s">10.2.11.0/24, 2001:470:f026:211::/64</tspan></text>
+<path d="M56,2556 L100,2556" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3"/>
+<text x="112" y="2560.5" class="t">Vendor_vlan_212 (212) <tspan class="s">10.2.12.0/24, 2001:470:f026:212::/64</tspan></text>
+<path d="M56,2582 L100,2582" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3"/>
+<text x="112" y="2586.5" class="t">Vendor_vlan_213 (213) <tspan class="s">10.2.13.0/24, 2001:470:f026:213::/64</tspan></text>
+<path d="M56,2608 L100,2608" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6"/>
+<text x="112" y="2612.5" class="t">Vendor_vlan_214 (214) <tspan class="s">10.2.14.0/24, 2001:470:f026:214::/64</tspan></text>
+<path d="M56,2634 L100,2634" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6"/>
+<text x="112" y="2638.5" class="t">Vendor_vlan_215 (215) <tspan class="s">10.2.15.0/24, 2001:470:f026:215::/64</tspan></text>
+<path d="M56,2660 L100,2660" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6"/>
+<text x="112" y="2664.5" class="t">Vendor_vlan_216 (216) <tspan class="s">10.2.16.0/24, 2001:470:f026:216::/64</tspan></text>
+<path d="M56,2686 L100,2686" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6"/>
+<text x="112" y="2690.5" class="t">Vendor_vlan_217 (217) <tspan class="s">10.2.17.0/24, 2001:470:f026:217::/64</tspan></text>
+<path d="M56,2712 L100,2712" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6"/>
+<text x="112" y="2716.5" class="t">Vendor_vlan_218 (218) <tspan class="s">10.2.18.0/24, 2001:470:f026:218::/64</tspan></text>
+<path d="M56,2738 L100,2738" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6"/>
+<text x="112" y="2742.5" class="t">Vendor_vlan_219 (219) <tspan class="s">10.2.19.0/24, 2001:470:f026:219::/64</tspan></text>
+<path d="M56,2764 L100,2764" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6"/>
+<text x="112" y="2768.5" class="t">Vendor_vlan_220 (220) <tspan class="s">10.2.20.0/24, 2001:470:f026:220::/64</tspan></text>
+<path d="M56,2790 L100,2790" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6"/>
+<text x="112" y="2794.5" class="t">Vendor_vlan_221 (221) <tspan class="s">10.2.21.0/24, 2001:470:f026:221::/64</tspan></text>
+<path d="M56,2816 L100,2816" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6"/>
+<text x="112" y="2820.5" class="t">Vendor_vlan_222 (222) <tspan class="s">10.2.22.0/24, 2001:470:f026:222::/64</tspan></text>
+<path d="M56,2842 L100,2842" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6"/>
+<text x="112" y="2846.5" class="t">Vendor_vlan_223 (223) <tspan class="s">10.2.23.0/24, 2001:470:f026:223::/64</tspan></text>
+<path d="M56,2868 L100,2868" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4"/>
+<text x="112" y="2872.5" class="t">Vendor_vlan_224 (224) <tspan class="s">10.2.24.0/24, 2001:470:f026:224::/64</tspan></text>
+<path d="M56,2894 L100,2894" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 4"/>
+<text x="112" y="2898.5" class="t">Vendor_vlan_225 (225) <tspan class="s">10.2.25.0/24, 2001:470:f026:225::/64</tspan></text>
+<path d="M56,2920 L100,2920" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 4"/>
+<text x="112" y="2924.5" class="t">Vendor_vlan_226 (226) <tspan class="s">10.2.26.0/24, 2001:470:f026:226::/64</tspan></text>
+<path d="M56,2946 L100,2946" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 4"/>
+<text x="112" y="2950.5" class="t">Vendor_vlan_227 (227) <tspan class="s">10.2.27.0/24, 2001:470:f026:227::/64</tspan></text>
+<path d="M56,2972 L100,2972" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4"/>
+<text x="112" y="2976.5" class="t">Vendor_vlan_228 (228) <tspan class="s">10.2.28.0/24, 2001:470:f026:228::/64</tspan></text>
+<path d="M56,2998 L100,2998" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 4"/>
+<text x="112" y="3002.5" class="t">Vendor_vlan_229 (229) <tspan class="s">10.2.29.0/24, 2001:470:f026:229::/64</tspan></text>
+<path d="M56,3024 L100,3024" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 4"/>
+<text x="112" y="3028.5" class="t">Vendor_vlan_230 (230) <tspan class="s">10.2.30.0/24, 2001:470:f026:230::/64</tspan></text>
+<path d="M603,1724 L647,1724" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 4"/>
+<text x="659" y="1728.5" class="t">Vendor_vlan_231 (231) <tspan class="s">10.2.31.0/24, 2001:470:f026:231::/64</tspan></text>
+<path d="M603,1750 L647,1750" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 4"/>
+<text x="659" y="1754.5" class="t">Vendor_vlan_232 (232) <tspan class="s">10.2.32.0/24, 2001:470:f026:232::/64</tspan></text>
+<path d="M603,1776 L647,1776" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 5"/>
+<text x="659" y="1780.5" class="t">Vendor_vlan_233 (233) <tspan class="s">10.2.33.0/24, 2001:470:f026:233::/64</tspan></text>
+<path d="M603,1802 L647,1802" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 5"/>
+<text x="659" y="1806.5" class="t">Vendor_vlan_234 (234) <tspan class="s">10.2.34.0/24, 2001:470:f026:234::/64</tspan></text>
+<path d="M603,1828 L647,1828" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 5"/>
+<text x="659" y="1832.5" class="t">Vendor_vlan_235 (235) <tspan class="s">10.2.35.0/24, 2001:470:f026:235::/64</tspan></text>
+<path d="M603,1854 L647,1854" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 5"/>
+<text x="659" y="1858.5" class="t">Vendor_vlan_236 (236) <tspan class="s">10.2.36.0/24, 2001:470:f026:236::/64</tspan></text>
+<path d="M603,1880 L647,1880" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 5"/>
+<text x="659" y="1884.5" class="t">Vendor_vlan_237 (237) <tspan class="s">10.2.37.0/24, 2001:470:f026:237::/64</tspan></text>
+<path d="M603,1906 L647,1906" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 5"/>
+<text x="659" y="1910.5" class="t">Vendor_vlan_238 (238) <tspan class="s">10.2.38.0/24, 2001:470:f026:238::/64</tspan></text>
+<path d="M603,1932 L647,1932" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 5"/>
+<text x="659" y="1936.5" class="t">Vendor_vlan_239 (239) <tspan class="s">10.2.39.0/24, 2001:470:f026:239::/64</tspan></text>
+<path d="M603,1958 L647,1958" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 5"/>
+<text x="659" y="1962.5" class="t">Vendor_vlan_240 (240) <tspan class="s">10.2.40.0/24, 2001:470:f026:240::/64</tspan></text>
+<path d="M603,1984 L647,1984" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 5"/>
+<text x="659" y="1988.5" class="t">Vendor_vlan_241 (241) <tspan class="s">10.2.41.0/24, 2001:470:f026:241::/64</tspan></text>
+<path d="M603,2010 L647,2010" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 5"/>
+<text x="659" y="2014.5" class="t">Vendor_vlan_242 (242) <tspan class="s">10.2.42.0/24, 2001:470:f026:242::/64</tspan></text>
+<path d="M603,2036 L647,2036" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 2"/>
+<text x="659" y="2040.5" class="t">Vendor_vlan_243 (243) <tspan class="s">10.2.43.0/24, 2001:470:f026:243::/64</tspan></text>
+<path d="M603,2062 L647,2062" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 2"/>
+<text x="659" y="2066.5" class="t">Vendor_vlan_244 (244) <tspan class="s">10.2.44.0/24, 2001:470:f026:244::/64</tspan></text>
+<path d="M603,2088 L647,2088" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 2"/>
+<text x="659" y="2092.5" class="t">Vendor_vlan_245 (245) <tspan class="s">10.2.45.0/24, 2001:470:f026:245::/64</tspan></text>
+<path d="M603,2114 L647,2114" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 2"/>
+<text x="659" y="2118.5" class="t">Vendor_vlan_246 (246) <tspan class="s">10.2.46.0/24, 2001:470:f026:246::/64</tspan></text>
+<path d="M603,2140 L647,2140" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 2"/>
+<text x="659" y="2144.5" class="t">Vendor_vlan_247 (247) <tspan class="s">10.2.47.0/24, 2001:470:f026:247::/64</tspan></text>
+<path d="M603,2166 L647,2166" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 2"/>
+<text x="659" y="2170.5" class="t">Vendor_vlan_248 (248) <tspan class="s">10.2.48.0/24, 2001:470:f026:248::/64</tspan></text>
+<path d="M603,2192 L647,2192" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 2"/>
+<text x="659" y="2196.5" class="t">Vendor_vlan_249 (249) <tspan class="s">10.2.49.0/24, 2001:470:f026:249::/64</tspan></text>
+<path d="M603,2218 L647,2218" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 2"/>
+<text x="659" y="2222.5" class="t">Vendor_vlan_250 (250) <tspan class="s">10.2.50.0/24, 2001:470:f026:250::/64</tspan></text>
+<path d="M603,2244 L647,2244" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 2"/>
+<text x="659" y="2248.5" class="t">Vendor_vlan_251 (251) <tspan class="s">10.2.51.0/24, 2001:470:f026:251::/64</tspan></text>
+<path d="M603,2270 L647,2270" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 2"/>
+<text x="659" y="2274.5" class="t">Vendor_vlan_252 (252) <tspan class="s">10.2.52.0/24, 2001:470:f026:252::/64</tspan></text>
+<path d="M603,2296 L647,2296" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3 2 3"/>
+<text x="659" y="2300.5" class="t">Vendor_vlan_253 (253) <tspan class="s">10.2.53.0/24, 2001:470:f026:253::/64</tspan></text>
+<path d="M603,2322 L647,2322" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3 2 3"/>
+<text x="659" y="2326.5" class="t">Vendor_vlan_254 (254) <tspan class="s">10.2.54.0/24, 2001:470:f026:254::/64</tspan></text>
+<path d="M603,2348 L647,2348" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3 2 3"/>
+<text x="659" y="2352.5" class="t">Vendor_vlan_255 (255) <tspan class="s">10.2.55.0/24, 2001:470:f026:255::/64</tspan></text>
+<path d="M603,2374 L647,2374" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3 2 3"/>
+<text x="659" y="2378.5" class="t">Vendor_vlan_256 (256) <tspan class="s">10.2.56.0/24, 2001:470:f026:256::/64</tspan></text>
+<path d="M603,2400 L647,2400" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3 2 3"/>
+<text x="659" y="2404.5" class="t">Vendor_vlan_257 (257) <tspan class="s">10.2.57.0/24, 2001:470:f026:257::/64</tspan></text>
+<path d="M603,2426 L647,2426" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3 2 3"/>
+<text x="659" y="2430.5" class="t">Vendor_vlan_258 (258) <tspan class="s">10.2.58.0/24, 2001:470:f026:258::/64</tspan></text>
+<path d="M603,2452 L647,2452" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3 2 3"/>
+<text x="659" y="2456.5" class="t">Vendor_vlan_259 (259) <tspan class="s">10.2.59.0/24, 2001:470:f026:259::/64</tspan></text>
+<path d="M603,2478 L647,2478" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3 2 3"/>
+<text x="659" y="2482.5" class="t">Vendor_vlan_260 (260) <tspan class="s">10.2.60.0/24, 2001:470:f026:260::/64</tspan></text>
+<path d="M603,2504 L647,2504" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3 2 3"/>
+<text x="659" y="2508.5" class="t">Vendor_vlan_261 (261) <tspan class="s">10.2.61.0/24, 2001:470:f026:261::/64</tspan></text>
+<path d="M603,2530 L647,2530" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3 2 3"/>
+<text x="659" y="2534.5" class="t">Vendor_vlan_262 (262) <tspan class="s">10.2.62.0/24, 2001:470:f026:262::/64</tspan></text>
+<path d="M603,2556 L647,2556" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6 2 6"/>
+<text x="659" y="2560.5" class="t">Vendor_vlan_263 (263) <tspan class="s">10.2.63.0/24, 2001:470:f026:263::/64</tspan></text>
+<path d="M603,2582 L647,2582" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6 2 6"/>
+<text x="659" y="2586.5" class="t">Vendor_vlan_264 (264) <tspan class="s">10.2.64.0/24, 2001:470:f026:264::/64</tspan></text>
+<path d="M603,2608 L647,2608" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6 2 6"/>
+<text x="659" y="2612.5" class="t">Vendor_vlan_265 (265) <tspan class="s">10.2.65.0/24, 2001:470:f026:265::/64</tspan></text>
+<path d="M603,2634 L647,2634" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6 2 6"/>
+<text x="659" y="2638.5" class="t">Vendor_vlan_266 (266) <tspan class="s">10.2.66.0/24, 2001:470:f026:266::/64</tspan></text>
+<path d="M603,2660 L647,2660" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6 2 6"/>
+<text x="659" y="2664.5" class="t">Vendor_vlan_267 (267) <tspan class="s">10.2.67.0/24, 2001:470:f026:267::/64</tspan></text>
+<path d="M603,2686 L647,2686" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6 2 6"/>
+<text x="659" y="2690.5" class="t">Vendor_vlan_268 (268) <tspan class="s">10.2.68.0/24, 2001:470:f026:268::/64</tspan></text>
+<path d="M603,2712 L647,2712" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6 2 6"/>
+<text x="659" y="2716.5" class="t">Vendor_vlan_269 (269) <tspan class="s">10.2.69.0/24, 2001:470:f026:269::/64</tspan></text>
+<path d="M603,2738 L647,2738" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6 2 6"/>
+<text x="659" y="2742.5" class="t">Vendor_vlan_270 (270) <tspan class="s">10.2.70.0/24, 2001:470:f026:270::/64</tspan></text>
+<path d="M603,2764 L647,2764" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6 2 6"/>
+<text x="659" y="2768.5" class="t">Vendor_vlan_271 (271) <tspan class="s">10.2.71.0/24, 2001:470:f026:271::/64</tspan></text>
+<path d="M603,2790 L647,2790" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6 2 6"/>
+<text x="659" y="2794.5" class="t">Vendor_vlan_272 (272) <tspan class="s">10.2.72.0/24, 2001:470:f026:272::/64</tspan></text>
+<path d="M603,2816 L647,2816" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4 2 4"/>
+<text x="659" y="2820.5" class="t">Vendor_vlan_273 (273) <tspan class="s">10.2.73.0/24, 2001:470:f026:273::/64</tspan></text>
+<path d="M603,2842 L647,2842" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4 2 4"/>
+<text x="659" y="2846.5" class="t">Vendor_vlan_274 (274) <tspan class="s">10.2.74.0/24, 2001:470:f026:274::/64</tspan></text>
+<path d="M603,2868 L647,2868" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 4 2 4"/>
+<text x="659" y="2872.5" class="t">Vendor_vlan_275 (275) <tspan class="s">10.2.75.0/24, 2001:470:f026:275::/64</tspan></text>
+<path d="M603,2894 L647,2894" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 4 2 4"/>
+<text x="659" y="2898.5" class="t">Vendor_vlan_276 (276) <tspan class="s">10.2.76.0/24, 2001:470:f026:276::/64</tspan></text>
+<path d="M603,2920 L647,2920" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 4 2 4"/>
+<text x="659" y="2924.5" class="t">Vendor_vlan_277 (277) <tspan class="s">10.2.77.0/24, 2001:470:f026:277::/64</tspan></text>
+<path d="M603,2946 L647,2946" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 4 2 4"/>
+<text x="659" y="2950.5" class="t">Vendor_vlan_278 (278) <tspan class="s">10.2.78.0/24, 2001:470:f026:278::/64</tspan></text>
+<path d="M603,2972 L647,2972" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 4 2 4"/>
+<text x="659" y="2976.5" class="t">Vendor_vlan_279 (279) <tspan class="s">10.2.79.0/24, 2001:470:f026:279::/64</tspan></text>
+<path d="M603,2998 L647,2998" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 4 2 4"/>
+<text x="659" y="3002.5" class="t">Vendor_vlan_280 (280) <tspan class="s">10.2.80.0/24, 2001:470:f026:280::/64</tspan></text>
+<path d="M603,3024 L647,3024" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 4 2 4"/>
+<text x="659" y="3028.5" class="t">Vendor_vlan_281 (281) <tspan class="s">10.2.81.0/24, 2001:470:f026:281::/64</tspan></text>
+<path d="M1149.9,1724 L1193.9,1724" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 4 2 4"/>
+<text x="1205.9" y="1728.5" class="t">Vendor_vlan_282 (282) <tspan class="s">10.2.82.0/24, 2001:470:f026:282::/64</tspan></text>
+<path d="M1149.9,1750 L1193.9,1750" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 5 2 5"/>
+<text x="1205.9" y="1754.5" class="t">Vendor_vlan_283 (283) <tspan class="s">10.2.83.0/24, 2001:470:f026:283::/64</tspan></text>
+<path d="M1149.9,1776 L1193.9,1776" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 5 2 5"/>
+<text x="1205.9" y="1780.5" class="t">Vendor_vlan_284 (284) <tspan class="s">10.2.84.0/24, 2001:470:f026:284::/64</tspan></text>
+<path d="M1149.9,1802 L1193.9,1802" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 5 2 5"/>
+<text x="1205.9" y="1806.5" class="t">Vendor_vlan_285 (285) <tspan class="s">10.2.85.0/24, 2001:470:f026:285::/64</tspan></text>
+<path d="M1149.9,1828 L1193.9,1828" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 5 2 5"/>
+<text x="1205.9" y="1832.5" class="t">Vendor_vlan_286 (286) <tspan class="s">10.2.86.0/24, 2001:470:f026:286::/64</tspan></text>
+<path d="M1149.9,1854 L1193.9,1854" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 5 2 5"/>
+<text x="1205.9" y="1858.5" class="t">Vendor_vlan_287 (287) <tspan class="s">10.2.87.0/24, 2001:470:f026:287::/64</tspan></text>
+<path d="M1149.9,1880 L1193.9,1880" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 5 2 5"/>
+<text x="1205.9" y="1884.5" class="t">Vendor_vlan_288 (288) <tspan class="s">10.2.88.0/24, 2001:470:f026:288::/64</tspan></text>
+<path d="M1149.9,1906 L1193.9,1906" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 5 2 5"/>
+<text x="1205.9" y="1910.5" class="t">Vendor_vlan_289 (289) <tspan class="s">10.2.89.0/24, 2001:470:f026:289::/64</tspan></text>
+<path d="M1149.9,1932 L1193.9,1932" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 5 2 5"/>
+<text x="1205.9" y="1936.5" class="t">Vendor_vlan_290 (290) <tspan class="s">10.2.90.0/24, 2001:470:f026:290::/64</tspan></text>
+<path d="M1149.9,1958 L1193.9,1958" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 5 2 5"/>
+<text x="1205.9" y="1962.5" class="t">Vendor_vlan_291 (291) <tspan class="s">10.2.91.0/24, 2001:470:f026:291::/64</tspan></text>
+<path d="M1149.9,1984 L1193.9,1984" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 5 2 5"/>
+<text x="1205.9" y="1988.5" class="t">Vendor_vlan_292 (292) <tspan class="s">10.2.92.0/24, 2001:470:f026:292::/64</tspan></text>
+<path d="M1149.9,2010 L1193.9,2010" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 2 2 2"/>
+<text x="1205.9" y="2014.5" class="t">Vendor_vlan_293 (293) <tspan class="s">10.2.93.0/24, 2001:470:f026:293::/64</tspan></text>
+<path d="M1149.9,2036 L1193.9,2036" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 2 2 2"/>
+<text x="1205.9" y="2040.5" class="t">Vendor_vlan_294 (294) <tspan class="s">10.2.94.0/24, 2001:470:f026:294::/64</tspan></text>
+<path d="M1149.9,2062 L1193.9,2062" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 2 2 2"/>
+<text x="1205.9" y="2066.5" class="t">Vendor_vlan_295 (295) <tspan class="s">10.2.95.0/24, 2001:470:f026:295::/64</tspan></text>
+<path d="M1149.9,2088 L1193.9,2088" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 2 2 2"/>
+<text x="1205.9" y="2092.5" class="t">Vendor_vlan_296 (296) <tspan class="s">10.2.96.0/24, 2001:470:f026:296::/64</tspan></text>
+<path d="M1149.9,2114 L1193.9,2114" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 2 2 2"/>
+<text x="1205.9" y="2118.5" class="t">Vendor_vlan_297 (297) <tspan class="s">10.2.97.0/24, 2001:470:f026:297::/64</tspan></text>
+<path d="M1149.9,2140 L1193.9,2140" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 2 2 2"/>
+<text x="1205.9" y="2144.5" class="t">Vendor_vlan_298 (298) <tspan class="s">10.2.98.0/24, 2001:470:f026:298::/64</tspan></text>
+<path d="M1149.9,2166 L1193.9,2166" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 2 2 2"/>
+<text x="1205.9" y="2170.5" class="t">Vendor_vlan_299 (299) <tspan class="s">10.2.99.0/24, 2001:470:f026:299::/64</tspan></text>
+<path d="M1149.9,2192 L1193.9,2192" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 2 2 2"/>
+<text x="1205.9" y="2196.5" class="t">Vendor_vlan_300 (300) <tspan class="s">10.2.100.0/24, 2001:470:f026:300::/64</tspan></text>
+<path d="M1149.9,2218 L1193.9,2218" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 2 2 2"/>
+<text x="1205.9" y="2222.5" class="t">Vendor_vlan_301 (301) <tspan class="s">10.2.101.0/24, 2001:470:f026:301::/64</tspan></text>
+<path d="M1149.9,2244 L1193.9,2244" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 2 2 2"/>
+<text x="1205.9" y="2248.5" class="t">Vendor_vlan_302 (302) <tspan class="s">10.2.102.0/24, 2001:470:f026:302::/64</tspan></text>
+<path d="M1149.9,2270 L1193.9,2270" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 3 2 3 2 3"/>
+<text x="1205.9" y="2274.5" class="t">Vendor_vlan_303 (303) <tspan class="s">10.2.103.0/24, 2001:470:f026:303::/64</tspan></text>
+<path d="M1149.9,2296 L1193.9,2296" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 3 2 3 2 3"/>
+<text x="1205.9" y="2300.5" class="t">Vendor_vlan_304 (304) <tspan class="s">10.2.104.0/24, 2001:470:f026:304::/64</tspan></text>
+<path d="M1149.9,2322 L1193.9,2322" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 3 2 3 2 3"/>
+<text x="1205.9" y="2326.5" class="t">Vendor_vlan_305 (305) <tspan class="s">10.2.105.0/24, 2001:470:f026:305::/64</tspan></text>
+<path d="M1149.9,2348 L1193.9,2348" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 3 2 3 2 3"/>
+<text x="1205.9" y="2352.5" class="t">Vendor_vlan_306 (306) <tspan class="s">10.2.106.0/24, 2001:470:f026:306::/64</tspan></text>
+<path d="M1149.9,2374 L1193.9,2374" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 3 2 3 2 3"/>
+<text x="1205.9" y="2378.5" class="t">Vendor_vlan_307 (307) <tspan class="s">10.2.107.0/24, 2001:470:f026:307::/64</tspan></text>
+<path d="M1149.9,2400 L1193.9,2400" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 3 2 3 2 3"/>
+<text x="1205.9" y="2404.5" class="t">Vendor_vlan_308 (308) <tspan class="s">10.2.108.0/24, 2001:470:f026:308::/64</tspan></text>
+<path d="M1149.9,2426 L1193.9,2426" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 3 2 3 2 3"/>
+<text x="1205.9" y="2430.5" class="t">Vendor_vlan_309 (309) <tspan class="s">10.2.109.0/24, 2001:470:f026:309::/64</tspan></text>
+<path d="M1149.9,2452 L1193.9,2452" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 3 2 3 2 3"/>
+<text x="1205.9" y="2456.5" class="t">Vendor_vlan_310 (310) <tspan class="s">10.2.110.0/24, 2001:470:f026:310::/64</tspan></text>
+<path d="M1149.9,2478 L1193.9,2478" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 3 2 3 2 3"/>
+<text x="1205.9" y="2482.5" class="t">Vendor_vlan_311 (311) <tspan class="s">10.2.111.0/24, 2001:470:f026:311::/64</tspan></text>
+<path d="M1149.9,2504 L1193.9,2504" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 3 2 3 2 3"/>
+<text x="1205.9" y="2508.5" class="t">Vendor_vlan_312 (312) <tspan class="s">10.2.112.0/24, 2001:470:f026:312::/64</tspan></text>
+<path d="M1149.9,2530 L1193.9,2530" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 6 2 6 2 6"/>
+<text x="1205.9" y="2534.5" class="t">Vendor_vlan_313 (313) <tspan class="s">10.2.113.0/24, 2001:470:f026:313::/64</tspan></text>
+<path d="M1149.9,2556 L1193.9,2556" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 6 2 6 2 6"/>
+<text x="1205.9" y="2560.5" class="t">Vendor_vlan_314 (314) <tspan class="s">10.2.114.0/24, 2001:470:f026:314::/64</tspan></text>
+<path d="M1149.9,2582 L1193.9,2582" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="6 6 2 6 2 6"/>
+<text x="1205.9" y="2586.5" class="t">Vendor_vlan_315 (315) <tspan class="s">10.2.115.0/24, 2001:470:f026:315::/64</tspan></text>
+<path d="M1149.9,2608 L1193.9,2608" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="8 6 2 6 2 6"/>
+<text x="1205.9" y="2612.5" class="t">Vendor_vlan_316 (316) <tspan class="s">10.2.116.0/24, 2001:470:f026:316::/64</tspan></text>
+<path d="M1149.9,2634 L1193.9,2634" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="10 6 2 6 2 6"/>
+<text x="1205.9" y="2638.5" class="t">Vendor_vlan_317 (317) <tspan class="s">10.2.117.0/24, 2001:470:f026:317::/64</tspan></text>
+<path d="M1149.9,2660 L1193.9,2660" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="12 6 2 6 2 6"/>
+<text x="1205.9" y="2664.5" class="t">Vendor_vlan_318 (318) <tspan class="s">10.2.118.0/24, 2001:470:f026:318::/64</tspan></text>
+<path d="M1149.9,2686 L1193.9,2686" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="16 6 2 6 2 6"/>
+<text x="1205.9" y="2690.5" class="t">Vendor_vlan_319 (319) <tspan class="s">10.2.119.0/24, 2001:470:f026:319::/64</tspan></text>
+<path d="M1149.9,2712 L1193.9,2712" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="20 6 2 6 2 6"/>
+<text x="1205.9" y="2716.5" class="t">Vendor_vlan_320 (320) <tspan class="s">10.2.120.0/24, 2001:470:f026:320::/64</tspan></text>
+<path d="M1149.9,2738 L1193.9,2738" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="24 6 2 6 2 6"/>
+<text x="1205.9" y="2742.5" class="t">Vendor_vlan_321 (321) <tspan class="s">10.2.121.0/24, 2001:470:f026:321::/64</tspan></text>
+<path d="M1149.9,2764 L1193.9,2764" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="30 6 2 6 2 6"/>
+<text x="1205.9" y="2768.5" class="t">Vendor_vlan_322 (322) <tspan class="s">10.2.122.0/24, 2001:470:f026:322::/64</tspan></text>
+<path d="M1149.9,2790 L1193.9,2790" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="2 4 2 4 2 4"/>
+<text x="1205.9" y="2794.5" class="t">Vendor_vlan_323 (323) <tspan class="s">10.2.123.0/24, 2001:470:f026:323::/64</tspan></text>
+<path d="M1149.9,2816 L1193.9,2816" fill="none" stroke="#9684F4" stroke-width="3" stroke-dasharray="4 4 2 4 2 4"/>
+<text x="1205.9" y="2820.5" class="t">Vendor_vlan_324 (324) <tspan class="s">10.2.124.0/24, 2001:470:f026:324::/64</tspan></text>
+<path d="M1149.9,2842 L1193.9,2842" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1205.9" y="2846.5" class="t">exUplink → exInfra, exw-SLOW, exw-FAST, exReg, exSpkr,</text>
+<text x="1205.9" y="2872.5" class="t">exAV, exSigns, exVmVndr, vendor_backbone</text>
+<path d="M1149.9,2894 L1193.9,2894" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1205.9" y="2898.5" class="t">exDownlink → exInfra, exw-SLOW, exw-FAST, exReg,</text>
+<text x="1205.9" y="2924.5" class="t">exSpkr, exAV, exSigns, exVmVndr, vendor_backbone</text>
+<path d="M1149.9,2946 L1193.9,2946" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1205.9" y="2950.5" class="t">exAP → exInfra, exw-SLOW, exw-FAST</text>
+<path d="M1149.9,2972 L1193.9,2972" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1205.9" y="2976.5" class="t">cfUplink → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV,</text>
+<text x="1205.9" y="3002.5" class="t">cfNOC, cfSigns</text>
+<path d="M1149.9,3024 L1193.9,3024" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1205.9" y="3028.5" class="t">cfDownlink → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr,</text>
+<text x="1752.9" y="1728.5" class="t">cfAV, cfNOC, cfSigns</text>
+<path d="M1696.9,1750 L1740.9,1750" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1752.9" y="1754.5" class="t">cfAP → cfInfra, cfw-SLOW, cfw-FAST</text>
+<path d="M1696.9,1776 L1740.9,1776" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1752.9" y="1780.5" class="t">vendor-all → exInfra, exw-SLOW, exw-FAST, exReg,</text>
+<text x="1752.9" y="1806.5" class="t">exSpkr, exAV, exSigns, exVmVndr, vendor_backbone,</text>
+<text x="1752.9" y="1832.5" class="t">vendor_vlan_200, vendor_vlan_201, vendor_vlan_202,</text>
+<text x="1752.9" y="1858.5" class="t">vendor_vlan_203, vendor_vlan_204, vendor_vlan_205,</text>
+<text x="1752.9" y="1884.5" class="t">vendor_vlan_206, vendor_vlan_207, vendor_vlan_208,</text>
+<text x="1752.9" y="1910.5" class="t">vendor_vlan_209, vendor_vlan_210, vendor_vlan_211,</text>
+<text x="1752.9" y="1936.5" class="t">vendor_vlan_212, vendor_vlan_213, vendor_vlan_214,</text>
+<text x="1752.9" y="1962.5" class="t">vendor_vlan_215, vendor_vlan_216, vendor_vlan_217,</text>
+<text x="1752.9" y="1988.5" class="t">vendor_vlan_218, vendor_vlan_219, vendor_vlan_220,</text>
+<text x="1752.9" y="2014.5" class="t">vendor_vlan_221, vendor_vlan_222, vendor_vlan_223,</text>
+<text x="1752.9" y="2040.5" class="t">vendor_vlan_224, vendor_vlan_225, vendor_vlan_226,</text>
+<text x="1752.9" y="2066.5" class="t">vendor_vlan_227, vendor_vlan_228, vendor_vlan_229,</text>
+<text x="1752.9" y="2092.5" class="t">vendor_vlan_230, vendor_vlan_231, vendor_vlan_232,</text>
+<text x="1752.9" y="2118.5" class="t">vendor_vlan_233, vendor_vlan_234, vendor_vlan_235,</text>
+<text x="1752.9" y="2144.5" class="t">vendor_vlan_236, vendor_vlan_237, vendor_vlan_238,</text>
+<text x="1752.9" y="2170.5" class="t">vendor_vlan_239, vendor_vlan_240, vendor_vlan_241,</text>
+<text x="1752.9" y="2196.5" class="t">vendor_vlan_242, vendor_vlan_243, vendor_vlan_244,</text>
+<text x="1752.9" y="2222.5" class="t">vendor_vlan_245, vendor_vlan_246, vendor_vlan_247,</text>
+<text x="1752.9" y="2248.5" class="t">vendor_vlan_248, vendor_vlan_249, vendor_vlan_250,</text>
+<text x="1752.9" y="2274.5" class="t">vendor_vlan_251, vendor_vlan_252, vendor_vlan_253,</text>
+<text x="1752.9" y="2300.5" class="t">vendor_vlan_254, vendor_vlan_255, vendor_vlan_256,</text>
+<text x="1752.9" y="2326.5" class="t">vendor_vlan_257, vendor_vlan_258, vendor_vlan_259,</text>
+<text x="1752.9" y="2352.5" class="t">vendor_vlan_260, vendor_vlan_261, vendor_vlan_262,</text>
+<text x="1752.9" y="2378.5" class="t">vendor_vlan_263, vendor_vlan_264, vendor_vlan_265,</text>
+<text x="1752.9" y="2404.5" class="t">vendor_vlan_266, vendor_vlan_267, vendor_vlan_268,</text>
+<text x="1752.9" y="2430.5" class="t">vendor_vlan_269, vendor_vlan_270, vendor_vlan_271,</text>
+<text x="1752.9" y="2456.5" class="t">vendor_vlan_272, vendor_vlan_273, vendor_vlan_274,</text>
+<text x="1752.9" y="2482.5" class="t">vendor_vlan_275, vendor_vlan_276, vendor_vlan_277,</text>
+<text x="1752.9" y="2508.5" class="t">vendor_vlan_278, vendor_vlan_279, vendor_vlan_280,</text>
+<text x="1752.9" y="2534.5" class="t">vendor_vlan_281, vendor_vlan_282, vendor_vlan_283,</text>
+<text x="1752.9" y="2560.5" class="t">vendor_vlan_284, vendor_vlan_285, vendor_vlan_286,</text>
+<text x="1752.9" y="2586.5" class="t">vendor_vlan_287, vendor_vlan_288, vendor_vlan_289,</text>
+<text x="1752.9" y="2612.5" class="t">vendor_vlan_290, vendor_vlan_291, vendor_vlan_292,</text>
+<text x="1752.9" y="2638.5" class="t">vendor_vlan_293, vendor_vlan_294, vendor_vlan_295,</text>
+<text x="1752.9" y="2664.5" class="t">vendor_vlan_296, vendor_vlan_297, vendor_vlan_298,</text>
+<text x="1752.9" y="2690.5" class="t">vendor_vlan_299, vendor_vlan_300, vendor_vlan_301,</text>
+<text x="1752.9" y="2716.5" class="t">vendor_vlan_302, vendor_vlan_303, vendor_vlan_304,</text>
+<text x="1752.9" y="2742.5" class="t">vendor_vlan_305, vendor_vlan_306, vendor_vlan_307,</text>
+<text x="1752.9" y="2768.5" class="t">vendor_vlan_308, vendor_vlan_309, vendor_vlan_310,</text>
+<text x="1752.9" y="2794.5" class="t">vendor_vlan_311, vendor_vlan_312, vendor_vlan_313,</text>
+<text x="1752.9" y="2820.5" class="t">vendor_vlan_314, vendor_vlan_315, vendor_vlan_316,</text>
+<text x="1752.9" y="2846.5" class="t">vendor_vlan_317, vendor_vlan_318, vendor_vlan_319,</text>
+<text x="1752.9" y="2872.5" class="t">vendor_vlan_320, vendor_vlan_321, vendor_vlan_322,</text>
+<text x="1752.9" y="2898.5" class="t">vendor_vlan_323, vendor_vlan_324</text>
+<path d="M1696.9,2920 L1740.9,2920" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1752.9" y="2924.5" class="t">cfRoom-up → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV,</text>
+<text x="1752.9" y="2950.5" class="t">cfNOC, cfSigns, cfCTF, cfInstl</text>
+<path d="M1696.9,2972 L1740.9,2972" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1752.9" y="2976.5" class="t">trunk: named set or more than 4 VLANs</text>
+<path d="M1700.9,2998 L1740.9,2998" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="1752.9" y="3002.5" class="t">routed</text>
 </g>
 </svg>

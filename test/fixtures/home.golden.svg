@@ -1,23 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="2063" height="1764" viewBox="0 0 2063 1764" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
+<svg xmlns="http://www.w3.org/2000/svg" width="2063" height="1780" viewBox="0 0 2063 1780" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
 <defs>
 <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
 <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1565C0"/></marker>
 <style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>
 </defs>
-<rect width="2063" height="1764" fill="#fff"/>
+<rect width="2063" height="1780" fill="#fff"/>
 <text x="40" y="46" font-size="26" font-weight="700">Home network</text>
-<rect x="44.8" y="380" width="899.5" height="608" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="44.8" y="380" width="899.5" height="624" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
 <rect x="819.6" y="378" width="8.5" height="4" fill="#FAFAFA"/>
-<rect x="112.2" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="222.2" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="215.7" y="986" width="9" height="4" fill="#FAFAFA"/>
-<rect x="627.7" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="621.2" y="986" width="9" height="4" fill="#FAFAFA"/>
-<rect x="613.7" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="419.7" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="419.7" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="419.7" y="986" width="10" height="4" fill="#FAFAFA"/>
-<rect x="942.4" y="972" width="4" height="8" fill="#FAFAFA"/>
+<rect x="112.2" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="222.2" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="215.7" y="1002" width="9" height="4" fill="#FAFAFA"/>
+<rect x="627.7" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="621.2" y="1002" width="9" height="4" fill="#FAFAFA"/>
+<rect x="613.7" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="419.7" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="419.7" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="419.7" y="1002" width="10" height="4" fill="#FAFAFA"/>
+<rect x="942.4" y="988" width="4" height="8" fill="#FAFAFA"/>
 <rect x="509.9" y="421" width="422.5" height="134" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
 <rect x="819.6" y="419" width="8.5" height="4" fill="#FDECEA"/>
 <rect x="606.2" y="553" width="10" height="4" fill="#FDECEA"/>
@@ -26,118 +26,118 @@
 <rect x="727.4" y="457" width="193" height="86" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="521.9" y="473" width="185.5" height="70" rx="6" fill="#FFF3E0" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 4"/>
 <polygon points="649.2,599 669.2,580 891.2,580 911.2,599 891.2,618 669.2,618" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="56.8" y="643" width="725.4" height="170" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
-<rect x="112.2" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="222.2" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="215.7" y="811" width="9" height="4" fill="#E8F5E9"/>
-<rect x="627.7" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="621.2" y="811" width="9" height="4" fill="#E8F5E9"/>
-<rect x="613.7" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="419.7" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="419.7" y="811" width="10" height="4" fill="#E8F5E9"/>
-<rect x="419.7" y="811" width="10" height="4" fill="#E8F5E9"/>
+<rect x="56.8" y="643" width="725.4" height="186" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="112.2" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="222.2" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="215.7" y="827" width="9" height="4" fill="#E8F5E9"/>
+<rect x="627.7" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="621.2" y="827" width="9" height="4" fill="#E8F5E9"/>
+<rect x="613.7" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="419.7" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="419.7" y="827" width="10" height="4" fill="#E8F5E9"/>
+<rect x="419.7" y="827" width="10" height="4" fill="#E8F5E9"/>
 <rect x="606.2" y="641" width="10" height="4" fill="#E8F5E9"/>
-<rect x="677.4" y="811" width="9" height="4" fill="#E8F5E9"/>
-<rect x="717.4" y="811" width="9" height="4" fill="#E8F5E9"/>
-<rect x="73.9" y="763" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="180.4" y="755" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="582.4" y="752.3" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="677.4" y="827" width="9" height="4" fill="#E8F5E9"/>
+<rect x="717.4" y="827" width="9" height="4" fill="#E8F5E9"/>
+<rect x="73.9" y="779" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="180.4" y="771" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="582.4" y="768.3" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <rect x="68.8" y="679" width="86.5" height="38" rx="6" fill="#F5F5F5" stroke="#999" stroke-width="1.5" stroke-dasharray="4 3"/>
 <rect x="175.3" y="679" width="145" height="38" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6 4"/>
 <rect x="625.2" y="679" width="145" height="38" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="286.9" y="747" width="275.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="637.7" y="838" width="248.3" height="118" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
-<rect x="649.7" y="890" width="154.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="200.4" y="1058" width="652" height="213" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="330.1" y="1056" width="10" height="4" fill="#FAFAFA"/>
-<rect x="323.6" y="1056" width="9" height="4" fill="#FAFAFA"/>
-<rect x="212.4" y="1099" width="628" height="160" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
-<rect x="330.1" y="1097" width="10" height="4" fill="#E8F5E9"/>
-<rect x="323.6" y="1097" width="9" height="4" fill="#E8F5E9"/>
-<rect x="288.3" y="1135" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="224.4" y="1193" width="185.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="429.9" y="1193" width="398.5" height="54" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
-<rect x="1400.9" y="1058" width="401.3" height="398" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="1505.2" y="1056" width="10" height="4" fill="#FAFAFA"/>
-<rect x="1498.7" y="1056" width="9" height="4" fill="#FAFAFA"/>
-<rect x="1491.2" y="1056" width="10" height="4" fill="#FAFAFA"/>
-<rect x="1730" y="1056" width="10" height="4" fill="#FAFAFA"/>
-<rect x="1412.9" y="1099" width="377.3" height="218" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
-<rect x="1505.2" y="1097" width="10" height="4" fill="#E8F5E9"/>
-<rect x="1498.7" y="1097" width="9" height="4" fill="#E8F5E9"/>
-<rect x="1491.2" y="1097" width="10" height="4" fill="#E8F5E9"/>
-<rect x="1730" y="1097" width="10" height="4" fill="#E8F5E9"/>
-<rect x="1618.9" y="1315" width="9" height="4" fill="#E8F5E9"/>
-<rect x="1474.4" y="1193" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1691.7" y="1135" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1526.7" y="1135" width="145" height="38" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6 4"/>
-<rect x="1424.9" y="1251" width="185.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1534" y="1342" width="178.8" height="102" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
-<rect x="1546" y="1378" width="154.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1491.5" y="474.7" width="531" height="324" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="1730.7" y="472.7" width="8.5" height="4" fill="#FAFAFA"/>
-<rect x="1730" y="796.7" width="10" height="4" fill="#FAFAFA"/>
-<rect x="1688" y="518.7" width="94" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="1730.7" y="516.7" width="8.5" height="4" fill="#FDECEA"/>
-<rect x="1730" y="602.7" width="10" height="4" fill="#FDECEA"/>
-<rect x="1700" y="554.7" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="1604,651.7 1624,632.7 1846,632.7 1866,651.7 1846,670.7 1624,670.7" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="1503.5" y="510.7" width="164.5" height="102" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
-<rect x="1515.5" y="546.7" width="140.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1691.7" y="748.7" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1691.7" y="690.7" width="86.5" height="38" rx="6" fill="#fff" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="286.9" y="763" width="275.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="637.7" y="854" width="248.3" height="118" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+<rect x="649.7" y="906" width="154.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="200.4" y="1074" width="652" height="213" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="330.1" y="1072" width="10" height="4" fill="#FAFAFA"/>
+<rect x="323.6" y="1072" width="9" height="4" fill="#FAFAFA"/>
+<rect x="212.4" y="1115" width="628" height="160" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="330.1" y="1113" width="10" height="4" fill="#E8F5E9"/>
+<rect x="323.6" y="1113" width="9" height="4" fill="#E8F5E9"/>
+<rect x="288.3" y="1151" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="224.4" y="1209" width="185.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="429.9" y="1209" width="398.5" height="54" rx="6" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+<rect x="1400.9" y="1074" width="401.3" height="398" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="1505.2" y="1072" width="10" height="4" fill="#FAFAFA"/>
+<rect x="1498.7" y="1072" width="9" height="4" fill="#FAFAFA"/>
+<rect x="1491.2" y="1072" width="10" height="4" fill="#FAFAFA"/>
+<rect x="1730" y="1072" width="10" height="4" fill="#FAFAFA"/>
+<rect x="1412.9" y="1115" width="377.3" height="218" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="1505.2" y="1113" width="10" height="4" fill="#E8F5E9"/>
+<rect x="1498.7" y="1113" width="9" height="4" fill="#E8F5E9"/>
+<rect x="1491.2" y="1113" width="10" height="4" fill="#E8F5E9"/>
+<rect x="1730" y="1113" width="10" height="4" fill="#E8F5E9"/>
+<rect x="1618.9" y="1331" width="9" height="4" fill="#E8F5E9"/>
+<rect x="1474.4" y="1209" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1691.7" y="1151" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1526.7" y="1151" width="145" height="38" rx="6" fill="#fff" stroke="#1565C0" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1424.9" y="1267" width="185.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1534" y="1358" width="178.8" height="102" rx="10" fill="#E3F2FD" stroke="#1565C0" stroke-width="1.5"/>
+<rect x="1546" y="1394" width="154.8" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1491.5" y="480" width="531" height="324" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="1730.7" y="478" width="8.5" height="4" fill="#FAFAFA"/>
+<rect x="1730" y="802" width="10" height="4" fill="#FAFAFA"/>
+<rect x="1688" y="524" width="94" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="1730.7" y="522" width="8.5" height="4" fill="#FDECEA"/>
+<rect x="1730" y="608" width="10" height="4" fill="#FDECEA"/>
+<rect x="1700" y="560" width="70" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<polygon points="1604,657 1624,638 1846,638 1866,657 1846,676 1624,676" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="1503.5" y="516" width="164.5" height="102" rx="10" fill="#E8F5E9" stroke="#2E7D32" stroke-width="1.5"/>
+<rect x="1515.5" y="552" width="140.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1691.7" y="754" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1691.7" y="696" width="86.5" height="38" rx="6" fill="#fff" stroke="#E65100" stroke-width="1.5" stroke-dasharray="6 4"/>
 <path d="M785.9,186 A21,21 0 0 1 769.4,154 A27,27 0 0 1 809.9,124.4 A33,33 0 0 1 869.9,119.6 A25.5,25.5 0 0 1 910.4,154 A19.5,19.5 0 0 1 893.9,186 Z" fill="#F5F5F5" stroke="#777" stroke-width="1.5"/>
 <rect x="791.8" y="268" width="96.3" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <path d="M951.1,316 A23,23 0 0 1 933,284 A29.6,29.6 0 0 1 977.4,254.4 A36.2,36.2 0 0 1 1043.2,249.6 A28,28 0 0 1 1087.6,284 A21.4,21.4 0 0 1 1069.5,316 Z" fill="#F5F5F5" stroke="#777" stroke-width="1.5"/>
-<rect x="73.9" y="1294.7" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="205.5" y="1506" width="125.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="40" y="1506" width="125.5" height="70" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1235.4" y="1058" width="125.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="892.4" y="1058" width="145" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1077.4" y="1058" width="118" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<path d="M761.8,956 L761.8,976 L1319.1,976 L1319.1,1058" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="2 4" stroke-linejoin="round" marker-end="url(#ab)"/>
+<rect x="73.9" y="1310.7" width="86.5" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="205.5" y="1522" width="125.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="40" y="1522" width="125.5" height="70" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1235.4" y="1074" width="125.5" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="892.4" y="1074" width="145" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1077.4" y="1074" width="118" height="54" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<path d="M761.8,972 L761.8,992 L1319.1,992 L1319.1,1074" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="2 4" stroke-linejoin="round" marker-end="url(#ab)"/>
 <path d="M839.9,190 L839.9,268" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
 <path d="M823.9,306 L823.9,457" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M1010.3,320 L1010.3,330 L1735,330 L1735,554.7" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M131.6,1332.7 L131.6,1466 L268.3,1466 L268.3,1506" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M102.7,1332.7 L102.8,1506" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M117.2,801 L117.2,1294.7" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M227.2,793 L227.2,1004.5 L335.1,1004.5 L335.1,1135" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M632.7,790.3 L632.7,1001 L1314.1,1001 A5,5 0 0 1 1324.1,1001 L1510.2,1001 L1510.2,1193" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M424.7,801 L424.7,1018 L1277.2,1018 L1277.2,1058" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M424.7,801 L424.7,1018 L964.9,1018 L964.9,1058" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M424.7,801 L424.7,1018 L1136.4,1018 L1136.4,1058" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M317.2,1173 L317.2,1193" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M1517.7,1231 L1517.7,1251" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
-<path d="M220.2,793 L220.2,1011.5 L328.1,1011.5 L328.1,1135" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M625.7,790.3 L625.7,1008 L1314.1,1008 A5,5 0 0 1 1324.1,1008 L1503.2,1008 L1503.2,1193" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M223.7,717 L223.7,755" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M640.1,717 L640.1,752.3" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M272,717 L272,737 L606.2,737 A5,5 0 0 1 616.2,737 L635.1,737 A5,5 0 0 1 645.1,737 L681.9,737 L681.9,828 L699.7,828 L699.7,838" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M721.9,717 L721.9,828 L761.8,828 L761.8,838" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M346,1173 L346,1183 L629.2,1183 L629.2,1193" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M1543.8,1173 L1543.8,1193" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M1623.4,1173 L1623.4,1342" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
-<path d="M618.7,790.3 L618.7,1015 L1314.1,1015 A5,5 0 0 1 1324.1,1015 L1496.2,1015 L1496.2,1193" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
-<path d="M1735,786.7 L1735,1135" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
-<path d="M611.2,543 L611.2,752.3" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
-<path d="M1735,728.7 L1735,748.7" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
+<path d="M1010.3,320 L1010.3,330 L1735,330 L1735,560" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M131.6,1348.7 L131.6,1482 L268.3,1482 L268.3,1522" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M102.7,1348.7 L102.8,1522" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M117.2,817 L117.2,1310.7" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M227.2,809 L227.2,1020.5 L335.1,1020.5 L335.1,1151" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M632.7,806.3 L632.7,1017 L1314.1,1017 A5,5 0 0 1 1324.1,1017 L1510.2,1017 L1510.2,1209" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M424.7,817 L424.7,1050 L1277.2,1050 L1277.2,1074" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M424.7,817 L424.7,1050 L964.9,1050 L964.9,1074" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M424.7,817 L424.7,1050 L1136.4,1050 L1136.4,1074" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M317.2,1189 L317.2,1209" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M1517.7,1247 L1517.7,1267" fill="none" stroke="#2E7D32" stroke-width="4" stroke-linejoin="round"/>
+<path d="M220.2,809 L220.2,1027.5 L328.1,1027.5 L328.1,1151" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M625.7,806.3 L625.7,1024 L1314.1,1024 A5,5 0 0 1 1324.1,1024 L1503.2,1024 L1503.2,1209" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M223.7,717 L223.7,771" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M640.1,717 L640.1,768.3" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M272,717 L272,753 L606.2,753 A5,5 0 0 1 616.2,753 L635.1,753 A5,5 0 0 1 645.1,753 L681.9,753 L681.9,844 L699.7,844 L699.7,854" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M721.9,717 L721.9,844 L761.8,844 L761.8,854" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M346,1189 L346,1199 L629.2,1199 L629.2,1209" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M1543.8,1189 L1543.8,1209" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M1623.4,1189 L1623.4,1358" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M618.7,806.3 L618.7,1031 L1314.1,1031 A5,5 0 0 1 1324.1,1031 L1496.2,1031 L1496.2,1209" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
+<path d="M1735,792 L1735,1151" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
+<path d="M611.2,543 L611.2,768.3" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
+<path d="M1735,734 L1735,754" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4" stroke-linejoin="round"/>
 <path d="M823.9,543 L823.9,580" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <path d="M645.5,543 L645.5,570 L736.5,570 L736.5,580" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <path d="M736.5,618 L736.5,628 L631.2,628 L631.2,643" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M823.9,618 L823.9,838" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1735,592.7 L1735,632.7" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1735,670.7 L1735,690.7" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<path d="M1314.1,1001 A5,5 0 0 1 1324.1,1001" fill="none" stroke="#fff" stroke-width="8"/>
-<path d="M1314.1,1008 A5,5 0 0 1 1324.1,1008" fill="none" stroke="#fff" stroke-width="7"/>
-<path d="M606.2,737 A5,5 0 0 1 616.2,737" fill="none" stroke="#fff" stroke-width="7"/>
-<path d="M635.1,737 A5,5 0 0 1 645.1,737" fill="none" stroke="#fff" stroke-width="7"/>
-<path d="M1314.1,1015 A5,5 0 0 1 1324.1,1015" fill="none" stroke="#fff" stroke-width="8"/>
-<path d="M1314.1,1001 A5,5 0 0 1 1324.1,1001" fill="none" stroke="#2E7D32" stroke-width="4"/>
-<path d="M1314.1,1008 A5,5 0 0 1 1324.1,1008" fill="none" stroke="#1565C0" stroke-width="3"/>
-<path d="M606.2,737 A5,5 0 0 1 616.2,737" fill="none" stroke="#1565C0" stroke-width="3"/>
-<path d="M635.1,737 A5,5 0 0 1 645.1,737" fill="none" stroke="#1565C0" stroke-width="3"/>
-<path d="M1314.1,1015 A5,5 0 0 1 1324.1,1015" fill="none" stroke="#E65100" stroke-width="4"/>
+<path d="M823.9,618 L823.9,854" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1735,598 L1735,638" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1735,676 L1735,696" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1314.1,1017 A5,5 0 0 1 1324.1,1017" fill="none" stroke="#fff" stroke-width="8"/>
+<path d="M1314.1,1024 A5,5 0 0 1 1324.1,1024" fill="none" stroke="#fff" stroke-width="7"/>
+<path d="M606.2,753 A5,5 0 0 1 616.2,753" fill="none" stroke="#fff" stroke-width="7"/>
+<path d="M635.1,753 A5,5 0 0 1 645.1,753" fill="none" stroke="#fff" stroke-width="7"/>
+<path d="M1314.1,1031 A5,5 0 0 1 1324.1,1031" fill="none" stroke="#fff" stroke-width="8"/>
+<path d="M1314.1,1017 A5,5 0 0 1 1324.1,1017" fill="none" stroke="#2E7D32" stroke-width="4"/>
+<path d="M1314.1,1024 A5,5 0 0 1 1324.1,1024" fill="none" stroke="#1565C0" stroke-width="3"/>
+<path d="M606.2,753 A5,5 0 0 1 616.2,753" fill="none" stroke="#1565C0" stroke-width="3"/>
+<path d="M635.1,753 A5,5 0 0 1 645.1,753" fill="none" stroke="#1565C0" stroke-width="3"/>
+<path d="M1314.1,1031 A5,5 0 0 1 1324.1,1031" fill="none" stroke="#E65100" stroke-width="4"/>
 <text x="58.8" y="404" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">CORE · hAP ax3 · 192.168.0.1 · RouterOS 7.25.1</text>
 <text x="523.9" y="445" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="741.4" y="481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
@@ -149,83 +149,83 @@
 <text x="535.9" y="531" class="s" stroke="#FFF3E0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DHCP client</text>
 <text x="780.2" y="604" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
 <text x="70.8" y="667" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge · 192.168.0.1/24</text>
-<text x="117.2" y="787" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
-<text x="223.7" y="779" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether3</text>
-<text x="625.7" y="776.3" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether4</text>
+<text x="117.2" y="803" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
+<text x="223.7" y="795" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether3</text>
+<text x="625.7" y="792.3" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether4</text>
 <text x="112.1" y="703" class="h" text-anchor="middle" stroke="#F5F5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether5</text>
 <text x="247.8" y="703" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan50-guest</text>
 <text x="697.7" y="703" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan51-guest</text>
-<text x="300.9" y="771" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
-<text x="300.9" y="788" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT · HomeNet-5</text>
-<text x="651.7" y="862" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest · 10.50.0.1/24</text>
-<text x="651.7" y="879" class="s" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">hotspot</text>
-<text x="663.7" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
-<text x="663.7" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="214.4" y="1082" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP1 · hAP ac lite · RouterOS 7.25</text>
-<text x="226.4" y="1123" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridgeLocal</text>
-<text x="331.6" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
-<text x="238.4" y="1217" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1 / wlan2</text>
-<text x="238.4" y="1234" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
-<text x="443.9" y="1217" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1-guest / wlan2-guest · use-tag 50</text>
-<text x="443.9" y="1234" class="s" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="1414.9" y="1082" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP2 · hAP ac2 · RouterOS 7.25</text>
-<text x="1426.9" y="1123" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
-<text x="1517.7" y="1217" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
-<text x="1735" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
-<text x="1599.2" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan51-guest</text>
-<text x="1438.9" y="1275" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
-<text x="1438.9" y="1292" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
-<text x="1548" y="1366" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest</text>
-<text x="1560" y="1402" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
-<text x="1560" y="1419" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="1505.5" y="498.7" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">LTE · LtAP mini LTE · 192.168.88.1 · RouterOS 7.25.1</text>
-<text x="1702" y="542.7" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="1735" y="578.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">lte1</text>
-<text x="1735" y="656.7" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
-<text x="1517.5" y="534.7" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
-<text x="1529.5" y="570.7" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1</text>
-<text x="1529.5" y="587.7" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">MikroTik-000020</text>
-<text x="1735" y="772.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
-<text x="1735" y="714.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan60</text>
+<text x="300.9" y="787" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
+<text x="300.9" y="804" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT · HomeNet-5</text>
+<text x="651.7" y="878" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest · 10.50.0.1/24</text>
+<text x="651.7" y="895" class="s" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">hotspot</text>
+<text x="663.7" y="930" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
+<text x="663.7" y="947" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
+<text x="214.4" y="1098" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP1 · hAP ac lite · RouterOS 7.25</text>
+<text x="226.4" y="1139" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridgeLocal</text>
+<text x="331.6" y="1175" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
+<text x="238.4" y="1233" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1 / wlan2</text>
+<text x="238.4" y="1250" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
+<text x="443.9" y="1233" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1-guest / wlan2-guest · use-tag 50</text>
+<text x="443.9" y="1250" class="s" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
+<text x="1414.9" y="1098" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP2 · hAP ac2 · RouterOS 7.25</text>
+<text x="1426.9" y="1139" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
+<text x="1517.7" y="1233" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
+<text x="1735" y="1175" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
+<text x="1599.2" y="1175" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan51-guest</text>
+<text x="1438.9" y="1291" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
+<text x="1438.9" y="1308" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
+<text x="1548" y="1382" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest</text>
+<text x="1560" y="1418" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
+<text x="1560" y="1435" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
+<text x="1505.5" y="504" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">LTE · LtAP mini LTE · 192.168.88.1 · RouterOS 7.25.1</text>
+<text x="1702" y="548" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="1735" y="584" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">lte1</text>
+<text x="1735" y="662" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
+<text x="1517.5" y="540" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
+<text x="1529.5" y="576" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1</text>
+<text x="1529.5" y="593" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">MikroTik-000020</text>
+<text x="1735" y="778" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
+<text x="1735" y="720" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan60</text>
 <text x="839.9" y="155" class="h" text-anchor="middle" stroke="#F5F5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Internet</text>
 <text x="839.9" y="292" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ISP box</text>
 <text x="1010.3" y="277" class="h" text-anchor="middle" stroke="#F5F5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Mobile network</text>
 <text x="1010.3" y="294" class="s" text-anchor="middle" stroke="#F5F5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Mobile ISP</text>
-<text x="117.2" y="1318.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Switch</text>
-<text x="219.5" y="1530" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Hub .130</text>
-<text x="219.5" y="1547" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.130</text>
-<text x="54" y="1530" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Pi 2 .153</text>
-<text x="54" y="1547" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.153</text>
-<text x="54" y="1564" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DNS server</text>
-<text x="1249.4" y="1082" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Printer</text>
-<text x="1249.4" y="1099" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.200</text>
-<text x="906.4" y="1082" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">media-server</text>
-<text x="906.4" y="1099" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.227</text>
-<text x="1091.4" y="1082" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">TV</text>
-<text x="1091.4" y="1099" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.28</text>
+<text x="117.2" y="1334.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Switch</text>
+<text x="219.5" y="1546" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Hub .130</text>
+<text x="219.5" y="1563" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.130</text>
+<text x="54" y="1546" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Pi 2 .153</text>
+<text x="54" y="1563" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.153</text>
+<text x="54" y="1580" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DNS server</text>
+<text x="1249.4" y="1098" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Printer</text>
+<text x="1249.4" y="1115" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.200</text>
+<text x="906.4" y="1098" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">media-server</text>
+<text x="906.4" y="1115" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.227</text>
+<text x="1091.4" y="1098" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">TV</text>
+<text x="1091.4" y="1115" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">192.168.0.28</text>
 <text x="829.9" y="375.5" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">primary uplink</text>
-<text x="1741" y="954.8" class="t" fill="#E65100" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">tagged 60</text>
+<text x="1741" y="965.5" class="t" fill="#E65100" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">tagged 60</text>
 <text x="829.9" y="567.4" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
 <text x="624.8" y="622" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
-<text x="955.9" y="732" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">guests, after hotspot login</text>
-<text x="1046.4" y="970" class="t" fill="#1565C0" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">printer</text>
-<text x="1741" y="616.7" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
-<text x="1741" y="684.7" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
+<text x="955.9" y="740" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">guests, after hotspot login</text>
+<text x="1046.4" y="986" class="t" fill="#1565C0" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">printer</text>
+<text x="1741" y="622" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
+<text x="1741" y="690" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
 <g class="legend">
-<rect x="40" y="1616" width="1982.5" height="108" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
-<text x="56" y="1644" class="h">Legend</text>
-<path d="M56,1666 L100,1666" fill="none" stroke="#2E7D32" stroke-width="4"/>
-<text x="112" y="1670.5" class="t">LAN (untagged) <tspan class="s">192.168.0.0/24</tspan></text>
-<path d="M371.3,1666 L415.3,1666" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5"/>
-<text x="427.3" y="1670.5" class="t">Guest (50, 51) <tspan class="s">10.50.0.0/24</tspan></text>
-<path d="M686.6,1666 L730.6,1666" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4"/>
-<text x="742.6" y="1670.5" class="t">LTE (60) <tspan class="s">192.168.88.0/24</tspan></text>
-<path d="M1001.9,1666 L1045.9,1666" fill="none" stroke="#555" stroke-width="2.5"/>
-<text x="1057.9" y="1670.5" class="t">plain cable</text>
-<path d="M1321.2,1666 L1361.2,1666" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
-<text x="1373.2" y="1670.5" class="t">routed / NAT</text>
-<path d="M1632.5,1666 L1670.5,1666" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="2 4" marker-end="url(#ab)"/>
-<text x="1688.5" y="1670.5" class="t">firewall allows</text>
-<text x="56" y="1698" class="s">Failover: when 9.9.9.9 stops answering via ether1, wan2-lte takes over.</text>
+<rect x="40" y="1632" width="1982.5" height="108" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
+<text x="56" y="1660" class="h">Legend</text>
+<path d="M56,1682 L100,1682" fill="none" stroke="#2E7D32" stroke-width="4"/>
+<text x="112" y="1686.5" class="t">LAN (untagged) <tspan class="s">192.168.0.0/24</tspan></text>
+<path d="M371.3,1682 L415.3,1682" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="427.3" y="1686.5" class="t">Guest (50, 51) <tspan class="s">10.50.0.0/24</tspan></text>
+<path d="M686.6,1682 L730.6,1682" fill="none" stroke="#E65100" stroke-width="4" stroke-dasharray="10 4"/>
+<text x="742.6" y="1686.5" class="t">LTE (60) <tspan class="s">192.168.88.0/24</tspan></text>
+<path d="M1001.9,1682 L1045.9,1682" fill="none" stroke="#555" stroke-width="2.5"/>
+<text x="1057.9" y="1686.5" class="t">plain cable</text>
+<path d="M1321.2,1682 L1361.2,1682" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="1373.2" y="1686.5" class="t">routed / NAT</text>
+<path d="M1632.5,1682 L1670.5,1682" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="2 4" marker-end="url(#ab)"/>
+<text x="1688.5" y="1686.5" class="t">firewall allows</text>
+<text x="56" y="1714" class="s">Failover: when 9.9.9.9 stops answering via ether1, wan2-lte takes over.</text>
 </g>
 </svg>

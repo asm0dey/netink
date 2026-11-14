@@ -56,6 +56,8 @@ const ROOT_OPTIONS: Record<string, string> = {
   "elk.spacing.nodeNode": "40",
   "elk.layered.spacing.nodeNodeBetweenLayers": "50",
   "elk.spacing.edgeEdge": "14",
+  // a lane bundle is up to TRUNK_AT × LANE_GAP wide, but ELK spaces centre lines: leave room for two half-bundles
+  "elk.layered.spacing.edgeEdgeBetweenLayers": "26",
   "elk.spacing.edgeNode": "18",
   "elk.padding": "[top=110,left=40,bottom=40,right=40]",
 };
@@ -152,6 +154,9 @@ function build(model: Model) {
       e.children = ordered(n.children, model, n.id).map(toElk);
       e.layoutOptions!["elk.padding"] = `[top=${36 + 16 * n.sub.length},left=12,bottom=12,right=12]`;
       e.layoutOptions!["elk.nodeSize.constraints"] = "MINIMUM_SIZE";
+      // not inherited from the root: cables routed inside a device need the same room between bundles
+      e.layoutOptions!["elk.layered.spacing.edgeEdgeBetweenLayers"] =
+        ROOT_OPTIONS["elk.layered.spacing.edgeEdgeBetweenLayers"]!;
       // (height, width): with direction DOWN + INCLUDE_CHILDREN, ELK (elkjs 0.12) applies a compound's minimum transposed.
       e.layoutOptions!["elk.nodeSize.minimum"] = `(40,${w + 24})`;
     } else {

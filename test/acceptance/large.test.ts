@@ -137,3 +137,37 @@ test("home: every view × slice renders with no overlap", async () => {
     }
   expect(bad).toEqual([]);
 }, 30_000);
+
+test("home: lanes of different cables running side by side keep 6 px apart", async () => {
+  const { lanesFor } = await import("../../src/render/geometry");
+  const close: string[] = [];
+  for (const view of ["combined", "vlans"] as const) {
+    const r = sliceModel(loadModel("examples/home/network.net"), { view });
+    if ("error" in r) throw new Error(r.error);
+    const m = collapseSiblings(r.model);
+    const p = await layout(m);
+    const lanes = new Map(m.links.map((l) => [l.id, l]));
+    // horizontal runs of every lane, tagged with the link that owns them
+    const runs = p.links.flatMap((pl) =>
+      lanesFor(pl.points, lanes.get(pl.id)!.lanes, !!lanes.get(pl.id)!.trunk).flatMap((ln) =>
+        ln.points.slice(1).flatMap((b, i) => {
+          const a = ln.points[i]!;
+          return Math.abs(a.y - b.y) < 0.5 && Math.abs(a.x - b.x) > 20
+            ? [{ id: pl.id, from: lanes.get(pl.id)!.from, y: a.y, x0: Math.min(a.x, b.x), x1: Math.max(a.x, b.x) }]
+            : [];
+        }),
+      ),
+    );
+    for (const a of runs)
+      for (const b of runs)
+        if (
+          a.id < b.id &&
+          Math.abs(a.y - b.y) < 6 &&
+          // a fan-out from one port is drawn as one shared line on purpose
+          !(a.from === b.from && Math.abs(a.y - b.y) < 0.5) &&
+          Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > 20
+        )
+          close.push(`${view}: ${a.id} y${a.y} / ${b.id} y${b.y}`);
+  }
+  expect(close).toEqual([]);
+});
