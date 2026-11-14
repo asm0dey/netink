@@ -403,3 +403,48 @@ test("a label moves off another cable's line, even when its own spot is on it", 
   const onLane = r.y0 < 100 && r.y1 > 100 && r.x0 < 200 && r.x1 > 0;
   expect(onLane).toBe(false);
 });
+
+test("a label too wide to sit beside its line splits into two lines there, instead of moving away", () => {
+  const node = (id: string): MNode => ({ id, kind: "client", style: "box", label: id, sub: [], children: [], tier: 0 });
+  const s = "guests, after hotspot login";
+  const half = textWidth("hotspot login", 12, true);
+  // a vertical arrow at x 100 between two boxes: room on its right for half the label, not for all of it
+  const right = 100 + 6 + half + 10;
+  expect(right - 106).toBeLessThan(textWidth(s, 12, true));
+  const svg = renderSvg(
+    {
+      title: "T",
+      nodes: ["a", "b", "l", "r"].map(node),
+      links: [],
+      arrows: [{ id: "x", from: "a", to: "b", kind: "route", label: s }],
+      vlans: [],
+      trunks: [],
+      legend: { mode: "off", add: [], remove: [], notes: [], position: "bottom" },
+      jumps: "arc",
+      hints: [],
+      diags: [],
+    },
+    {
+      width: 600,
+      height: 300,
+      boxes: new Map([
+        ["l", { id: "l", x: 0, y: 0, w: 100 - 6 - half + 20, h: 300 }],
+        ["r", { id: "r", x: right, y: 0, w: 200, h: 300 }],
+      ]),
+      links: [],
+      arrows: [
+        {
+          id: "x",
+          points: [
+            { x: 100, y: 0 },
+            { x: 100, y: 300 },
+          ],
+          labelAt: { x: 100, y: 150 },
+        },
+      ],
+    },
+  );
+  const lines = [...svg.matchAll(/<text x="([\d.]+)" y="([\d.]+)" class="t"[^>]*>([^<]*)</g)];
+  expect(lines.map((m) => m[3])).toEqual(["guests, after", "hotspot login"]);
+  for (const m of lines) expect(Number(m[1])).toBeGreaterThanOrEqual(106);
+});

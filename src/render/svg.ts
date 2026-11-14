@@ -460,53 +460,74 @@ export function renderSvg(model: Model, placed: Placed): string {
       const meets = r.x1 > b.x && r.x0 < b.x + b.w && r.y1 > b.y && r.y0 < b.y + b.h;
       return !meets || (containers.has(b.id) && r.x0 >= b.x && r.x1 <= b.x + b.w && r.y0 >= b.y && r.y1 <= b.y + b.h);
     });
+  type Spot = P & { end?: boolean; dx: number; dy: number };
+  /** A label of one or more 14 px lines; `y` is the first line's baseline. */
+  const box = (q: P, w: number, n: number): Rect => ({
+    x0: q.x,
+    y0: q.y - 11,
+    x1: q.x + w,
+    y1: q.y + 3 + 14 * (n - 1),
+  });
   /**
    * Baseline start: the default spot (above-right of `at`), else the first clean spot beside a segment, longest
-   * segment first, else the same spots moved away from the line in 14 px steps. `dx`/`dy`: the away direction.
+   * segment first (`near`), else the same spots moved away from the line in 14 px steps. `dx`/`dy`: the away direction.
    */
-  type Spot = P & { end?: boolean; dx: number; dy: number };
-  const spot = (pts: P[], at: P, s: string, owner: string): Spot => {
-    const w = textWidth(s, 12, true),
-      rect = (q: P): Rect => ({ x0: q.x, y0: q.y - 11, x1: q.x + w, y1: q.y + 3 });
+  const spot = (pts: P[], at: P, ss: string[], owner: string): { q: Spot; near: boolean } => {
+    const n = ss.length,
+      w = Math.max(...ss.map((t) => textWidth(t, 12, true))),
+      up = 14 * (n - 1);
     const segs = pts
       .slice(1)
       .map((b, i) => [pts[i]!, b] as const)
       .sort(([a, b], [c, d]) => Math.hypot(d.x - c.x, d.y - c.y) - Math.hypot(b.x - a.x, b.y - a.y));
     const options: Spot[] = [
-      { x: at.x + 6, y: at.y - 6, dx: 0, dy: -1 },
+      { x: at.x + 6, y: at.y - 6 - up, dx: 0, dy: -1 },
       ...segs.flatMap(([a, b]) =>
         STEPS.flatMap((t) => {
           const m = { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
           return Math.abs(a.y - b.y) < 0.5
             ? [
-                { x: m.x - w / 2, y: m.y - 6, dx: 0, dy: -1 },
+                { x: m.x - w / 2, y: m.y - 6 - up, dx: 0, dy: -1 },
                 { x: m.x - w / 2, y: m.y + 16, dx: 0, dy: 1 },
               ]
             : // left of a vertical: drawn end-anchored, so a font narrower than the estimate still hugs the line
               [
-                { x: m.x + 6, y: m.y + 4, dx: 1, dy: 0 },
-                { x: m.x - 6 - w, y: m.y + 4, end: true, dx: -1, dy: 0 },
+                { x: m.x + 6, y: m.y + 4 - up / 2, dx: 1, dy: 0 },
+                { x: m.x - 6 - w, y: m.y + 4 - up / 2, end: true, dx: -1, dy: 0 },
               ];
         }),
       ),
     ];
+    const near = options.find((q) => clean(box(q, w, n), owner));
     const q =
-      options.find((q) => clean(rect(q), owner)) ??
+      near ??
       Array.from({ length: 10 }, (_, k) =>
         options.map((o) => ({ ...o, x: o.x + o.dx * 14 * (k + 1), y: o.y + o.dy * 14 * (k + 1) })),
       )
         .flat()
-        .find((q) => clean(rect(q), owner)) ??
+        .find((q) => clean(box(q, w, n), owner)) ??
       options[0]!;
-    taken.push(rect(q));
-    return q;
+    return { q, near: !!near };
   };
+  /** One line if it fits beside its line; else two, split at the middle space, if those fit; else one line further away. */
   const label = (pts: P[], at: P, s: string, colour: string, owner: string) => {
-    const q = spot(pts, at, s, owner);
+    const one = spot(pts, at, [s], owner);
+    let ss = [s],
+      q = one.q;
+    const cut = s.indexOf(" ", s.length / 2) > 0 ? s.indexOf(" ", s.length / 2) : s.lastIndexOf(" ");
+    if (!one.near && cut > 0) {
+      const two = [s.slice(0, cut), s.slice(cut + 1)],
+        r = spot(pts, at, two, owner);
+      if (r.near) [ss, q] = [two, r.q];
+    }
+    const w = Math.max(...ss.map((t) => textWidth(t, 12, true)));
+    taken.push(box(q, w, ss.length));
     labels.push(
-      q.end
-        ? text(q.x + textWidth(s, 12, true), q.y, s, `class="t" text-anchor="end" fill="${colour}" ${halo}`)
-        : text(q.x, q.y, s, `class="t" fill="${colour}" ${halo}`),
+      ...ss.map((t, i) =>
+        q.end
+          ? text(q.x + w, q.y + 14 * i, t, `class="t" text-anchor="end" fill="${colour}" ${halo}`)
+          : text(q.x, q.y + 14 * i, t, `class="t" fill="${colour}" ${halo}`),
+      ),
     );
   };
   for (const pl of placed.links) {

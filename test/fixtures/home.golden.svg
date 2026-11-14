@@ -207,7 +207,8 @@
 <text x="1741" y="965.5" class="t" fill="#E65100" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">tagged 60</text>
 <text x="829.9" y="567.4" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
 <text x="624.8" y="622" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
-<text x="955.9" y="740" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">guests, after hotspot login</text>
+<text x="829.9" y="716" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">guests, after</text>
+<text x="829.9" y="730" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">hotspot login</text>
 <text x="1046.4" y="986" class="t" fill="#1565C0" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">printer</text>
 <text x="1741" y="622" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
 <text x="1741" y="690" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">LAN</text>
