@@ -104,6 +104,21 @@ test("physical view: wires only, no arrows, no trunk", () => {
   expect(m.nodes.map((n) => n.id)).toEqual(HOME.nodes.map((n) => n.id));
 });
 
+test("physical view: no VLAN interface, router badge or link inside one device", () => {
+  const m = ok(HOME, { view: "physical" });
+  const all = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...all(n.children)]);
+  expect(all(m.nodes).filter((n) => n.kind === "iface" || n.kind === "router")).toEqual([]);
+  expect(m.links.filter((l) => top(l.from) === top(l.to))).toEqual([]);
+  consistent(m);
+});
+
+test("legend notes stay in the full picture and leave every slice and view", () => {
+  expect(HOME.legend.notes.length).toBeGreaterThan(0);
+  expect(ok(HOME, { view: "combined" }).legend.notes).toEqual(HOME.legend.notes);
+  for (const s of [{ view: "physical" }, { view: "vlans" }, { around: "core" }, { vlans: ["guest"] }] as Slice[])
+    expect(ok(HOME, s).legend.notes).toEqual([]);
+});
+
 test("vlans view: no arrows, lanes unchanged", () => {
   const m = ok(HOME, { view: "vlans" });
   expect(m.arrows).toEqual([]);

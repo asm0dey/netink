@@ -15,11 +15,11 @@ export type Slice = {
 const top = (id: string) => id.split("/")[0]!;
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
 
-// physical view draws no VLAN: a node coloured by one falls back to the plain box
+// physical view draws hardware only: no VLAN interface or router badge, and a node coloured by a VLAN falls back to the plain box
 const plain = (n: MNode): MNode => ({
   ...n,
   style: laneOfStyle(n.style) === undefined ? n.style : "box",
-  children: n.children.map(plain),
+  children: n.children.filter((c) => c.kind !== "iface" && c.kind !== "router").map(plain),
 });
 
 /** Keep the devices the slice asks for (spec §6, flags intersect); a cut-off neighbour linked to a kept one becomes a stub. */
@@ -103,18 +103,35 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
     if (!s.path) keep = new Set([...keep].filter((id) => has.has(id)));
   }
   if (!keep.size) return { error: "the slice is empty" };
+  const sliced =
+    (s.view ?? "combined") !== "combined" ||
+    !!s.vlans?.length ||
+    s.around !== undefined ||
+    !!s.path ||
+    s.address !== undefined;
   const stub = new Set(
     model.links.flatMap((l) => {
       const [a, b] = [top(l.from), top(l.to)];
       return keep.has(a) && !keep.has(b) ? [b] : keep.has(b) && !keep.has(a) ? [a] : [];
     }),
   );
+  const phys = s.view === "physical",
+    gone = new Set(
+      phys
+        ? walk(model.nodes)
+            .filter((n) => n.kind === "iface")
+            .map((n) => n.id)
+        : [],
+    );
   const drawn = (id: string) => keep.has(top(id)) || stub.has(top(id));
-  const end = (id: string) => (stub.has(top(id)) ? top(id) : id);
+  // a cable to a dropped VLAN interface lands on its device instead
+  const end = (id: string) => (stub.has(top(id)) || gone.has(id) ? top(id) : id);
   return {
     model: {
       ...model,
       ...(only ? { slice: { vlans: [...only] } } : {}),
+      // a note is free text about the whole network: it may name what the slice or view leaves out
+      legend: sliced ? { ...model.legend, notes: [] } : model.legend,
       nodes: model.nodes.flatMap((n) =>
         keep.has(n.id)
           ? [s.view === "physical" ? plain(n) : n]
@@ -124,6 +141,8 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ),
       links: model.links.flatMap((l) => {
         if (!drawn(l.from) || !drawn(l.to) || (stub.has(top(l.from)) && stub.has(top(l.to)))) return [];
+        // inside one device a link is bridging or VLAN wiring, not a cable
+        if (phys && top(l.from) === top(l.to)) return [];
         const lanes = s.view === "physical" ? ["wire"] : only ? l.lanes.filter((x) => only!.has(x)) : l.lanes;
         const { trunk, ...rest } = l;
         return [

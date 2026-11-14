@@ -78,6 +78,10 @@ test("annotated header", () => {
   const { header } = r("# CORE - hAP ax3, 192.168.0.1, RouterOS 7.25.1  (main router)");
   expect(header).toEqual({ model: "hAP ax3", version: "7.25.1" });
 });
+test("annotated header: a comma after the version is not part of it", () => {
+  const { header } = r("# AP - hAP ac2, 10.0.0.2, RouterOS 7.25, wifi-qcom-ac  (AP only)");
+  expect(header).toEqual({ model: "hAP ac2", version: "7.25" });
+});
 test("reads a larger synthetic export", () => {
   const body = Array.from(
     { length: 40 },

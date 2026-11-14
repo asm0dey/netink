@@ -93,9 +93,9 @@
 <path d="M511.5,893 L511.5,908 L1681.9,908 L1681.9,968" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <path d="M358.9,893 L358.9,976" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <text x="2475.2" y="134" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">br-mdf-01</text>
-<text x="194" y="232" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">EX-MDF-01</text>
-<text x="194" y="249" class="s" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:103::1</text>
-<text x="2252.7" y="284" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="194" y="232" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">EX-MDF-01</text>
+<text x="194" y="249" class="s" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:103::1</text>
+<text x="2252.7" y="284" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="2264.7" y="320" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan104</text>
 <text x="2264.7" y="337" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.4.2/24</text>
 <text x="2264.7" y="354" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:104::2/64</text>
@@ -132,9 +132,9 @@
 <text x="434" y="467" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan499</text>
 <text x="434" y="484" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.1.0.1/24</text>
 <text x="434" y="501" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:499::1/64</text>
-<text x="54" y="747" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">CF-MDF-01</text>
-<text x="54" y="764" class="s" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:503::1</text>
-<text x="66" y="799" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="54" y="747" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">CF-MDF-01</text>
+<text x="54" y="764" class="s" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:503::1</text>
+<text x="66" y="799" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="78" y="835" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
 <text x="78" y="852" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.2/24</text>
 <text x="78" y="869" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::2/64</text>

@@ -65,11 +65,11 @@ export function readRsc(
     const start = n + 1;
     let ln = lines[n]!.trim();
     if (ln.startsWith("#")) {
-      const ver = ln.match(/by RouterOS (\d\S*)/);
+      const ver = ln.match(/by RouterOS (\d[^\s,]*)/);
       if (header.version === undefined && ver) header.version = ver[1];
       const model = ln.match(/^#\s*model\s*=\s*(.+)$/);
       if (header.model === undefined && model) header.model = model[1]!.trim();
-      const both = ln.match(/^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d\S*)/);
+      const both = ln.match(/^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d[^\s,]*)/);
       if ((header.model === undefined || header.version === undefined) && both) {
         header.model ??= both[1]!;
         header.version ??= both[2];

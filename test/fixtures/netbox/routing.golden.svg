@@ -137,104 +137,104 @@
 <path d="M15038.5,232 L15038.5,264 L14856.8,264 L14856.8,304" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
 <path d="M16059,232 L16059,304" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
 <path d="M16302,232 L16302,264 L16126.8,264 L16126.8,304" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
-<text x="289.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
+<text x="289.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="399" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="642" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="153.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="897" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="1140" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="927.7" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-akron-sw01</text>
-<text x="1317.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-RTR01 · ISR 1111-8P</text>
-<text x="1553" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="1317.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-RTR01 · ISR 1111-8P</text>
+<text x="1553" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="1662.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="1905.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="1417.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="2160.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="2403.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="2192.8" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-albany-sw01</text>
-<text x="2581" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-RTR01 · ISR 1111-8P</text>
-<text x="2816.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="2581" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-RTR01 · ISR 1111-8P</text>
+<text x="2816.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="2926" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="3169" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="2680.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="3424" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="3667" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="3462.8" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-binghamton-sw01</text>
-<text x="3844.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-RTR01 · ISR 1111-8P</text>
-<text x="4080" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="3844.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-RTR01 · ISR 1111-8P</text>
+<text x="4080" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="4189.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="4432.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="3944.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="4687.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="4930.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="4721.4" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-buffalo-sw01</text>
-<text x="5108" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-RTR01 · ISR 1111-8P</text>
-<text x="5343.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="5108" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-RTR01 · ISR 1111-8P</text>
+<text x="5343.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="5453" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="5696" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="5207.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="5951" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="6194" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="5983.3" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-camden-sw01</text>
-<text x="6371.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-RTR01 · ISR 1111-8P</text>
-<text x="6607" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="6371.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-RTR01 · ISR 1111-8P</text>
+<text x="6607" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="6716.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="6959.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="6471.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="7214.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="7457.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="7246.8" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-nashua-sw01</text>
-<text x="7635" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-RTR01 · ISR 1111-8P</text>
-<text x="7870.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="7635" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-RTR01 · ISR 1111-8P</text>
+<text x="7870.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="7980" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="8223" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="7734.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="8478" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="8721" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="8516.8" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-pittsfield-sw01</text>
-<text x="8898.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHESTER-RTR01 · ISR 1111-8P</text>
-<text x="9134" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="8898.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHESTER-RTR01 · ISR 1111-8P</text>
+<text x="9134" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="9243.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="9486.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="8998.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="9741.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="9984.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="9777" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-rochster-sw01</text>
-<text x="10162" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-RTR01 · ISR 1111-8P</text>
-<text x="10397.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="10162" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-RTR01 · ISR 1111-8P</text>
+<text x="10397.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="10507" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="10750" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="10261.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="11005" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="11248" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="11040.5" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-scranton-sw01</text>
-<text x="11425.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-RTR01 · ISR 1111-8P</text>
-<text x="11661" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="11425.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-RTR01 · ISR 1111-8P</text>
+<text x="11661" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="11770.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="12013.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="11525.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="12268.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="12511.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="12304" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-stamford-sw01</text>
-<text x="12689" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-RTR01 · ISR 1111-8P</text>
-<text x="12924.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="12689" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-RTR01 · ISR 1111-8P</text>
+<text x="12924.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="13034" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="13277" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="12788.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="13532" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="13775" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="13567.5" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-syracuse-sw01</text>
-<text x="13952.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-RTR01 · ISR 1111-8P</text>
-<text x="14188" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="13952.5" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-RTR01 · ISR 1111-8P</text>
+<text x="14188" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="14297.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="14540.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="14052.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="14795.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="15038.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
 <text x="14826.2" y="328" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">dmi01-utica-sw01</text>
-<text x="15216" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-RTR01 · ISR 1111-8P</text>
-<text x="15451.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="15216" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-RTR01 · ISR 1111-8P</text>
+<text x="15451.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="15561" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="15804" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="15315.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>

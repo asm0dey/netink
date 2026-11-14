@@ -1,300 +1,274 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="16466" height="562" viewBox="0 0 16466 562" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
+<svg xmlns="http://www.w3.org/2000/svg" width="13560" height="562" viewBox="0 0 13560 562" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
 <defs>
 <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
 <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1565C0"/></marker>
 <style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>
 </defs>
-<rect width="16466" height="562" fill="#fff"/>
+<rect width="13560" height="562" fill="#fff"/>
 <text x="40" y="46" font-size="26" font-weight="700">NetBox demo data</text>
 <text x="40" y="72" class="s" font-size="14">netbox-community/netbox-demo-data v4.7</text>
-<rect x="40" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="275.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="287.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="530.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="52,189 72,170 235.5,170 255.5,189 235.5,208 72,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="785.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1028.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="773.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="785.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1028.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1303.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="1539" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="1551" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="1794" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="1315.5,189 1335.5,170 1499,170 1519,189 1499,208 1335.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="2049" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="2292" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="2037" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="2049" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="2292" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="2567" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="2802.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="2814.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="3057.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="2579,189 2599,170 2762.5,170 2782.5,189 2762.5,208 2599,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="3312.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="3555.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="3300.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="3312.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="3555.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="3830.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="4066" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="4078" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="4321" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="3842.5,189 3862.5,170 4026,170 4046,189 4026,208 3862.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="4576" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="4819" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="4564" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="4576" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="4819" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="5094" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="5329.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="5341.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="5584.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="5106,189 5126,170 5289.5,170 5309.5,189 5289.5,208 5126,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="5839.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="6082.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="5827.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="5839.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="6082.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="6357.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="6593" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="6605" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="6848" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="6369.5,189 6389.5,170 6553,170 6573,189 6553,208 6389.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="7103" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="7346" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="7091" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="7103" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="7346" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="7621" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="7856.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="7868.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="8111.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="7633,189 7653,170 7816.5,170 7836.5,189 7816.5,208 7653,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="8366.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="8609.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="8354.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="8366.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="8609.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="8884.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="9120" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="9132" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="9375" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="8896.5,189 8916.5,170 9080,170 9100,189 9080,208 8916.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="9630" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="9873" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="9618" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="9630" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="9873" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="10148" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="10383.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="10395.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="10638.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="10160,189 10180,170 10343.5,170 10363.5,189 10343.5,208 10180,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="10893.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="11136.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="10881.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="10893.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="11136.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="11411.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="11647" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="11659" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="11902" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="11423.5,189 11443.5,170 11607,170 11627,189 11607,208 11443.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="12157" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="12400" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="12145" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="12157" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="12400" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="12675" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="12910.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="12922.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="13165.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="12687,189 12707,170 12870.5,170 12890.5,189 12870.5,208 12707,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="13420.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="13663.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="13408.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="13420.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="13663.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="13938.5" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="14174" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="14186" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="14429" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="13950.5,189 13970.5,170 14134,170 14154,189 14134,208 13970.5,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="14684" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="14927" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="14672" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="14684" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="14927" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="15202" y="110" width="1223.5" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="15437.5" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
-<rect x="15449.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="15692.5" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<polygon points="15214,189 15234,170 15397.5,170 15417.5,189 15397.5,208 15234,208" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
-<rect x="15947.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="16190.5" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="15935.5" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
-<rect x="15947.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<rect x="16190.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
-<path d="M897,232 L897,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M1140,232 L1140,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M2160.5,232 L2160.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M2403.5,232 L2403.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M3424,232 L3424,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M3667,232 L3667,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M4687.5,232 L4687.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M4930.5,232 L4930.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M5951,232 L5951,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M6194,232 L6194,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M7214.5,232 L7214.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M7457.5,232 L7457.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M8478,232 L8478,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M8721,232 L8721,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M9741.5,232 L9741.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M9984.5,232 L9984.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M11005,232 L11005,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M11248,232 L11248,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M12268.5,232 L12268.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M12511.5,232 L12511.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M13532,232 L13532,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M13775,232 L13775,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M14795.5,232 L14795.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M15038.5,232 L15038.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M16059,232 L16059,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<path d="M16302,232 L16302,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
-<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
-<text x="289.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="399" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="642" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="153.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="897" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="1140" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="787.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-SW01 · C9200-48P</text>
-<text x="897" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="1140" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="1317.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-RTR01 · ISR 1111-8P</text>
-<text x="1553" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="1662.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="1905.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="1417.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="2160.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="2403.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="2051" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-SW01 · C9200-48P</text>
-<text x="2160.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="2403.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="2581" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-RTR01 · ISR 1111-8P</text>
-<text x="2816.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="2926" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="3169" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="2680.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="3424" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="3667" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="3314.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-SW01 · C9200-48P</text>
-<text x="3424" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="3667" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="3844.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-RTR01 · ISR 1111-8P</text>
-<text x="4080" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="4189.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="4432.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="3944.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="4687.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="4930.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="4578" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-SW01 · C9200-48P</text>
-<text x="4687.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="4930.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="5108" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-RTR01 · ISR 1111-8P</text>
-<text x="5343.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="5453" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="5696" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="5207.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="5951" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="6194" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="5841.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-SW01 · C9200-48P</text>
-<text x="5951" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="6194" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="6371.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-RTR01 · ISR 1111-8P</text>
-<text x="6607" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="6716.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="6959.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="6471.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="7214.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="7457.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="7105" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-SW01 · C9200-48P</text>
-<text x="7214.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="7457.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="7635" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-RTR01 · ISR 1111-8P</text>
-<text x="7870.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="7980" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="8223" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="7734.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="8478" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="8721" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="8368.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-SW01 · C9200-48P</text>
-<text x="8478" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="8721" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="8898.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHESTER-RTR01 · ISR 1111-8P</text>
-<text x="9134" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="9243.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="9486.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="8998.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="9741.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="9984.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="9632" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHSTER-SW01 · C9200-48P</text>
-<text x="9741.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="9984.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="10162" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-RTR01 · ISR 1111-8P</text>
-<text x="10397.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="10507" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="10750" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="10261.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="11005" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="11248" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="10895.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-SW01 · C9200-48P</text>
-<text x="11005" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="11248" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="11425.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-RTR01 · ISR 1111-8P</text>
-<text x="11661" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="11770.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="12013.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="11525.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="12268.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="12511.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="12159" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-SW01 · C9200-48P</text>
-<text x="12268.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="12511.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="12689" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-RTR01 · ISR 1111-8P</text>
-<text x="12924.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="13034" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="13277" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="12788.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="13532" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="13775" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="13422.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-SW01 · C9200-48P</text>
-<text x="13532" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="13775" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="13952.5" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-RTR01 · ISR 1111-8P</text>
-<text x="14188" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="14297.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="14540.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="14052.3" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="14795.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="15038.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="14686" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-SW01 · C9200-48P</text>
-<text x="14795.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="15038.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
-<text x="15216" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-RTR01 · ISR 1111-8P</text>
-<text x="15451.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
-<text x="15561" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
-<text x="15804" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
-<text x="15315.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
-<text x="16059" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
-<text x="16302" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="15949.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-SW01 · C9200-48P</text>
-<text x="16059" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
-<text x="16302" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<rect x="40" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="52" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="64" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="307" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="562" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="805" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="550" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="562" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="805" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1080" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="1092" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="1104" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1347" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1602" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1845" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1590" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="1602" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1845" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2120" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2132" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2144" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2387" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2642" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2885" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2630" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2642" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2885" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3160" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="3172" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="3184" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3427" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3682" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3925" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3670" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="3682" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="3925" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4200" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="4212" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="4224" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4467" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4722" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4965" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4710" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="4722" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="4965" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="5240" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="5252" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="5264" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="5507" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="5762" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6005" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="5750" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="5762" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6005" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6280" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="6292" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="6304" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6547" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6802" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7045" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="6790" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="6802" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7045" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7320" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="7332" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="7344" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7587" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7842" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8085" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="7830" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="7842" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8085" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8360" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="8372" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="8384" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8627" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8882" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9125" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="8870" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="8882" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9125" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9400" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="9412" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="9424" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9667" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9922" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10165" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="9910" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="9922" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10165" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10440" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="10452" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="10464" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10707" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10962" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="11205" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="10950" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="10962" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="11205" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="11480" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="11492" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="11504" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="11747" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="12002" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="12245" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="11990" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="12002" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="12245" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="12520" y="110" width="1000" height="134" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="12532" y="146" width="490" height="86" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="12544" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="12787" y="182" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="13042" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="13285" y="194" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="13030" y="314" width="490" height="86" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="13042" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="13285" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<path d="M673.5,232 L673.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M916.5,232 L916.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M1713.5,232 L1713.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M1956.5,232 L1956.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M2753.5,232 L2753.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M2996.5,232 L2996.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M3793.5,232 L3793.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M4036.5,232 L4036.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M4833.5,232 L4833.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M5076.5,232 L5076.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M5873.5,232 L5873.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M6116.5,232 L6116.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M6913.5,232 L6913.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M7156.5,232 L7156.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M7953.5,232 L7953.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M8196.5,232 L8196.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M8993.5,232 L8993.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M9236.5,232 L9236.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M10033.5,232 L10033.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M10276.5,232 L10276.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M11073.5,232 L11073.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M11316.5,232 L11316.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M12113.5,232 L12113.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M12356.5,232 L12356.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M13153.5,232 L13153.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<path d="M13396.5,232 L13396.5,350" fill="none" stroke="#555" stroke-width="2.5" stroke-linejoin="round"/>
+<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
+<text x="66" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="175.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="418.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="673.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="916.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="564" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-SW01 · C9200-48P</text>
+<text x="673.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="916.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="1094" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-RTR01 · ISR 1111-8P</text>
+<text x="1106" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="1215.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="1458.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="1713.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="1956.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="1604" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ALBANY-SW01 · C9200-48P</text>
+<text x="1713.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="1956.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="2134" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-RTR01 · ISR 1111-8P</text>
+<text x="2146" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="2255.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="2498.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="2753.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="2996.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="2644" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BINGHAMTON-SW01 · C9200-48P</text>
+<text x="2753.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="2996.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="3174" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-RTR01 · ISR 1111-8P</text>
+<text x="3186" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="3295.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="3538.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="3793.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="4036.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="3684" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-BUFFALO-SW01 · C9200-48P</text>
+<text x="3793.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="4036.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="4214" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-RTR01 · ISR 1111-8P</text>
+<text x="4226" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="4335.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="4578.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="4833.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="5076.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="4724" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-CAMDEN-SW01 · C9200-48P</text>
+<text x="4833.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="5076.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="5254" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-RTR01 · ISR 1111-8P</text>
+<text x="5266" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="5375.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="5618.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="5873.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="6116.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="5764" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-NASHUA-SW01 · C9200-48P</text>
+<text x="5873.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="6116.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="6294" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-RTR01 · ISR 1111-8P</text>
+<text x="6306" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="6415.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="6658.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="6913.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="7156.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="6804" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-PITTSFIELD-SW01 · C9200-48P</text>
+<text x="6913.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="7156.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="7334" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHESTER-RTR01 · ISR 1111-8P</text>
+<text x="7346" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="7455.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="7698.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="7953.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="8196.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="7844" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-ROCHSTER-SW01 · C9200-48P</text>
+<text x="7953.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="8196.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="8374" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-RTR01 · ISR 1111-8P</text>
+<text x="8386" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="8495.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="8738.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="8993.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="9236.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="8884" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SCRANTON-SW01 · C9200-48P</text>
+<text x="8993.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="9236.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="9414" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-RTR01 · ISR 1111-8P</text>
+<text x="9426" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="9535.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="9778.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="10033.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="10276.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="9924" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-STAMFORD-SW01 · C9200-48P</text>
+<text x="10033.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="10276.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="10454" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-RTR01 · ISR 1111-8P</text>
+<text x="10466" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="10575.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="10818.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="11073.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="11316.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="10964" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-SYRACUSE-SW01 · C9200-48P</text>
+<text x="11073.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="11316.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="11494" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-RTR01 · ISR 1111-8P</text>
+<text x="11506" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="11615.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="11858.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="12113.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="12356.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="12004" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-UTICA-SW01 · C9200-48P</text>
+<text x="12113.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="12356.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
+<text x="12534" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-RTR01 · ISR 1111-8P</text>
+<text x="12546" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="12655.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
+<text x="12898.5" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
+<text x="13153.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
+<text x="13396.5" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
+<text x="13044" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-YONKERS-SW01 · C9200-48P</text>
+<text x="13153.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
+<text x="13396.5" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
 <g class="legend">
-<rect x="40" y="440" width="16385.5" height="82" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
+<rect x="40" y="440" width="13480" height="82" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
 <text x="56" y="468" class="h">Legend</text>
 <path d="M56,490 L100,490" fill="none" stroke="#555" stroke-width="2.5"/>
 <text x="112" y="494.5" class="t">plain cable</text>

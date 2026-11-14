@@ -209,7 +209,8 @@ function drawNodes(
     const tx = centred ? x + w / 2 : x + 14,
       anchor = centred ? ' text-anchor="middle"' : "";
     const ty = n.kind === "cloud" ? y + h / 2 + 5 - 8 * n.sub.length : y + (n.kind === "router" ? h / 2 + 5 : 24);
-    const h2 = ` stroke="${bg}" stroke-width="3" stroke-linejoin="round" paint-order="stroke"`;
+    // a container's title is crossed by cables entering it: a wide halo in its own fill hides the cable under the words
+    const h2 = ` stroke="${bg}" stroke-width="${container ? 7 : 3}" stroke-linejoin="round" paint-order="stroke"`;
     texts.push(text(tx, ty, n.label, `class="${n.style === "stub" ? "s" : "h"}"${anchor}${labelFill}${h2}`));
     n.sub.forEach((s, i) => {
       texts.push(text(tx, ty + 17 * (i + 1), s, `class="s"${anchor}${h2}`));

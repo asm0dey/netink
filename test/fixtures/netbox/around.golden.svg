@@ -19,14 +19,14 @@
 <rect x="1028.5" y="350" width="223" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
 <path d="M897,232 L897,350" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
 <path d="M1140,232 L1140,350" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
-<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
-<text x="289.5" y="170" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="54" y="134" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-RTR01 · ISR 1111-8P</text>
+<text x="289.5" y="170" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="399" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/0</text>
 <text x="642" y="206" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/0/1</text>
 <text x="153.8" y="194" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
 <text x="897" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/0</text>
 <text x="1140" y="218" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet0/1/1</text>
-<text x="787.5" y="338" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-SW01 · C9200-48P</text>
+<text x="787.5" y="338" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">DMI01-AKRON-SW01 · C9200-48P</text>
 <text x="897" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/1</text>
 <text x="1140" y="374" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GigabitEthernet1/0/2</text>
 <text x="903" y="285" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">dm-akron</text>

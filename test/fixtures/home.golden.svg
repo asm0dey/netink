@@ -94,8 +94,8 @@
 <path d="M606.2,737 A5,5 0 0 1 616.2,737" fill="none" stroke="#1565C0" stroke-width="3"/>
 <path d="M635.1,737 A5,5 0 0 1 645.1,737" fill="none" stroke="#1565C0" stroke-width="3"/>
 <path d="M1314.1,1015 A5,5 0 0 1 1324.1,1015" fill="none" stroke="#E65100" stroke-width="4"/>
-<text x="58.8" y="404" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">CORE · hAP ax3 · 192.168.0.1 · RouterOS 7.25.1</text>
-<text x="523.9" y="445" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="58.8" y="404" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">CORE · hAP ax3 · 192.168.0.1 · RouterOS 7.25.1</text>
+<text x="523.9" y="445" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="741.4" y="481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
 <text x="741.4" y="498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wan1-main · distance 1</text>
 <text x="741.4" y="515" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DHCP client</text>
@@ -104,7 +104,7 @@
 <text x="535.9" y="514" class="s" stroke="#FFF3E0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wan2-lte · distance 2</text>
 <text x="535.9" y="531" class="s" stroke="#FFF3E0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">DHCP client</text>
 <text x="780.2" y="604" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
-<text x="70.8" y="667" class="h" stroke="#E8F5E9" stroke-width="3" stroke-linejoin="round" paint-order="stroke">bridge · 192.168.0.1/24</text>
+<text x="70.8" y="667" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge · 192.168.0.1/24</text>
 <text x="117.2" y="787" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
 <text x="223.7" y="779" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether3</text>
 <text x="625.7" y="776.3" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether4</text>
@@ -113,32 +113,32 @@
 <text x="697.7" y="703" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan51-guest</text>
 <text x="300.9" y="771" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
 <text x="300.9" y="788" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT · HomeNet-5</text>
-<text x="651.7" y="862" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">br-guest · 10.50.0.1/24</text>
-<text x="651.7" y="879" class="s" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">hotspot</text>
+<text x="651.7" y="862" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest · 10.50.0.1/24</text>
+<text x="651.7" y="879" class="s" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">hotspot</text>
 <text x="663.7" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
 <text x="663.7" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="214.4" y="1082" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">AP1 · hAP ac lite · RouterOS 7.25</text>
-<text x="226.4" y="1123" class="h" stroke="#E8F5E9" stroke-width="3" stroke-linejoin="round" paint-order="stroke">bridgeLocal</text>
+<text x="214.4" y="1082" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP1 · hAP ac lite · RouterOS 7.25</text>
+<text x="226.4" y="1123" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridgeLocal</text>
 <text x="331.6" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
 <text x="238.4" y="1217" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1 / wlan2</text>
 <text x="238.4" y="1234" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
 <text x="443.9" y="1217" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1-guest / wlan2-guest · use-tag 50</text>
 <text x="443.9" y="1234" class="s" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="1414.9" y="1082" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">AP2 · hAP ac2 · RouterOS 7.25</text>
-<text x="1426.9" y="1123" class="h" stroke="#E8F5E9" stroke-width="3" stroke-linejoin="round" paint-order="stroke">bridge</text>
+<text x="1414.9" y="1082" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">AP2 · hAP ac2 · RouterOS 7.25</text>
+<text x="1426.9" y="1123" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
 <text x="1517.7" y="1217" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
 <text x="1735" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether2</text>
 <text x="1599.2" y="1159" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan51-guest</text>
 <text x="1438.9" y="1275" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
 <text x="1438.9" y="1292" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet · HomeNet-IoT</text>
-<text x="1548" y="1366" class="h" stroke="#E3F2FD" stroke-width="3" stroke-linejoin="round" paint-order="stroke">br-guest</text>
+<text x="1548" y="1366" class="h" stroke="#E3F2FD" stroke-width="7" stroke-linejoin="round" paint-order="stroke">br-guest</text>
 <text x="1560" y="1402" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wifi1 / wifi2</text>
 <text x="1560" y="1419" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HomeNet-Guest</text>
-<text x="1505.5" y="498.7" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">LTE · LtAP mini LTE · 192.168.88.1 · RouterOS 7.25.1</text>
-<text x="1702" y="542.7" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="1505.5" y="498.7" class="h" stroke="#FAFAFA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">LTE · LtAP mini LTE · 192.168.88.1 · RouterOS 7.25.1</text>
+<text x="1702" y="542.7" class="h" stroke="#FDECEA" stroke-width="7" stroke-linejoin="round" paint-order="stroke">WAN</text>
 <text x="1735" y="578.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">lte1</text>
 <text x="1735" y="656.7" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
-<text x="1517.5" y="534.7" class="h" stroke="#E8F5E9" stroke-width="3" stroke-linejoin="round" paint-order="stroke">bridge</text>
+<text x="1517.5" y="534.7" class="h" stroke="#E8F5E9" stroke-width="7" stroke-linejoin="round" paint-order="stroke">bridge</text>
 <text x="1529.5" y="570.7" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">wlan1</text>
 <text x="1529.5" y="587.7" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">MikroTik-000020</text>
 <text x="1735" y="772.7" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ether1</text>
