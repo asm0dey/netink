@@ -1,0 +1,232 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2659" height="1991" viewBox="0 0 2659 1991" font-family="Inter, 'DejaVu Sans', Arial, sans-serif" font-size="14" fill="#222">
+<defs>
+<marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="2.75" markerHeight="2.75" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6A1B9A"/></marker>
+<marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1565C0"/></marker>
+<style>.h{font-weight:700;font-size:15px}.s{font-size:12.5px;fill:#444}.t{font-size:12px;font-weight:600}</style>
+</defs>
+<rect width="2659" height="1991" fill="#fff"/>
+<text x="40" y="46" font-size="26" font-weight="700">SCaLE expo network</text>
+<text x="40" y="72" class="s" font-size="14">socallinuxexpo/scale-network, full size</text>
+<rect x="2200.5" y="110" width="106" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="2206.2" y="208" width="412" height="377" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2344.5" y="260" width="202" height="102" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2356.5" y="296" width="178" height="54" rx="6" fill="#F7FFE0" stroke="#779E00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<polygon points="2344.2,406 2364.2,387 2586.2,387 2606.2,406 2586.2,425 2364.2,425" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="2218.2" y="387" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2422.2" y="535" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2374.9" y="445" width="200.5" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="180" y="655" width="2342.5" height="445" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="2238.7" y="707" width="224.5" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="2250.7" y="743" width="200.5" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<polygon points="1291.3,806 1311.3,787 1474.8,787 1494.8,806 1474.8,825 1311.3,825" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="2404.5" y="890" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="243" y="1050" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="2188.9" y="1050" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="192" y="890" width="208" height="70" rx="6" fill="#fff" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1302" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="640.5" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="861" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1963.5" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#649DAE" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1081.5" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1522.5" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1743" y="898" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="2184" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#0000ff" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="420" y="890" width="200.5" height="70" rx="6" fill="#fff" stroke="#aa3a0a" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="40" y="1170" width="1754.2" height="405" rx="10" fill="#FAFAFA" stroke="#333" stroke-width="2"/>
+<rect x="52" y="1222" width="232" height="118" rx="10" fill="#FDECEA" stroke="#C62828" stroke-width="1.5"/>
+<rect x="64" y="1258" width="208" height="70" rx="6" fill="#FFFFE0" stroke="#999900" stroke-width="1.5" stroke-dasharray="6 4"/>
+<polygon points="333.5,1321 353.5,1302 517,1302 537,1321 517,1340 353.5,1340" fill="#F3E5F5" stroke="#6A1B9A" stroke-width="2"/>
+<rect x="132.7" y="1415" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="967.4" y="1525" width="106" height="38" rx="6" fill="#fff" stroke="#555" stroke-width="1.5"/>
+<rect x="1140.7" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#17A817" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="479.2" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#0088ac" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="699.7" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#044c84" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="920.2" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#B98B2E" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1361.2" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#ff4f00" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="1581.7" y="1415" width="200.5" height="70" rx="6" fill="#fff" stroke="#B68F0B" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="258.7" y="1423" width="200.5" height="54" rx="6" fill="#fff" stroke="#604040" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="2193.7" y="1170" width="96.3" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<rect x="972.3" y="1635" width="96.3" height="38" rx="6" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<path d="M740.8,960 L740.8,1030 L2210.1,1030 L2210.1,1050" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>
+<path d="M961.3,960 L961.3,1020 L2220.7,1020 L2220.7,1050" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1181.8,960 L1181.8,1010 L2231.3,1010 L2231.3,1050" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M1402.3,960 L1402.3,1000 L2241.9,1000 L2241.9,1050" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M2475.2,573 L2475.2,890" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M2475.2,515 L2475.2,535" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M2439.8,813 L2439.8,890" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M1622.8,960 L1622.8,990 L2252.5,990 L2252.5,1050" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1843.3,952 L1843.3,980 L2263.1,980 L2263.1,1050" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M2063.8,960 L2063.8,970 L2273.7,970 L2273.7,1050" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M2284.3,960 L2284.3,1050" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M520.3,960 L520.3,1040 L2199.5,1040 L2199.5,1050" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M579.4,1485 L579.4,1505 L993.9,1505 L993.9,1525" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4" stroke-linejoin="round"/>
+<path d="M799.9,1485 L799.9,1495 L1007.2,1495 L1007.2,1525" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M1020.4,1485 L1020.4,1525" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M1240.9,1485 L1240.9,1495 L1033.7,1495 L1033.7,1525" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M1461.4,1485 L1461.4,1505 L1046.9,1505 L1046.9,1525" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M1681.9,1485 L1681.9,1515 L1060.2,1515 L1060.2,1525" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M358.9,1477 L358.9,1515 L980.7,1515 L980.7,1525" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4" stroke-linejoin="round"/>
+<path d="M296,1088 L296,1355 L203.3,1355 L203.3,1415" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M296,960 L296,1050" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M168,1328 L168,1415" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6" stroke-linejoin="round"/>
+<path d="M2253.5,148 L2253.5,387" fill="none" stroke="#779E00" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M2415.8,350 L2415.8,377 L2288.8,377 L2288.8,387" fill="none" stroke="#779E00" stroke-width="3" stroke-dasharray="7 3 2 3" stroke-linejoin="round"/>
+<path d="M2241.9,1088 L2241.9,1170" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M1020.4,1563 L1020.4,1635" fill="none" stroke="#555" stroke-width="8" stroke-linejoin="round"/>
+<path d="M2475.2,350 L2475.2,387" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M2475.2,425 L2475.2,445" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1309.8,825 L1309.8,840 L296,840 L296,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1402.3,825 L1402.3,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1346.8,825 L1346.8,860 L740.8,860 L740.8,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1365.3,825 L1365.3,870 L961.3,870 L961.3,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1457.8,825 L1457.8,850 L2063.8,850 L2063.8,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1383.8,825 L1383.8,880 L1181.8,880 L1181.8,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1420.8,825 L1420.8,870 L1622.8,870 L1622.8,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1439.3,825 L1439.3,860 L1843.3,860 L1843.3,898" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1476.3,825 L1476.3,840 L2284.3,840 L2284.3,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M1328.3,825 L1328.3,850 L520.3,850 L520.3,890" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M460.7,1340 L460.7,1375 L1240.9,1375 L1240.9,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M384.4,1340 L384.4,1405 L579.4,1405 L579.4,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M409.8,1340 L409.8,1395 L799.9,1395 L799.9,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M435.2,1340 L435.2,1385 L1020.4,1385 L1020.4,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M486.1,1340 L486.1,1365 L1461.4,1365 L1461.4,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M511.5,1340 L511.5,1355 L1681.9,1355 L1681.9,1415" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<path d="M358.9,1340 L358.9,1423" fill="none" stroke="#6A1B9A" stroke-width="4" stroke-linejoin="round" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="2253.5" y="134" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">internet</text>
+<text x="2220.2" y="232" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">BR-MDF-01</text>
+<text x="2220.2" y="249" class="s" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:103::2</text>
+<text x="2358.5" y="284" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="2370.5" y="320" class="h" stroke="#F7FFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">cogent</text>
+<text x="2370.5" y="337" class="s" stroke="#F7FFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">default · distance 1</text>
+<text x="2475.2" y="411" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · NAT · firewall</text>
+<text x="2271.2" y="411" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
+<text x="2475.2" y="559" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
+<text x="2388.9" y="469" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan104</text>
+<text x="2388.9" y="486" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.4.1/24</text>
+<text x="2388.9" y="503" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:104::1/64</text>
+<text x="194" y="679" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">EX-MDF-01</text>
+<text x="194" y="696" class="s" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:103::1</text>
+<text x="2252.7" y="731" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="2264.7" y="767" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan104</text>
+<text x="2264.7" y="784" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.4.2/24</text>
+<text x="2264.7" y="801" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:104::2/64</text>
+<text x="1393" y="811" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
+<text x="2457.5" y="914" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
+<text x="296" y="1074" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
+<text x="2241.9" y="1074" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/2</text>
+<text x="206" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
+<text x="206" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.1/24</text>
+<text x="206" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::1/64</text>
+<text x="1316" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan103</text>
+<text x="1316" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.3.1/24</text>
+<text x="1316" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:103::1/64</text>
+<text x="654.5" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan100</text>
+<text x="654.5" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.128.1/21</text>
+<text x="654.5" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:100::1/64</text>
+<text x="875" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan101</text>
+<text x="875" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.136.1/21</text>
+<text x="875" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:101::1/64</text>
+<text x="1977.5" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan110</text>
+<text x="1977.5" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.10.1/24</text>
+<text x="1977.5" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:110::1/64</text>
+<text x="1095.5" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan102</text>
+<text x="1095.5" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.2.1/24</text>
+<text x="1095.5" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:102::1/64</text>
+<text x="1536.5" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan105</text>
+<text x="1536.5" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.5.1/24</text>
+<text x="1536.5" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:105::1/64</text>
+<text x="1757" y="922" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan107</text>
+<text x="1757" y="939" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:107::1/64</text>
+<text x="2198" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan112</text>
+<text x="2198" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.0.144.1/20</text>
+<text x="2198" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:112::1/64</text>
+<text x="434" y="914" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan499</text>
+<text x="434" y="931" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.1.0.1/24</text>
+<text x="434" y="948" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:499::1/64</text>
+<text x="54" y="1194" class="h" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">CF-MDF-01</text>
+<text x="54" y="1211" class="s" stroke="#FAFAFA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routerlist IPv6 2001:470:f026:503::1</text>
+<text x="66" y="1246" class="h" stroke="#FDECEA" stroke-width="3" stroke-linejoin="round" paint-order="stroke">WAN</text>
+<text x="78" y="1282" class="h" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan900</text>
+<text x="78" y="1299" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">172.20.0.2/24</text>
+<text x="78" y="1316" class="s" stroke="#FFFFE0" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:8000::2/64</text>
+<text x="435.2" y="1326" class="h" text-anchor="middle" fill="#4A148C" stroke="#F3E5F5" stroke-width="3" stroke-linejoin="round" paint-order="stroke">routing · firewall</text>
+<text x="185.7" y="1439" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/0</text>
+<text x="1020.4" y="1549" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">ge-0/0/1</text>
+<text x="1154.7" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan503</text>
+<text x="1154.7" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.3.1/24</text>
+<text x="1154.7" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:503::1/64</text>
+<text x="493.2" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan500</text>
+<text x="493.2" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.128.1/21</text>
+<text x="493.2" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:500::1/64</text>
+<text x="713.7" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan501</text>
+<text x="713.7" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.136.1/21</text>
+<text x="713.7" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:501::1/64</text>
+<text x="934.2" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan502</text>
+<text x="934.2" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.2.1/24</text>
+<text x="934.2" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:502::1/64</text>
+<text x="1375.2" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan505</text>
+<text x="1375.2" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.5.1/24</text>
+<text x="1375.2" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:505::1/64</text>
+<text x="1595.7" y="1439" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan506</text>
+<text x="1595.7" y="1456" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">10.128.6.1/24</text>
+<text x="1595.7" y="1473" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:506::1/64</text>
+<text x="272.7" y="1447" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">vlan507</text>
+<text x="272.7" y="1464" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">2001:470:f026:507::1/64</text>
+<text x="2241.9" y="1194" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expoidf</text>
+<text x="1020.4" y="1659" class="s" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">confidf</text>
+<text x="2247.9" y="1123" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">exUplink</text>
+<text x="1026.4" y="1593" class="t" fill="#333" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">cfUplink</text>
+<text x="2481.2" y="374.4" class="t" fill="#6A1B9A" stroke="#fff" stroke-width="4" stroke-linejoin="round" paint-order="stroke">to internet</text>
+<g class="legend">
+<rect x="40" y="1713" width="2578.2" height="238" rx="10" fill="#fff" stroke="#BDBDBD" stroke-width="1"/>
+<text x="56" y="1741" class="h">Legend</text>
+<path d="M56,1763 L100,1763" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="7 5"/>
+<text x="112" y="1767.5" class="t">Exw-SLOW (100) <tspan class="s">10.0.128.0/21, 2001:470:f026:100::/64</tspan></text>
+<path d="M56,1789 L100,1789" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="1793.5" class="t">Exw-FAST (101) <tspan class="s">10.0.136.0/21, 2001:470:f026:101::/64</tspan></text>
+<path d="M56,1815 L100,1815" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="1819.5" class="t">ExSpkr (102) <tspan class="s">10.0.2.0/24, 2001:470:f026:102::/64</tspan></text>
+<path d="M56,1841 L100,1841" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="112" y="1845.5" class="t">ExInfra (103) <tspan class="s">10.0.3.0/24, 2001:470:f026:103::/64</tspan></text>
+<path d="M56,1867 L100,1867" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="112" y="1871.5" class="t">ExMDF (104) <tspan class="s">10.0.4.0/24, 2001:470:f026:104::/64</tspan></text>
+<path d="M56,1893 L100,1893" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="112" y="1897.5" class="t">EXAV (105) <tspan class="s">10.0.5.0/24, 2001:470:f026:105::/64</tspan></text>
+<path d="M56,1919 L100,1919" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="112" y="1923.5" class="t">ExSigns (107) <tspan class="s">2001:470:f026:107::/64</tspan></text>
+<path d="M588,1763 L632,1763" fill="none" stroke="#649DAE" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="644" y="1767.5" class="t">ExReg (110) <tspan class="s">10.0.10.0/24, 2001:470:f026:110::/64</tspan></text>
+<path d="M588,1789 L632,1789" fill="none" stroke="#0000ff" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="644" y="1793.5" class="t">ExVmVndr (112) <tspan class="s">10.0.144.0/20, 2001:470:f026:112::/64</tspan></text>
+<path d="M588,1815 L632,1815" fill="none" stroke="#aa3a0a" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="644" y="1819.5" class="t">Vendor_backbone (499) <tspan class="s">10.1.0.0/24, 2001:470:f026:499::/64</tspan></text>
+<path d="M588,1841 L632,1841" fill="none" stroke="#0088ac" stroke-width="3" stroke-dasharray="4 4"/>
+<text x="644" y="1845.5" class="t">Cfw-SLOW (500) <tspan class="s">10.128.128.0/21, 2001:470:f026:500::/64</tspan></text>
+<path d="M588,1867 L632,1867" fill="none" stroke="#044c84" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="644" y="1871.5" class="t">Cfw-FAST (501) <tspan class="s">10.128.136.0/21, 2001:470:f026:501::/64</tspan></text>
+<path d="M588,1893 L632,1893" fill="none" stroke="#B98B2E" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="644" y="1897.5" class="t">CfSpkr (502) <tspan class="s">10.128.2.0/24, 2001:470:f026:502::/64</tspan></text>
+<path d="M588,1919 L632,1919" fill="none" stroke="#17A817" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="644" y="1923.5" class="t">CfInfra (503) <tspan class="s">10.128.3.0/24, 2001:470:f026:503::/64</tspan></text>
+<path d="M1119.9,1763 L1163.9,1763" fill="none" stroke="#ff4f00" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="1175.9" y="1767.5" class="t">CFAV (505) <tspan class="s">10.128.5.0/24, 2001:470:f026:505::/64</tspan></text>
+<path d="M1119.9,1789 L1163.9,1789" fill="none" stroke="#B68F0B" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="1175.9" y="1793.5" class="t">CfNOC (506) <tspan class="s">10.128.6.0/24, 2001:470:f026:506::/64</tspan></text>
+<path d="M1119.9,1815 L1163.9,1815" fill="none" stroke="#604040" stroke-width="3" stroke-dasharray="12 4 3 4"/>
+<text x="1175.9" y="1819.5" class="t">CfSigns (507) <tspan class="s">2001:470:f026:507::/64</tspan></text>
+<path d="M1119.9,1841 L1163.9,1841" fill="none" stroke="#999900" stroke-width="3" stroke-dasharray="14 6"/>
+<text x="1175.9" y="1845.5" class="t">MDF_LINK (900) <tspan class="s">172.20.0.0/24, 2001:470:f026:8000::/64</tspan></text>
+<path d="M1119.9,1867 L1163.9,1867" fill="none" stroke="#779E00" stroke-width="3" stroke-dasharray="7 3 2 3"/>
+<text x="1175.9" y="1871.5" class="t">COGENT (999) <tspan class="s">38.98.46.128/25</tspan></text>
+<path d="M1119.9,1893 L1163.9,1893" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1175.9" y="1897.5" class="t">exUplink → exInfra, exw-SLOW, exw-FAST, exReg,</text>
+<text x="1175.9" y="1923.5" class="t">exSpkr, exAV, exSigns, exVmVndr, vendor_backbone</text>
+<path d="M1651.9,1763 L1695.9,1763" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1707.9" y="1767.5" class="t">cfUplink → cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV,</text>
+<text x="1707.9" y="1793.5" class="t">cfNOC, cfSigns</text>
+<path d="M1651.9,1815 L1695.9,1815" fill="none" stroke="#555" stroke-width="8"/>
+<text x="1707.9" y="1819.5" class="t">trunk: named set or more than 4 VLANs</text>
+<path d="M1655.9,1841 L1695.9,1841" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
+<text x="1707.9" y="1845.5" class="t">routed / NAT</text>
+</g>
+</svg>

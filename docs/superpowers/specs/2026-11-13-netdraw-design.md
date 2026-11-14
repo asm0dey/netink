@@ -50,9 +50,10 @@ The model for this is Articraft-style tooling: every capability is a subcommand.
 2. **CLI:** every operation is a subcommand (Articraft-style). Commands edit the
    DSL file; hand-editing the file is equally valid; both give the same result.
 3. **Views:** `render` draws the combined view (physical + L2 VLAN lanes + L3
-   routing arrows, like today). Also `--view physical | vlans | routing`, and
-   filters `--only vlan <name|id>`, `--site <device>`. Filtered-out neighbours
-   are drawn as stubs so a slice still shows where it connects.
+   routing arrows, like today). Also `--view combined|physical|vlans|routing`, and
+   slices `--vlan <name|id>`, `--around <device> [--depth N]`, `--path <a> <b>`,
+   `--address <ip|prefix>`; `--no-collapse` draws identical siblings one by one.
+   Filtered-out neighbours are drawn as stubs so a slice still shows where it connects.
 4. **Layout:** automatic, steerable by hints in the DSL (`place X near Y`,
    `row A, B`, `<device>.side <group> = top`). No pinned coordinates.
 5. **Stack (approach A):** TypeScript on bun, elkjs for layout, a custom SVG
@@ -172,7 +173,8 @@ netdraw hint add|rm "place lte near isp"
 netdraw legend on|off|add|remove|note|position
 netdraw check                     # validate model, no drawing
 netdraw show [devices|links|vlans|<name>]   # print the merged model
-netdraw render [-o out.svg] [--view ...] [--only ...] [--site ...]
+netdraw render [-o out.svg] [--view combined|physical|vlans|routing] [--vlan <name|id>]
+               [--around <device> [--depth N]] [--path <a> <b>] [--address <ip|prefix>] [--no-collapse]
 ```
 
 - Every command takes `--file` (default `./network.net`) and `--json`.
@@ -212,12 +214,9 @@ netdraw render [-o out.svg] [--view ...] [--only ...] [--site ...]
    renders a diagram the owner judges not worse than `network.svg`, side by
    side (the owner renders their real network locally; only the anonymised
    `examples/home` copy is committed). Same information present: all boxes, ports, lanes, arrows, legend.
-2. **Large network:** a fixture with ≥30 devices and ≥24 VLANs renders without
-   overlaps, every link traceable, legend complete. Real large configs are
-   scarce publicly (privacy); build the fixture from the multi-device reference
-   configs in the MikroTik forum thread "Using RouterOS to VLAN your network"
-   (router + CRS switches + APs, `vlan-filtering=yes`), replicated across sites
-   to reach scale. A raw `/export` style must be among the fixtures.
+2. **Large network:** a DSL fixture with ≥30 devices and ≥24 VLANs renders without
+   overlaps, every link traceable, legend complete. Fixtures: SCaLE (one big tree) and the
+   NetBox demo data (many small sites).
 3. Filters/views on the large fixture produce readable slices.
 4. An LLM given only `netdraw --help` can build the home-network DSL via commands.
 5. **DSL-only parity (owner request, 2026-11-13):** `examples/home/network-dsl-only.net`
