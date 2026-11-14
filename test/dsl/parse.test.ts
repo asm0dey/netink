@@ -34,7 +34,7 @@ legend note "Failover: when 9.9.9.9 stops answering via ether1, wan2-lte takes o
 test("parses the home sketch", () => {
   const { stmts, diags } = parseDsl(HOME, "network.net");
   expect(diags).toEqual([]);
-  expect(stmts.filter((s) => s.kind === "link").length).toBe(8);
+  expect(stmts.filter((s) => s.kind === "link")).toHaveLength(8);
   const guest = stmts.find((s) => s.kind === "vlan" && s.name === "guest");
   expect(guest).toMatchObject({ ids: [50, 51], color: "blue", subnets: ["10.50.0.0/24"] });
   const imports = stmts.filter((s) => s.kind === "import");
@@ -61,7 +61,7 @@ test("link endpoint with port", () => {
 
 test("unknown keyword", () => {
   const { stmts, diags } = parseDsl('title "a"\n\nfrobnicate x\nsubtitle "b"', "f");
-  expect(diags.length).toBe(1);
+  expect(diags).toHaveLength(1);
   expect(diags[0]).toMatchObject({ level: "error", line: 3, file: "f" });
   expect(diags[0]!.hint).toContain("link");
   expect(stmts.map((s) => s.kind)).toEqual(["title", "subtitle"]);
@@ -198,7 +198,7 @@ const spanOf = (t: string) => {
 
 test("spans cover continuations", () => {
   const r = spanOf("imports rsc a.rsc as a,\n  b.rsc as b\n");
-  expect(r.stmts.length).toBe(2);
+  expect(r.stmts).toHaveLength(2);
   for (const s of r.stmts) expect(r.sp(s)).toEqual({ line: 1, head: 2, end: 2 });
 });
 

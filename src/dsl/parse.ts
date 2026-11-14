@@ -296,7 +296,7 @@ function parseLine(kw: string, c: Cur, line: number): Stmt[] {
       }
       if (vlans && trunk) throw new DslError("a link has both vlans and trunk", "use either vlans or trunk");
       const mk = (p: Endpoint[], lbl?: string): Stmt => ({ line, kind: "link", path: p, vlans, trunk, label: lbl });
-      const last = path[path.length - 1]!;
+      const last = path.at(-1)!;
       // a chain's label belongs to its last pair; each fan-out pair keeps it
       const chain = pairs(path).map((p, i, a) => mk(p, fan.length || i < a.length - 1 ? undefined : label));
       return [...chain, ...fan.map((f) => mk([last, ep(f)], label))];
@@ -592,7 +592,7 @@ export function parseDsl(
         const out = parseLine(kw, c, line);
         const sp: Span = { line, head, end: head };
         for (const o of out) spans.set(o, sp);
-        const last = out[out.length - 1];
+        const last = out.at(-1);
         if (last?.kind === "node" && last.type === "device") {
           dev = last;
           devSpan = sp;

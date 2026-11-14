@@ -302,7 +302,7 @@ test("ambiguous lists candidates", () => {
   const f = fresh("amb.net", 'device a\ndevice b\nlink a -- b\nlink a -- b label "x"\n');
   const r = run("link", "rm", "a", "b", "--file", f, "--json");
   expect(r.code).toBe(1);
-  expect(JSON.parse(r.out).candidates.length).toBe(2);
+  expect(JSON.parse(r.out).candidates).toHaveLength(2);
   expect(run("link", "rm", "a", "b", "--file", f).err).toContain(`${f}:4: link a -- b`);
 });
 test("block nouns, allow --in, legend subnouns, row, import noun", () => {

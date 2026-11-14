@@ -17,7 +17,7 @@ const naturalCmp = (a: string, b: string) => a.localeCompare(b, "en", { numeric:
 function vlanIds(s?: string): number[] {
   const out: number[] = [];
   for (const p of split(s)) {
-    const m = p.match(/^(\d+)(?:-(\d+))?$/);
+    const m = /^(\d+)(?:-(\d+))?$/.exec(p);
     if (!m) continue;
     for (let v = Number(m[1]); v <= Number(m[2] ?? m[1]) && out.length < 4094; v++) out.push(v);
   }

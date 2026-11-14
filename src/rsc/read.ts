@@ -65,11 +65,11 @@ export function readRsc(
     const start = n + 1;
     let ln = lines[n]!.trim();
     if (ln.startsWith("#")) {
-      const ver = ln.match(/by RouterOS (\d[^\s,]*)/);
+      const ver = /by RouterOS (\d[^\s,]*)/.exec(ln);
       if (header.version === undefined && ver) header.version = ver[1];
-      const model = ln.match(/^#\s*model\s*=\s*(.+)$/);
+      const model = /^#\s*model\s*=\s*(.+)$/.exec(ln);
       if (header.model === undefined && model) header.model = model[1]!.trim();
-      const both = ln.match(/^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d[^\s,]*)/);
+      const both = /^#\s*\S+ - (.+?), [\d.]+, RouterOS (\d[^\s,]*)/.exec(ln);
       if ((header.model === undefined || header.version === undefined) && both) {
         header.model ??= both[1]!;
         header.version ??= both[2];
@@ -79,7 +79,7 @@ export function readRsc(
     while (ln.endsWith("\\") && n + 1 < lines.length) ln = ln.slice(0, -1) + lines[++n]!.trimStart();
     ln = ln.trim();
     if (!ln) continue;
-    if (ln[0] === ":" || ln === "{" || ln === "}") {
+    if (ln.startsWith(":") || ln === "{" || ln === "}") {
       warn(start, `scripting line skipped: ${ln.slice(0, 40)}`);
       continue;
     }
@@ -107,7 +107,7 @@ export function readRsc(
       let { key, val } = t;
       if (key !== undefined) {
         // fused "a=1b=2": the value swallowed the next key
-        const m = val.match(/^(.+?)([a-z][a-z0-9-]*)=(.*)$/s);
+        const m = /^(.+?)([a-z][a-z0-9-]*)=(.*)$/s.exec(val);
         if (m && !t.q) {
           warn(start, `fused tokens "${key}=${val}" split into ${key} and ${m[2]}`);
           cmd.props[key] = m[1]!;

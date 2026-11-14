@@ -24,7 +24,7 @@ export function replaceLines(text: string, from: number, to: number, lines: stri
     const code = first.slice(0, ci);
     out[0] += code.slice(code.trimEnd().length) + first.slice(ci);
   }
-  const lastOld = old[old.length - 1];
+  const lastOld = old.at(-1);
   const noEnd = lastOld !== undefined && !lastOld.endsWith("\n");
   const ins = out.map((l, i) => (noEnd && i === out.length - 1 ? l : l + eol));
   return [...ps.slice(0, from - 1), ...ins, ...ps.slice(to)].join("");
@@ -36,7 +36,7 @@ export function insertAfter(text: string, after: number, lines: string[]): strin
   const eol = eolOf(text);
   const at = Math.min(after, ps.length);
   const head = ps.slice(0, at);
-  const last = head[head.length - 1];
+  const last = head.at(-1);
   if (last !== undefined && !last.endsWith("\n")) head[head.length - 1] = last + eol;
   return [...head, ...lines.map((l) => l + eol), ...ps.slice(at)].join("");
 }

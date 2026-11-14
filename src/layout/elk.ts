@@ -253,12 +253,12 @@ export async function layout(model: Model): Promise<Placed> {
   const links = model.links.map((l) => {
     if (!flip(l)) return placed(l.id, l.from, l.to, l.label, true);
     const p = placed(l.id, l.to, l.from, l.label, true);
-    return { ...p, points: p.points.reverse() };
+    return { ...p, points: p.points.toReversed() };
   });
   const arrows = model.arrows.map((a) => {
     if (!up(a)) return placed(a.id, a.from, a.to, a.label, false);
     const p = placed(a.id, a.to, a.from, a.label, false);
-    return { ...p, points: p.points.reverse() };
+    return { ...p, points: p.points.toReversed() };
   });
   straighten(model, boxes, links, arrows);
   return { width: out.width ?? 0, height: out.height ?? 0, boxes, links, arrows };
@@ -338,8 +338,8 @@ const orthogonal = (pts: P[]): P[] =>
 const simplify = (pts: P[]): P[] => {
   const out: P[] = [];
   for (const p of pts) {
-    if (out.length && near(out[out.length - 1]!, p)) continue;
-    const [a, b] = [out[out.length - 2], out[out.length - 1]];
+    if (out.length && near(out.at(-1)!, p)) continue;
+    const [a, b] = [out.at(-2), out.at(-1)];
     if (
       a &&
       b &&
@@ -349,7 +349,7 @@ const simplify = (pts: P[]): P[] => {
       out.pop();
     out.push(p);
   }
-  return out.length >= 2 ? out : [pts[0]!, pts[pts.length - 1]!];
+  return out.length >= 2 ? out : [pts[0]!, pts.at(-1)!];
 };
 
 /** Midpoint of the longest segment. */

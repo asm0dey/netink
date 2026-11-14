@@ -109,7 +109,7 @@ function editRaw(text: string, file: string, req: EditRequest): EditResult {
         error: `no ${key}`,
         hint: `run netink show${noun.show ? ` ${noun.show}` : ""} to list them`,
       };
-    if (noun.last) return { t: ms[ms.length - 1]!, sp: spans.get(ms[ms.length - 1]!)! };
+    if (noun.last) return { t: ms.at(-1)!, sp: spans.get(ms.at(-1)!)! };
     const same = verb === "rm" && new Set(ms.map((t) => print([t], level, false).join("\n"))).size === 1;
     if (ms.length > 1 && !same)
       return {

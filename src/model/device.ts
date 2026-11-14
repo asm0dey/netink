@@ -33,7 +33,7 @@ export const mk = (
   tier = 0,
 ): MNode => ({ id, kind, style, label, sub, children: [], tier });
 /** A block name in a node id: `/` would split the id, so it is `%2F`, and `%` is `%25`. */
-export const esc = (name: string) => name.replace(/%/g, "%25").replace(/\//g, "%2F");
+export const esc = (name: string) => name.replaceAll("%", "%25").replaceAll("/", "%2F");
 const flagsOf = (x: IfFlags): IfFlags =>
   ({
     ...(x.lan ? { lan: true } : {}),

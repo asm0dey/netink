@@ -12,7 +12,7 @@ export const fallbackIn =
     vlans.some((v) => v.name === name) ? vlanStyle(name) : name;
 
 // shortcut: the physical radio is read from the name (wifi1-iot → wifi1) because facts keep no master-interface; upgrade if names diverge.
-export const physOf = (n: string) => n.match(/^(cap-)?(wifi|wlan)\d+/)?.[0] ?? n;
+export const physOf = (n: string) => /^(cap-)?(wifi|wlan)\d+/.exec(n)?.[0] ?? n;
 
 /** The theme's named colours: the only names `vlan … color` accepts (else a quoted "#rrggbb"). */
 export const NAMED: Record<string, string> = {

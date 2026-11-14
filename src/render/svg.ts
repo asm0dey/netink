@@ -37,13 +37,13 @@ type Rect = { x0: number; y0: number; x1: number; y1: number };
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
 
 export const esc = (s: string): string =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  s.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
 
 const hex = (c: string, i: number): string =>
   c.startsWith("#") ? c : (NAMED[c.toLowerCase()] ?? PALETTE[i % PALETTE.length]!);
 /** Light tint of a colour: mixed 88 % towards white, for group fills the theme has no tint for. */
 const tint = (c: string): string => {
-  const n = parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16);
+  const n = Number.parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16);
   const ch = (s: number) =>
     Math.round(((n >> s) & 255) * 0.12 + 255 * 0.88)
       .toString(16)
@@ -57,7 +57,7 @@ const lum = (rgb: number[]): number => {
 };
 /** Contrast floor: a lane colour under 3:1 against white keeps its hue and loses HSL lightness until it reaches 3:1. */
 export function contrastFloor(c: string): string {
-  const n = parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16),
+  const n = Number.parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16),
     rgb = [n >> 16, (n >> 8) & 255, n & 255];
   if (1.05 / (lum(rgb) + 0.05) >= 3) return c;
   const [r, g, b] = rgb.map((v) => v / 255),
@@ -426,10 +426,12 @@ export function renderSvg(model: Model, placed: Placed): string {
   /** Middle of the longest segment: where a label without `labelAt` goes. */
   const mid = (pts: P[]): P => {
     const segs = pts.slice(1).map((b, i) => [pts[i]!, b] as const);
-    const [a, b] = segs.reduce((best, s) =>
-      Math.hypot(s[1].x - s[0].x, s[1].y - s[0].y) > Math.hypot(best[1].x - best[0].x, best[1].y - best[0].y)
-        ? s
-        : best,
+    const [a, b] = segs.reduce(
+      (best, s) =>
+        Math.hypot(s[1].x - s[0].x, s[1].y - s[0].y) > Math.hypot(best[1].x - best[0].x, best[1].y - best[0].y)
+          ? s
+          : best,
+      segs[0]!,
     );
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
   };

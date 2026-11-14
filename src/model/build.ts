@@ -549,7 +549,7 @@ export function buildFromStmts(stmts: Stmt[], opts: Opts = {}): Model {
         ? { ...h, ids: h.ids.map(ref) }
         : { ...h, group: devs.get(h.device)?.ref.get(h.group) ?? `${h.device}/${h.group}` };
   const text = (k: "title" | "subtitle") =>
-    stmts.filter((s): s is Extract<Stmt, { text: string }> => s.kind === k).at(-1)?.text;
+    stmts.findLast((s): s is Extract<Stmt, { text: string }> => s.kind === k)?.text;
   const subtitle = text("subtitle");
   return {
     title: text("title") ?? "",
