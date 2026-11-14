@@ -10,6 +10,14 @@ test.each([SCALE, NETBOX])("%s loads with no errors", (f) => {
   expect(loadModel(f).diags.filter((d) => d.level === "error")).toEqual([]);
 });
 
+test.each([SCALE, NETBOX])("%s: every VLAN def and trunk set rides a link", (f) => {
+  const m = loadModel(f);
+  const lanes = new Set(m.links.flatMap((l) => l.lanes)),
+    trunks = new Set(m.links.map((l) => l.trunk));
+  expect(m.vlans.map((v) => v.name).filter((n) => !lanes.has(n))).toEqual([]);
+  expect(m.trunks.map((t) => t.name).filter((n) => !trunks.has(n))).toEqual([]);
+});
+
 test("SCaLE: ≥30 devices, ≥24 VLANs, links use trunk sets", () => {
   const m = loadModel(SCALE);
   expect(devices(m).length).toBeGreaterThanOrEqual(30);

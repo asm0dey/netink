@@ -8,11 +8,14 @@
 #   console, front/rear-port (patch panel) and circuit cables are not links. Kind = device role,
 #   model = device type. Ports are the cabled interfaces, names as in NetBox.
 # - Links: one per interface-to-interface cable, port to port. The dump assigns no VLANs to any
-#   interface (no mode, no tagged/untagged VLANs), so links carry no VLANs.
+#   interface (no mode, no tagged/untagged VLANs). Inferred: each site's router-to-switch cables
+#   carry that site's VLANs, as one trunk set per site named by the site slug.
 # - Routers (role router) get `router`, a `wan` line per interface cabled to a circuit, and an
 #   `address` line per IP assigned to an interface. The dump assigns none of its
 #   180 IP addresses to an interface (180 unassigned), so there are no address lines.
-# - VLANs: all of them. Names clash across sites (Data, Voice, Wireless, Admin), so each clashing
+# - VLANs: those of the 13 sites with drawn devices (39 of 63); the rest belong to sites
+#   with no interface-to-interface cable, so no link could carry them.
+#   Names clash across sites (Data, Voice, Wireless), so each clashing
 #   name is suffixed with its VLAN group slug, or its site slug when it has no group.
 # - Prefixes: the 39 tied to a VLAN are that VLAN's subnet. The 51 tied to no VLAN have no
 #   place in the DSL and are listed below as comments.
@@ -113,30 +116,21 @@ vlan Wireless-dm-stamford 300 subnet 10.112.167.0/24
 vlan Wireless-dm-syracuse 300 subnet 10.112.171.0/24
 vlan Wireless-dm-utica 300 subnet 10.112.175.0/24
 vlan Wireless-dm-yonkers 300 subnet 10.112.179.0/24
-vlan Data-jbb104 201
-vlan Voice-jbb104 202
-vlan Wireless-jbb104 203
-vlan Admin-jbb104 204
-vlan Data-jbb109 201
-vlan Voice-jbb109 202
-vlan Wireless-jbb109 203
-vlan Admin-jbb109 204
-vlan Data-jb115 201
-vlan Voice-jb115 202
-vlan Wireless-jb115 203
-vlan Admin-jb115 204
-vlan Data-jbb120 201
-vlan Voice-jbb120 202
-vlan Wireless-jbb120 203
-vlan Admin-jbb120 204
-vlan Data-jbb127 201
-vlan Voice-jbb127 202
-vlan Wireless-jbb127 203
-vlan Admin-jbb127 204
-vlan Data-jbb133 201
-vlan Voice-jbb133 202
-vlan Wireless-jbb133 203
-vlan Admin-jbb133 204
+
+# Trunk sets: each site's VLANs
+trunk dm-akron vlans Data-dm-akron, Voice-dm-akron, Wireless-dm-akron
+trunk dm-albany vlans Data-dm-albany, Voice-dm-albany, Wireless-dm-albany
+trunk dm-binghamton vlans Data-dm-binghamton, Voice-dm-binghamton, Wireless-dm-binghamton
+trunk dm-buffalo vlans Data-dm-buffalo, Voice-dm-buffalo, Wireless-dm-buffalo
+trunk dm-camden vlans Data-dm-camden, Voice-dm-camden, Wireless-dm-camden
+trunk dm-nashua vlans Data-dm-nashua, Voice-dm-nashua, Wireless-dm-nashua
+trunk dm-pittsfield vlans Data-dm-pittsfield, Voice-dm-pittsfield, Wireless-dm-pittsfield
+trunk dm-rochester vlans Data-dm-rochester, Voice-dm-rochester, Wireless-dm-rochester
+trunk dm-scranton vlans Data-dm-scranton, Voice-dm-scranton, Wireless-dm-scranton
+trunk dm-stamford vlans Data-dm-stamford, Voice-dm-stamford, Wireless-dm-stamford
+trunk dm-syracuse vlans Data-dm-syracuse, Voice-dm-syracuse, Wireless-dm-syracuse
+trunk dm-utica vlans Data-dm-utica, Voice-dm-utica, Wireless-dm-utica
+trunk dm-yonkers vlans Data-dm-yonkers, Voice-dm-yonkers, Wireless-dm-yonkers
 
 # Site DM-Akron (dm-akron)
 device dmi01-akron-rtr01 kind router model "ISR 1111-8P"
@@ -256,29 +250,29 @@ device dmi01-yonkers-sw01 kind access-switch model "C9200-48P"
   ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
 
 # Links (cables)
-link dmi01-akron-rtr01.GigabitEthernet0/1/0 -- dmi01-akron-sw01.GigabitEthernet1/0/1
-link dmi01-akron-rtr01.GigabitEthernet0/1/1 -- dmi01-akron-sw01.GigabitEthernet1/0/2
-link dmi01-albany-rtr01.GigabitEthernet0/1/0 -- dmi01-albany-sw01.GigabitEthernet1/0/1
-link dmi01-albany-rtr01.GigabitEthernet0/1/1 -- dmi01-albany-sw01.GigabitEthernet1/0/2
-link dmi01-binghamton-rtr01.GigabitEthernet0/1/0 -- dmi01-binghamton-sw01.GigabitEthernet1/0/1
-link dmi01-binghamton-rtr01.GigabitEthernet0/1/1 -- dmi01-binghamton-sw01.GigabitEthernet1/0/2
-link dmi01-buffalo-rtr01.GigabitEthernet0/1/0 -- dmi01-buffalo-sw01.GigabitEthernet1/0/1
-link dmi01-buffalo-rtr01.GigabitEthernet0/1/1 -- dmi01-buffalo-sw01.GigabitEthernet1/0/2
-link dmi01-camden-rtr01.GigabitEthernet0/1/0 -- dmi01-camden-sw01.GigabitEthernet1/0/1
-link dmi01-camden-rtr01.GigabitEthernet0/1/1 -- dmi01-camden-sw01.GigabitEthernet1/0/2
-link dmi01-nashua-rtr01.GigabitEthernet0/1/0 -- dmi01-nashua-sw01.GigabitEthernet1/0/1
-link dmi01-nashua-rtr01.GigabitEthernet0/1/1 -- dmi01-nashua-sw01.GigabitEthernet1/0/2
-link dmi01-pittsfield-rtr01.GigabitEthernet0/1/0 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/1
-link dmi01-pittsfield-rtr01.GigabitEthernet0/1/1 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/2
-link dmi01-rochester-rtr01.GigabitEthernet0/1/0 -- dmi01-rochster-sw01.GigabitEthernet1/0/1
-link dmi01-rochester-rtr01.GigabitEthernet0/1/1 -- dmi01-rochster-sw01.GigabitEthernet1/0/2
-link dmi01-scranton-rtr01.GigabitEthernet0/1/0 -- dmi01-scranton-sw01.GigabitEthernet1/0/1
-link dmi01-scranton-rtr01.GigabitEthernet0/1/1 -- dmi01-scranton-sw01.GigabitEthernet1/0/2
-link dmi01-stamford-rtr01.GigabitEthernet0/1/0 -- dmi01-stamford-sw01.GigabitEthernet1/0/1
-link dmi01-stamford-rtr01.GigabitEthernet0/1/1 -- dmi01-stamford-sw01.GigabitEthernet1/0/2
-link dmi01-syracuse-rtr01.GigabitEthernet0/1/0 -- dmi01-syracuse-sw01.GigabitEthernet1/0/1
-link dmi01-syracuse-rtr01.GigabitEthernet0/1/1 -- dmi01-syracuse-sw01.GigabitEthernet1/0/2
-link dmi01-utica-rtr01.GigabitEthernet0/1/0 -- dmi01-utica-sw01.GigabitEthernet1/0/1
-link dmi01-utica-rtr01.GigabitEthernet0/1/1 -- dmi01-utica-sw01.GigabitEthernet1/0/2
-link dmi01-yonkers-rtr01.GigabitEthernet0/1/0 -- dmi01-yonkers-sw01.GigabitEthernet1/0/1
-link dmi01-yonkers-rtr01.GigabitEthernet0/1/1 -- dmi01-yonkers-sw01.GigabitEthernet1/0/2
+link dmi01-akron-rtr01.GigabitEthernet0/1/0 -- dmi01-akron-sw01.GigabitEthernet1/0/1 trunk dm-akron
+link dmi01-akron-rtr01.GigabitEthernet0/1/1 -- dmi01-akron-sw01.GigabitEthernet1/0/2 trunk dm-akron
+link dmi01-albany-rtr01.GigabitEthernet0/1/0 -- dmi01-albany-sw01.GigabitEthernet1/0/1 trunk dm-albany
+link dmi01-albany-rtr01.GigabitEthernet0/1/1 -- dmi01-albany-sw01.GigabitEthernet1/0/2 trunk dm-albany
+link dmi01-binghamton-rtr01.GigabitEthernet0/1/0 -- dmi01-binghamton-sw01.GigabitEthernet1/0/1 trunk dm-binghamton
+link dmi01-binghamton-rtr01.GigabitEthernet0/1/1 -- dmi01-binghamton-sw01.GigabitEthernet1/0/2 trunk dm-binghamton
+link dmi01-buffalo-rtr01.GigabitEthernet0/1/0 -- dmi01-buffalo-sw01.GigabitEthernet1/0/1 trunk dm-buffalo
+link dmi01-buffalo-rtr01.GigabitEthernet0/1/1 -- dmi01-buffalo-sw01.GigabitEthernet1/0/2 trunk dm-buffalo
+link dmi01-camden-rtr01.GigabitEthernet0/1/0 -- dmi01-camden-sw01.GigabitEthernet1/0/1 trunk dm-camden
+link dmi01-camden-rtr01.GigabitEthernet0/1/1 -- dmi01-camden-sw01.GigabitEthernet1/0/2 trunk dm-camden
+link dmi01-nashua-rtr01.GigabitEthernet0/1/0 -- dmi01-nashua-sw01.GigabitEthernet1/0/1 trunk dm-nashua
+link dmi01-nashua-rtr01.GigabitEthernet0/1/1 -- dmi01-nashua-sw01.GigabitEthernet1/0/2 trunk dm-nashua
+link dmi01-pittsfield-rtr01.GigabitEthernet0/1/0 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/1 trunk dm-pittsfield
+link dmi01-pittsfield-rtr01.GigabitEthernet0/1/1 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/2 trunk dm-pittsfield
+link dmi01-rochester-rtr01.GigabitEthernet0/1/0 -- dmi01-rochster-sw01.GigabitEthernet1/0/1 trunk dm-rochester
+link dmi01-rochester-rtr01.GigabitEthernet0/1/1 -- dmi01-rochster-sw01.GigabitEthernet1/0/2 trunk dm-rochester
+link dmi01-scranton-rtr01.GigabitEthernet0/1/0 -- dmi01-scranton-sw01.GigabitEthernet1/0/1 trunk dm-scranton
+link dmi01-scranton-rtr01.GigabitEthernet0/1/1 -- dmi01-scranton-sw01.GigabitEthernet1/0/2 trunk dm-scranton
+link dmi01-stamford-rtr01.GigabitEthernet0/1/0 -- dmi01-stamford-sw01.GigabitEthernet1/0/1 trunk dm-stamford
+link dmi01-stamford-rtr01.GigabitEthernet0/1/1 -- dmi01-stamford-sw01.GigabitEthernet1/0/2 trunk dm-stamford
+link dmi01-syracuse-rtr01.GigabitEthernet0/1/0 -- dmi01-syracuse-sw01.GigabitEthernet1/0/1 trunk dm-syracuse
+link dmi01-syracuse-rtr01.GigabitEthernet0/1/1 -- dmi01-syracuse-sw01.GigabitEthernet1/0/2 trunk dm-syracuse
+link dmi01-utica-rtr01.GigabitEthernet0/1/0 -- dmi01-utica-sw01.GigabitEthernet1/0/1 trunk dm-utica
+link dmi01-utica-rtr01.GigabitEthernet0/1/1 -- dmi01-utica-sw01.GigabitEthernet1/0/2 trunk dm-utica
+link dmi01-yonkers-rtr01.GigabitEthernet0/1/0 -- dmi01-yonkers-sw01.GigabitEthernet1/0/1 trunk dm-yonkers
+link dmi01-yonkers-rtr01.GigabitEthernet0/1/1 -- dmi01-yonkers-sw01.GigabitEthernet1/0/2 trunk dm-yonkers

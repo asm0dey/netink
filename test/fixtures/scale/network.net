@@ -11,8 +11,14 @@
 #   commented out upstream and skipped. Vendor VLANs (VVRNG 200-498): one per booth_list.tsv
 #   booth, numbered in file order, prefixes from switch_template.pm's VV_get_prefix4/6.
 #   Upstream allocates 16 per booth switch at build time; this per-booth numbering is an
-#   approximation. Vendor VLANs are access ports on booth switches and ride no trunk here.
-# - Trunks: one trunk set per trunktypes entry. Every link uses the child's ge-0/0/0 trunk type.
+#   approximation. booth_list.tsv maps each booth to a block, and block X to switch ExpoX.
+# - Trunks: one trunk set per trunktypes entry that a link uses (massflash feeds only an unused
+#   switch, so it is left out). A switch-to-switch link uses the parent's Downlink type, a
+#   router-to-switch link the child's ge-0/0/0 type. Derived sets (listed after the published
+#   ones) add what must also ride a switch's uplink: its booths' vendor VLANs on each booth
+#   switch, every vendor VLAN on the Expo-Catwalk uplink (booths in blocks without a linked
+#   switch ride only that one), and access VLANs a type configures but no trunk type lists
+#   (on the uplink to its parent switch).
 # - Switches: every switchtypes row, model from it. Hierarchy column gives the tree (level n
 #   hangs off the deepest lower level of its group); Z (unused) switches are left unlinked.
 #   Inferred, not published: group heads C.1, F.1 and W.1 hang off ExpoIDF (X.1); X.1 and I.1
@@ -205,7 +211,31 @@ trunk exAP vlans exInfra, exw-SLOW, exw-FAST
 trunk cfUplink vlans cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV, cfNOC, cfSigns
 trunk cfDownlink vlans cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV, cfNOC, cfSigns
 trunk cfAP vlans cfInfra, cfw-SLOW, cfw-FAST
-trunk massflash vlans cfInfra
+# Derived trunk sets (not in trunktypes)
+# Expo-Catwalk uplink: feeds the whole booth area, so every booth's vendor VLAN
+trunk vendor-all vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_200, vendor_vlan_201, vendor_vlan_202, vendor_vlan_203, vendor_vlan_204, vendor_vlan_205, vendor_vlan_206, vendor_vlan_207, vendor_vlan_208, vendor_vlan_209, vendor_vlan_210, vendor_vlan_211, vendor_vlan_212, vendor_vlan_213, vendor_vlan_214, vendor_vlan_215, vendor_vlan_216, vendor_vlan_217, vendor_vlan_218, vendor_vlan_219, vendor_vlan_220, vendor_vlan_221, vendor_vlan_222, vendor_vlan_223, vendor_vlan_224, vendor_vlan_225, vendor_vlan_226, vendor_vlan_227, vendor_vlan_228, vendor_vlan_229, vendor_vlan_230, vendor_vlan_231, vendor_vlan_232, vendor_vlan_233, vendor_vlan_234, vendor_vlan_235, vendor_vlan_236, vendor_vlan_237, vendor_vlan_238, vendor_vlan_239, vendor_vlan_240, vendor_vlan_241, vendor_vlan_242, vendor_vlan_243, vendor_vlan_244, vendor_vlan_245, vendor_vlan_246, vendor_vlan_247, vendor_vlan_248, vendor_vlan_249, vendor_vlan_250, vendor_vlan_251, vendor_vlan_252, vendor_vlan_253, vendor_vlan_254, vendor_vlan_255, vendor_vlan_256, vendor_vlan_257, vendor_vlan_258, vendor_vlan_259, vendor_vlan_260, vendor_vlan_261, vendor_vlan_262, vendor_vlan_263, vendor_vlan_264, vendor_vlan_265, vendor_vlan_266, vendor_vlan_267, vendor_vlan_268, vendor_vlan_269, vendor_vlan_270, vendor_vlan_271, vendor_vlan_272, vendor_vlan_273, vendor_vlan_274, vendor_vlan_275, vendor_vlan_276, vendor_vlan_277, vendor_vlan_278, vendor_vlan_279, vendor_vlan_280, vendor_vlan_281, vendor_vlan_282, vendor_vlan_283, vendor_vlan_284, vendor_vlan_285, vendor_vlan_286, vendor_vlan_287, vendor_vlan_288, vendor_vlan_289, vendor_vlan_290, vendor_vlan_291, vendor_vlan_292, vendor_vlan_293, vendor_vlan_294, vendor_vlan_295, vendor_vlan_296, vendor_vlan_297, vendor_vlan_298, vendor_vlan_299, vendor_vlan_300, vendor_vlan_301, vendor_vlan_302, vendor_vlan_303, vendor_vlan_304, vendor_vlan_305, vendor_vlan_306, vendor_vlan_307, vendor_vlan_308, vendor_vlan_309, vendor_vlan_310, vendor_vlan_311, vendor_vlan_312, vendor_vlan_313, vendor_vlan_314, vendor_vlan_315, vendor_vlan_316, vendor_vlan_317, vendor_vlan_318, vendor_vlan_319, vendor_vlan_320, vendor_vlan_321, vendor_vlan_322, vendor_vlan_323, vendor_vlan_324
+# cfRoom uplinks: cfDownlink plus the type's access VLANs cfCTF, cfInstl
+trunk cfRoom-up vlans cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV, cfNOC, cfSigns, cfCTF, cfInstl
+# ExpoAW uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoaw vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_309, vendor_vlan_310, vendor_vlan_311, vendor_vlan_312, vendor_vlan_313, vendor_vlan_314, vendor_vlan_315, vendor_vlan_316, vendor_vlan_317, vendor_vlan_318, vendor_vlan_319, vendor_vlan_320, vendor_vlan_321, vendor_vlan_322, vendor_vlan_323, vendor_vlan_324
+# ExpoA2 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoa2 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_221, vendor_vlan_222, vendor_vlan_223, vendor_vlan_224, vendor_vlan_225, vendor_vlan_226
+# ExpoA3 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoa3 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_243, vendor_vlan_244, vendor_vlan_245, vendor_vlan_246, vendor_vlan_247, vendor_vlan_248
+# ExpoB1 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expob1 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_206, vendor_vlan_207, vendor_vlan_208, vendor_vlan_209, vendor_vlan_210, vendor_vlan_211, vendor_vlan_212, vendor_vlan_213, vendor_vlan_214, vendor_vlan_215
+# ExpoB2 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expob2 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_227, vendor_vlan_228, vendor_vlan_229, vendor_vlan_230, vendor_vlan_231, vendor_vlan_232, vendor_vlan_233, vendor_vlan_234, vendor_vlan_235, vendor_vlan_236
+# ExpoB3 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expob3 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_249, vendor_vlan_250, vendor_vlan_251, vendor_vlan_252, vendor_vlan_253, vendor_vlan_254, vendor_vlan_255, vendor_vlan_256, vendor_vlan_257, vendor_vlan_258
+# ExpoA1 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoa1 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_200, vendor_vlan_201, vendor_vlan_202, vendor_vlan_203, vendor_vlan_204, vendor_vlan_205
+# ExpoC1 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoc1 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_216, vendor_vlan_217, vendor_vlan_218, vendor_vlan_219, vendor_vlan_220
+# ExpoC2 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoc2 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_237, vendor_vlan_238, vendor_vlan_239, vendor_vlan_240, vendor_vlan_241, vendor_vlan_242
+# ExpoC3 uplink: exDownlink plus its booths' vendor VLANs
+trunk vendor-expoc3 vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone, vendor_vlan_259, vendor_vlan_260, vendor_vlan_261, vendor_vlan_262, vendor_vlan_263, vendor_vlan_264
 
 cloud internet "Internet (COGENT transit)"
 
@@ -436,45 +466,45 @@ device noc-2 "NOC-2" kind ap  # 10.128.3.228
 link br-mdf-01.ge-0/0/0 -- internet vlans COGENT
 link br-mdf-01.ge-0/0/1 -- ex-mdf-01.ge-0/0/0 vlans exMDF
 link ex-mdf-01.ge-0/0/1 -- cf-mdf-01.ge-0/0/0 vlans MDF_LINK
-link confidf -- noc trunk cfUplink
-link expoidf -- nw-idf trunk exUplink
-link expoidf -- ne-idf trunk exUplink
-link expoidf -- expo-catwalk trunk exUplink
-link confidf -- avswitch trunk cfUplink
-link confidf -- rm211 trunk cfUplink
-link confidf -- rm215 trunk cfUplink
-link confidf -- rm207 trunk cfUplink
-link confidf -- rm105 trunk cfUplink
-link confidf -- rm106 trunk cfUplink
-link confidf -- rm107 trunk cfUplink
-link expo-catwalk -- expoaw trunk exUplink
-link expo-catwalk -- expoa2 trunk exUplink
-link expo-catwalk -- expoa3 trunk exUplink
-link expo-catwalk -- expod1 trunk exUplink
-link expo-catwalk -- expod2 trunk exUplink
-link expo-catwalk -- expob1 trunk exUplink
-link expo-catwalk -- expob2 trunk exUplink
-link expo-catwalk -- expob3 trunk exUplink
-link expo-catwalk -- expoa1 trunk exUplink
-link expo-catwalk -- expoc1 trunk exUplink
-link expo-catwalk -- expoc2 trunk exUplink
-link expo-catwalk -- expoc3 trunk exUplink
-link ne-idf -- ballroomb trunk exUplink
-link ne-idf -- ballroomc trunk exUplink
-link nw-idf -- ballroomd trunk exUplink
-link nw-idf -- ballroomf trunk exUplink
-link nw-idf -- ballroome trunk exUplink
-link confidf -- rm209-210 trunk cfUplink
-link confidf -- rm101-102 trunk cfUplink
-link nw-idf -- ballroomh trunk exUplink
-link confidf -- rm208 trunk cfUplink
-link expoidf -- regdesk trunk exUplink
+link confidf -- noc trunk cfDownlink
+link expoidf -- nw-idf trunk exDownlink
+link expoidf -- ne-idf trunk exDownlink
+link expoidf -- expo-catwalk trunk vendor-all
+link confidf -- avswitch trunk cfDownlink
+link confidf -- rm211 trunk cfRoom-up
+link confidf -- rm215 trunk cfRoom-up
+link confidf -- rm207 trunk cfRoom-up
+link confidf -- rm105 trunk cfRoom-up
+link confidf -- rm106 trunk cfRoom-up
+link confidf -- rm107 trunk cfRoom-up
+link expo-catwalk -- expoaw trunk vendor-expoaw
+link expo-catwalk -- expoa2 trunk vendor-expoa2
+link expo-catwalk -- expoa3 trunk vendor-expoa3
+link expo-catwalk -- expod1 trunk exDownlink
+link expo-catwalk -- expod2 trunk exDownlink
+link expo-catwalk -- expob1 trunk vendor-expob1
+link expo-catwalk -- expob2 trunk vendor-expob2
+link expo-catwalk -- expob3 trunk vendor-expob3
+link expo-catwalk -- expoa1 trunk vendor-expoa1
+link expo-catwalk -- expoc1 trunk vendor-expoc1
+link expo-catwalk -- expoc2 trunk vendor-expoc2
+link expo-catwalk -- expoc3 trunk vendor-expoc3
+link ne-idf -- ballroomb trunk exDownlink
+link ne-idf -- ballroomc trunk exDownlink
+link nw-idf -- ballroomd trunk exDownlink
+link nw-idf -- ballroomf trunk exDownlink
+link nw-idf -- ballroome trunk exDownlink
+link confidf -- rm209-210 trunk cfRoom-up
+link confidf -- rm101-102 trunk cfRoom-up
+link nw-idf -- ballroomh trunk exDownlink
+link confidf -- rm208 trunk cfRoom-up
+link expoidf -- regdesk trunk exDownlink
 link ex-mdf-01.ge-0/0/2 -- expoidf trunk exUplink
-link ne-idf -- ballrooma trunk exAP
-link nw-idf -- ballroomg trunk exAP
-link confidf -- room103 trunk cfAP
+link ne-idf -- ballrooma trunk exDownlink
+link nw-idf -- ballroomg trunk exDownlink
+link confidf -- room103 trunk cfDownlink
 link cf-mdf-01.ge-0/0/1 -- confidf trunk cfUplink
-link confidf -- room104 trunk cfAP
+link confidf -- room104 trunk cfDownlink
 link rm101-102 -- rm101-a trunk cfAP
 link rm101-102 -- rm101-b trunk cfAP
 link rm101-102 -- rm101-c trunk cfAP
