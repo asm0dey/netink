@@ -12,7 +12,7 @@ class DslError extends Error {
   }
 }
 
-const KEYWORDS = [
+export const KEYWORDS = [
   "title",
   "subtitle",
   "imports",
@@ -556,7 +556,7 @@ function parseItem(kw: string, c: Cur, line: number): DevItem {
   }
 }
 
-const BLOCK = ["wan", "router", "bridge", "ports", "vlan-iface", "radio", "address", "lease", "allow"];
+export const BLOCK = ["wan", "router", "bridge", "ports", "vlan-iface", "radio", "address", "lease", "allow"];
 const NESTED = ["ports", "vlan-iface", "radio"];
 
 /** Consecutive endpoint pairs of a chain. */

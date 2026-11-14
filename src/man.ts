@@ -1,7 +1,20 @@
+import dslDoc from "../docs/dsl.md" with { type: "text" };
 import { NOUNS } from "./edit/table";
-import { COMPLETION, DESC, EDITING, EXIT, GRAMMAR, JSON_OUT } from "./help";
+import { COMPLETION, DESC, EDITING, EXIT, JSON_OUT } from "./help";
 
 const code = (s: string) => `\`\`\`\n${s}\n\`\`\``;
+
+/** Push markdown headings two levels down (`#` → `###`), leaving fenced code alone. */
+export function demote(md: string): string {
+  let fenced = false;
+  return md
+    .split("\n")
+    .map((l) => {
+      if (l.startsWith("```")) fenced = !fenced;
+      return !fenced && /^#{1,4}\s/.test(l) ? `##${l}` : l;
+    })
+    .join("\n");
+}
 
 /** The man page as marked-man markdown, built from the same definitions --help uses. */
 export function manPage(): string {
@@ -51,6 +64,6 @@ ${code(COMPLETION)}
 
 ## DSL
 
-${code(GRAMMAR)}
+${demote(dslDoc.trim())}
 `;
 }

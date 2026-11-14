@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
+import { readFileSync } from "node:fs";
 import { NOUNS } from "../src/edit/table";
-import { GRAMMAR } from "../src/help";
-import { manPage } from "../src/man";
+import { demote, manPage } from "../src/man";
 
 const run = (...a: string[]) => {
   const r = Bun.spawnSync(["bun", "src/cli.ts", ...a]);
@@ -14,7 +14,10 @@ test("man page structure", () => {
   for (const h of ["## SYNOPSIS", "## COMMANDS", "## EDITING COMMANDS", "## EXIT STATUS"]) expect(m).toContain(h);
   for (const c of ["render", "check", "show", "import", "init", "completion"]) expect(m).toContain(c);
   for (const n of NOUNS) expect(m).toContain(n.help);
-  expect(m).toContain(GRAMMAR);
+  // the man page nests dsl.md under its "## DSL" heading, two levels down; code blocks are untouched
+  const doc = readFileSync("docs/dsl.md", "utf8").trim();
+  expect(m).toContain(demote(doc));
+  expect(demote("# a\n```net\n# c\n```")).toBe("### a\n```net\n# c\n```");
   for (const f of ["--view", "--path"]) expect(m).toContain(f);
 });
 test("__man prints it, hidden from --help", () => {
