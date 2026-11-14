@@ -60,6 +60,8 @@ netink is a single executable with no dependencies.
    chmod +x netink
    ```
 
+   On Windows, rename it to `netink.exe` instead; no `chmod` is needed.
+
 3. Put it in a directory on your `PATH`, such as `~/.local/bin` or
    `/usr/local/bin`.
 4. Optionally, install the manual page `netink.1` from the same release into
@@ -67,8 +69,8 @@ netink is a single executable with no dependencies.
    works.
 
 To build from source instead, install [mise](https://mise.jdx.dev), then
-in a clone of this repository run `mise run build`. The executable is
-written to `dist/netink`.
+in a clone of this repository run `bun install` followed by
+`mise run build`. The executable is written to `dist/netink`.
 
 ## Quick start
 
