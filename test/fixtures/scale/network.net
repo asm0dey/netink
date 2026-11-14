@@ -20,14 +20,15 @@
 #   switch ride only that one), and access VLANs a type configures but no trunk type lists
 #   (on the uplink to its parent switch).
 # - Switches: every switchtypes row, model from it. Hierarchy column gives the tree (level n
-#   hangs off the deepest lower level of its group); Z (unused) switches are left unlinked.
+#   hangs off the deepest lower level of its group). Switches that no link reaches (Z unused
+#   spares, DECEASED*, DONOTUSE, MassFlash, ExpoB5/C4/C5) are dropped.
 #   Inferred, not published: group heads C.1, F.1 and W.1 hang off ExpoIDF (X.1); X.1 and I.1
 #   uplink to ex-mdf-01 and cf-mdf-01.
 # - APs: every apuse.csv row, attached by name (room number, ballroom, booth switch, AV, NOC,
 #   reghall -> RegDesk), else to the building IDF by IPv4 (10.0.x Expo, 10.128.x Conference).
 #   Expo APs use trunk exAP, Conference APs cfAP. The attachment is inferred.
 # - Routers: routerlist.csv names. Router-to-router links, port names and the COGENT uplink are
-#   inferred; gateway addresses follow the routerlist ::1 convention (.1 / ::1 per routed VLAN,
+#   inferred, as is the default route with NAT on the COGENT line; gateway addresses follow the routerlist ::1 convention (.1 / ::1 per routed VLAN,
 #   .2 / ::2 for the downstream end of a router link). Switch management addresses are dropped.
 # - Rewrites: ids are the names lowercased; labels keep the original names.
 title "SCaLE expo network"
@@ -241,7 +242,7 @@ cloud internet "Internet (COGENT transit)"
 
 # Routers
 device br-mdf-01 kind router note "routerlist IPv6 2001:470:f026:103::2"
-  wan cogent on ge-0/0/0 vlan 999
+  wan cogent on ge-0/0/0 vlan 999 route "default" distance 1 nat
   router
   ports ge-0/0/0, ge-0/0/1
   vlan-iface vlan104 on ge-0/0/1 vlan 104 address 10.0.4.1/24, 2001:470:f026:104::1/64
@@ -275,30 +276,17 @@ device cf-mdf-01 kind router note "routerlist IPv6 2001:470:f026:503::1"
 
 # Switches
 device noc "NOC" kind switch model "ex4200-48p"  # cfNOC I.9
-device sparek "SpareK" kind switch model "ex4200-48p"  # cfIDF Z.9 (unused)
 device nw-idf "NW-IDF" kind switch model "ex4200-48p"  # exIDF F.1
 device ne-idf "NE-IDF" kind switch model "ex4200-48p"  # exIDF C.1
-device sparel "SpareL" kind switch model "ex4200-48p"  # exIDF Z.9 (unused)
 device expo-catwalk "Expo-Catwalk" kind switch model "ex4200-48p"  # Catwalk W.1
-device massflash "MassFlash" kind switch model "ex4200-48p"  # MassFlash Z.9 (unused)
 device avswitch "AVSwitch" kind switch model "ex4200-48p"  # cfAV I.9
-device deceased1 "DECEASED1" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
 device rm211 "Rm211" kind switch model "ex4200-48p"  # cfRoom I.9
 device rm215 "Rm215" kind switch model "ex4200-48p"  # cfRoom I.9
-device deceased3 "DECEASED3" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
 device rm207 "Rm207" kind switch model "ex4200-48p"  # cfRoom I.9
-device spareh "SpareH" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
 device rm105 "Rm105" kind switch model "ex4200-48p"  # cfRoom I.9
 device rm106 "Rm106" kind switch model "ex4200-48p"  # cfRoom I.9
 device rm107 "Rm107" kind switch model "ex4200-48p"  # cfRoom I.9
-device sparea "SpareA" kind switch model "ex4200-48p"  # cfCTF Z.4 (unused)
-device spareb "SpareB" kind switch model "ex4200-48p"  # cfCTF Z.5 (unused)
-device sparec "SpareC" kind switch model "ex4200-48p"  # cfCTF Z.6 (unused)
-device spared "SpareD" kind switch model "ex4200-48p"  # cfCTF Z.7 (unused)
-device sparee "SpareE" kind switch model "ex4200-48p"  # cfCTF Z.8 (unused)
-device sparef "SpareF" kind switch model "ex4200-48p"  # cfCTF Z.9 (unused)
 device expoaw "ExpoAW" kind switch model "ex4200-48p"  # Booth W.9
-device deceased4 "DECEASED4" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
 device expoa2 "ExpoA2" kind switch model "ex4200-48p"  # Booth W.9
 device expoa3 "ExpoA3" kind switch model "ex4200-48p"  # Booth W.9
 device expod1 "ExpoD1" kind switch model "ex4200-48p"  # Booth W.9
@@ -307,24 +295,18 @@ device expob1 "ExpoB1" kind switch model "ex4200-48p"  # Booth W.9
 device expob2 "ExpoB2" kind switch model "ex4200-48p"  # Booth W.9
 device expob3 "ExpoB3" kind switch model "ex4200-48p"  # Booth W.9
 device expoa1 "ExpoA1" kind switch model "ex4200-48p"  # Booth W.9
-device expob5 "ExpoB5" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
 device expoc1 "ExpoC1" kind switch model "ex4200-48p"  # Booth W.9
 device expoc2 "ExpoC2" kind switch model "ex4200-48p"  # Booth W.9
 device expoc3 "ExpoC3" kind switch model "ex4200-48p"  # Booth W.9
-device expoc4 "ExpoC4" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
-device expoc5 "ExpoC5" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
-device sparei "SpareI" kind switch model "ex4200-48p"  # exRoom Z.9 (unused)
 device ballroomb "BallroomB" kind switch model "ex4200-48p"  # exRoom C.9
 device ballroomc "BallroomC" kind switch model "ex4200-48p"  # exRoom C.9
 device ballroomd "BallroomD" kind switch model "ex4200-48p"  # exRoom F.9
 device ballroomf "BallroomF" kind switch model "ex4200-48p"  # exRoom F.9
 device ballroome "BallroomE" kind switch model "ex4200-48p"  # exRoom F.9
-device deceased2 "DECEASED2" kind switch model "ex4200-48p"  # exRoom Z.9 (unused)
 device rm209-210 "Rm209-210" kind switch model "ex4200-48p"  # cfRoom I.9
 device rm101-102 "Rm101-102" kind switch model "ex4200-48p"  # cfRoom I.9
 device ballroomh "BallroomH" kind switch model "ex4200-48p"  # exRoom F.9
 device rm208 "Rm208" kind switch model "ex4200-48p"  # cfRoom I.9
-device donotuse "DONOTUSE" kind switch model "ex4200-48px"  # swatch Z.9 (unused)
 device regdesk "RegDesk" kind switch model "ex4200-48px"  # registration X.9
 device expoidf "ExpoIDF" kind switch model "ex4300-48p"  # exIDF X.1
 device ballrooma "BallroomA" kind switch model "ex2300-c-12p"  # exMicro C.9

@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
 import { textWidth } from "../../src/layout/measure";
 import { loadModel } from "../../src/load";
-import { renderSvg } from "../../src/render/svg";
+import { laneStyles, renderSvg } from "../../src/render/svg";
 import type { MNode, Model, Placed } from "../../src/types";
 
 const HOME = "examples/home/network.net";
@@ -352,4 +352,33 @@ test("a right-hand legend taller than the diagram moves below it", () => {
   ];
   const y = Number(/<g class="legend">\n<rect x="[\d.]+" y="([\d.]+)"/.exec(renderSvg(m, p))![1]);
   expect(y).toBeGreaterThanOrEqual(p.height);
+});
+
+test("lane contrast floor: pale colours darken in hue, tints stay, dark colours are untouched", () => {
+  const ratio = (c: string) => {
+    const ch = [16, 8, 0]
+      .map((s) => ((parseInt(c.slice(1), 16) >> s) & 255) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 1.05 / (0.2126 * ch[0]! + 0.7152 * ch[1]! + 0.0722 * ch[2]! + 0.05);
+  };
+  const hue = (c: string) => {
+    const [r, g, b] = [16, 8, 0].map((s) => ((parseInt(c.slice(1), 16) >> s) & 255) / 255) as [number, number, number];
+    const d = Math.max(r, g, b) - Math.min(r, g, b);
+    const h =
+      Math.max(r, g, b) === r ? ((g - b) / d + 6) % 6 : Math.max(r, g, b) === g ? (b - r) / d + 2 : (r - g) / d + 4;
+    return h * 60;
+  };
+  const lanes = laneStyles(
+    ["#C0FF00", "#FFFF00", "#283593"].map((color, i) => ({ name: `v${i}`, ids: [i + 1], color, subnets: [] }) as never),
+  );
+  for (const [n, orig, tint] of [
+    ["v0", "#C0FF00", "#F7FFE0"],
+    ["v1", "#FFFF00", "#FFFFE0"],
+  ] as const) {
+    const s = lanes.get(n)!;
+    expect(ratio(s.stroke)).toBeGreaterThanOrEqual(3);
+    expect(Math.abs(hue(s.stroke) - hue(orig))).toBeLessThan(10);
+    expect(s.tint).toBe(tint);
+  }
+  expect(lanes.get("v2")!.stroke).toBe("#283593");
 });

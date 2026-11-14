@@ -51,6 +51,39 @@ const tint = (c: string): string => {
   return `#${ch(16)}${ch(8)}${ch(0)}`.toUpperCase();
 };
 
+const lum = (rgb: number[]): number => {
+  const [r, g, b] = rgb.map((v) => (v / 255 <= 0.03928 ? v / 255 / 12.92 : ((v / 255 + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r! + 0.7152 * g! + 0.0722 * b!;
+};
+/** Contrast floor: a lane colour under 3:1 against white keeps its hue and loses HSL lightness until it reaches 3:1. */
+export function contrastFloor(c: string): string {
+  const n = parseInt(c.slice(1).padEnd(6, "0").slice(0, 6), 16),
+    rgb = [n >> 16, (n >> 8) & 255, n & 255];
+  if (1.05 / (lum(rgb) + 0.05) >= 3) return c;
+  const [r, g, b] = rgb.map((v) => v / 255),
+    mx = Math.max(r!, g!, b!),
+    mn = Math.min(r!, g!, b!),
+    d = mx - mn,
+    h = d === 0 ? 0 : mx === r ? ((g! - b!) / d + 6) % 6 : mx === g ? (b! - r!) / d + 2 : (r! - g!) / d + 4,
+    l0 = (mx + mn) / 2,
+    sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l0 - 1));
+  const at = (l: number) => {
+    const a = sat * Math.min(l, 1 - l),
+      k = (o: number) => {
+        const q = (o + h * 2) % 12;
+        return l - a * Math.max(-1, Math.min(q - 3, 9 - q, 1));
+      };
+    return [k(0), k(8), k(4)].map((v) => Math.round(v * 255));
+  };
+  let l = l0,
+    out = rgb;
+  while (1.05 / (lum(out) + 0.05) < 3 && l > 0) {
+    l -= 0.01;
+    out = at(l);
+  }
+  return `#${out.map((v) => v.toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+}
+
 /** Stroke per lane name: one per VLAN def, plus the fixed kinds. */
 export function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
   const m = new Map<string, Stroke>([
@@ -63,8 +96,9 @@ export function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
   const seen = new Set<string>(),
     look = (s: Stroke) => `${s.stroke} ${s.w} ${s.dash ?? ""}`;
   vlans.forEach((v, i) => {
-    const stroke = hex(v.color, i),
-      t = THEME_TINT[stroke.toUpperCase()] ?? tint(stroke);
+    const orig = hex(v.color, i),
+      stroke = contrastFloor(orig),
+      t = THEME_TINT[orig.toUpperCase()] ?? tint(orig);
     const s: Stroke =
       v.ids === "untagged"
         ? { stroke, w: 4, tint: t }
