@@ -1,0 +1,604 @@
+# SCaLE expo network (full size, with APs), converted from the public scale-network repo.
+# Source: https://github.com/socallinuxexpo/scale-network at commit 7d3b51dcbab48e3e3298a48c087af5cdf94d1a8c
+#   switch-configuration/config/{vlans,vlans.d/*,booth_list.tsv,switchtypes,trunktypes,types/*},
+#   facts/routers/routerlist.csv, facts/aps/apuse.csv
+# Retrieved 2026-11-14. Licence: BSD-3-Clause (see LICENSE beside this file).
+# Converted by a throwaway script; this file is the source of truth.
+#
+# Mapping (what is published vs inferred):
+# - VLANs: every VLAN line in vlans.d/{Expo,Conference,Bridged} with its IPv4/IPv6 prefix and
+#   background colour; 0.0.0.0/0 and ::/0 (IPv6-only, transit) are left out. Hilton VLANs are
+#   commented out upstream and skipped. Vendor VLANs (VVRNG 200-498): one per booth_list.tsv
+#   booth, numbered in file order, prefixes from switch_template.pm's VV_get_prefix4/6.
+#   Upstream allocates 16 per booth switch at build time; this per-booth numbering is an
+#   approximation. Vendor VLANs are access ports on booth switches and ride no trunk here.
+# - Trunks: one trunk set per trunktypes entry. Every link uses the child's ge-0/0/0 trunk type.
+# - Switches: every switchtypes row, model from it. Hierarchy column gives the tree (level n
+#   hangs off the deepest lower level of its group); Z (unused) switches are left unlinked.
+#   Inferred, not published: group heads C.1, F.1 and W.1 hang off ExpoIDF (X.1); X.1 and I.1
+#   uplink to ex-mdf-01 and cf-mdf-01.
+# - APs: every apuse.csv row, attached by name (room number, ballroom, booth switch, AV, NOC,
+#   reghall -> RegDesk), else to the building IDF by IPv4 (10.0.x Expo, 10.128.x Conference).
+#   Expo APs use trunk exAP, Conference APs cfAP. The attachment is inferred.
+# - Routers: routerlist.csv names. Router-to-router links, port names and the COGENT uplink are
+#   inferred; gateway addresses follow the routerlist ::1 convention (.1 / ::1 per routed VLAN,
+#   .2 / ::2 for the downstream end of a router link). Switch management addresses are dropped.
+# - Rewrites: ids are the names lowercased; labels keep the original names.
+title "SCaLE expo network"
+subtitle "socallinuxexpo/scale-network, full size"
+
+# VLANs
+# 2.4G Wireless Network in Expo Center
+vlan exw-SLOW 100 color "#0088ac" subnet 10.0.128.0/21, 2001:470:f026:100::/64
+# 5G Wireless Network in Expo Center
+vlan exw-FAST 101 color "#044c84" subnet 10.0.136.0/21, 2001:470:f026:101::/64
+# Speaker Network
+vlan exSpkr 102 color "#eeddbb" subnet 10.0.2.0/24, 2001:470:f026:102::/64
+# SCALE NetInfra + Servers (Expo Center)
+vlan exInfra 103 color "#cbf8cb" subnet 10.0.3.0/24, 2001:470:f026:103::/64
+# Link to MDF Router
+vlan exMDF 104 color "#ffff00" subnet 10.0.4.0/24, 2001:470:f026:104::/64
+# AV Network (DHCP Relay to AV server)
+vlan exAV 105 color "#ff4f00" subnet 10.0.5.0/24, 2001:470:f026:105::/64
+# Signs network (Expo Center) IPv6 Only
+vlan exSigns 107 color "#604040" subnet 2001:470:f026:107::/64
+# Registration Network (Expo Center)
+vlan exReg 110 color "#9abfca" subnet 10.0.10.0/24, 2001:470:f026:110::/64
+# Special network for VM Vending Machine
+vlan exVmVndr 112 color "#0000ff" subnet 10.0.144.0/20, 2001:470:f026:112::/64
+# Vendor Backbone
+vlan vendor_backbone 499 color "#aa3a0a" subnet 10.1.0.0/24, 2001:470:f026:499::/64
+# 2.4G Wireless Network in Conference Center
+vlan cfw-SLOW 500 color "#0088ac" subnet 10.128.128.0/21, 2001:470:f026:500::/64
+# 5G Wireless Network in Conference Center
+vlan cfw-FAST 501 color "#044c84" subnet 10.128.136.0/21, 2001:470:f026:501::/64
+# Speaker Network
+vlan cfSpkr 502 color "#eeddbb" subnet 10.128.2.0/24, 2001:470:f026:502::/64
+# SCALE Net Infra and Servers (Conference Center)
+vlan cfInfra 503 color "#cbf8cb" subnet 10.128.3.0/24, 2001:470:f026:503::/64
+# Capture the Flag
+vlan cfCTF 504 color "#000000" subnet 10.128.4.0/24, 2001:470:f026:504::/64
+# Audio Visual Network (DHCP Helper to AV server)
+vlan cfAV 505 color "#ff4f00" subnet 10.128.5.0/24, 2001:470:f026:505::/64
+# Wired network in NOC
+vlan cfNOC 506 color "#f6d669" subnet 10.128.6.0/24, 2001:470:f026:506::/64
+# Signs network (Conference Center) IPv6 Only
+vlan cfSigns 507 color "#604040" subnet 2001:470:f026:507::/64
+# Install Fests and Workshops
+vlan cfInstl 510 color "#f28fd3" subnet 10.128.10.0/24, 2001:470:f026:510::/64
+# Link between IDF in Conference and Expo Centers
+vlan MDF_LINK 900 color "#ffff00" subnet 172.20.0.0/24, 2001:470:f026:8000::/64
+# COGENT IPv4 Transit Link (PSAV & PCC)
+vlan COGENT 999 color "#c0ff00" subnet 38.98.46.128/25
+
+# Vendor VLANs, one per booth
+vlan vendor_vlan_200 200 color "#e2ddfc" subnet 10.2.0.0/24, 2001:470:f026:200::/64  # booth 201, block A1, switch ExpoA1
+vlan vendor_vlan_201 201 color "#e2ddfc" subnet 10.2.1.0/24, 2001:470:f026:201::/64  # booth 300, block A1, switch ExpoA1
+vlan vendor_vlan_202 202 color "#e2ddfc" subnet 10.2.2.0/24, 2001:470:f026:202::/64  # booth 203, block A1, switch ExpoA1
+vlan vendor_vlan_203 203 color "#e2ddfc" subnet 10.2.3.0/24, 2001:470:f026:203::/64  # booth 302, block A1, switch ExpoA1
+vlan vendor_vlan_204 204 color "#e2ddfc" subnet 10.2.4.0/24, 2001:470:f026:204::/64  # booth 205, block A1, switch ExpoA1
+vlan vendor_vlan_205 205 color "#e2ddfc" subnet 10.2.5.0/24, 2001:470:f026:205::/64  # booth 304, block A1, switch ExpoA1
+vlan vendor_vlan_206 206 color "#e2ddfc" subnet 10.2.6.0/24, 2001:470:f026:206::/64  # booth 211, block B1, switch ExpoB1
+vlan vendor_vlan_207 207 color "#e2ddfc" subnet 10.2.7.0/24, 2001:470:f026:207::/64  # booth 310, block B1, switch ExpoB1
+vlan vendor_vlan_208 208 color "#e2ddfc" subnet 10.2.8.0/24, 2001:470:f026:208::/64  # booth 213, block B1, switch ExpoB1
+vlan vendor_vlan_209 209 color "#e2ddfc" subnet 10.2.9.0/24, 2001:470:f026:209::/64  # booth 312, block B1, switch ExpoB1
+vlan vendor_vlan_210 210 color "#e2ddfc" subnet 10.2.10.0/24, 2001:470:f026:210::/64  # booth 215, block B1, switch ExpoB1
+vlan vendor_vlan_211 211 color "#e2ddfc" subnet 10.2.11.0/24, 2001:470:f026:211::/64  # booth 314, block B1, switch ExpoB1
+vlan vendor_vlan_212 212 color "#e2ddfc" subnet 10.2.12.0/24, 2001:470:f026:212::/64  # booth 217, block B1, switch ExpoB1
+vlan vendor_vlan_213 213 color "#e2ddfc" subnet 10.2.13.0/24, 2001:470:f026:213::/64  # booth 316, block B1, switch ExpoB1
+vlan vendor_vlan_214 214 color "#e2ddfc" subnet 10.2.14.0/24, 2001:470:f026:214::/64  # booth 219, block B1, switch ExpoB1
+vlan vendor_vlan_215 215 color "#e2ddfc" subnet 10.2.15.0/24, 2001:470:f026:215::/64  # booth 318, block B1, switch ExpoB1
+vlan vendor_vlan_216 216 color "#e2ddfc" subnet 10.2.16.0/24, 2001:470:f026:216::/64  # booth 227, block C1, switch ExpoC1
+vlan vendor_vlan_217 217 color "#e2ddfc" subnet 10.2.17.0/24, 2001:470:f026:217::/64  # booth 229, block C1, switch ExpoC1
+vlan vendor_vlan_218 218 color "#e2ddfc" subnet 10.2.18.0/24, 2001:470:f026:218::/64  # booth 328, block C1, switch ExpoC1
+vlan vendor_vlan_219 219 color "#e2ddfc" subnet 10.2.19.0/24, 2001:470:f026:219::/64  # booth 231, block C1, switch ExpoC1
+vlan vendor_vlan_220 220 color "#e2ddfc" subnet 10.2.20.0/24, 2001:470:f026:220::/64  # booth 330, block C1, switch ExpoC1
+vlan vendor_vlan_221 221 color "#e2ddfc" subnet 10.2.21.0/24, 2001:470:f026:221::/64  # booth 301, block A2, switch ExpoA2
+vlan vendor_vlan_222 222 color "#e2ddfc" subnet 10.2.22.0/24, 2001:470:f026:222::/64  # booth 400, block A2, switch ExpoA2
+vlan vendor_vlan_223 223 color "#e2ddfc" subnet 10.2.23.0/24, 2001:470:f026:223::/64  # booth 303, block A2, switch ExpoA2
+vlan vendor_vlan_224 224 color "#e2ddfc" subnet 10.2.24.0/24, 2001:470:f026:224::/64  # booth 402, block A2, switch ExpoA2
+vlan vendor_vlan_225 225 color "#e2ddfc" subnet 10.2.25.0/24, 2001:470:f026:225::/64  # booth 305, block A2, switch ExpoA2
+vlan vendor_vlan_226 226 color "#e2ddfc" subnet 10.2.26.0/24, 2001:470:f026:226::/64  # booth 404, block A2, switch ExpoA2
+vlan vendor_vlan_227 227 color "#e2ddfc" subnet 10.2.27.0/24, 2001:470:f026:227::/64  # booth 311, block B2, switch ExpoB2
+vlan vendor_vlan_228 228 color "#e2ddfc" subnet 10.2.28.0/24, 2001:470:f026:228::/64  # booth 410, block B2, switch ExpoB2
+vlan vendor_vlan_229 229 color "#e2ddfc" subnet 10.2.29.0/24, 2001:470:f026:229::/64  # booth 313, block B2, switch ExpoB2
+vlan vendor_vlan_230 230 color "#e2ddfc" subnet 10.2.30.0/24, 2001:470:f026:230::/64  # booth 412, block B2, switch ExpoB2
+vlan vendor_vlan_231 231 color "#e2ddfc" subnet 10.2.31.0/24, 2001:470:f026:231::/64  # booth 315, block B2, switch ExpoB2
+vlan vendor_vlan_232 232 color "#e2ddfc" subnet 10.2.32.0/24, 2001:470:f026:232::/64  # booth 414, block B2, switch ExpoB2
+vlan vendor_vlan_233 233 color "#e2ddfc" subnet 10.2.33.0/24, 2001:470:f026:233::/64  # booth 317, block B2, switch ExpoB2
+vlan vendor_vlan_234 234 color "#e2ddfc" subnet 10.2.34.0/24, 2001:470:f026:234::/64  # booth 416, block B2, switch ExpoB2
+vlan vendor_vlan_235 235 color "#e2ddfc" subnet 10.2.35.0/24, 2001:470:f026:235::/64  # booth 319, block B2, switch ExpoB2
+vlan vendor_vlan_236 236 color "#e2ddfc" subnet 10.2.36.0/24, 2001:470:f026:236::/64  # booth 418, block B2, switch ExpoB2
+vlan vendor_vlan_237 237 color "#e2ddfc" subnet 10.2.37.0/24, 2001:470:f026:237::/64  # booth 327, block C2, switch ExpoC2
+vlan vendor_vlan_238 238 color "#e2ddfc" subnet 10.2.38.0/24, 2001:470:f026:238::/64  # booth 426, block C2, switch ExpoC2
+vlan vendor_vlan_239 239 color "#e2ddfc" subnet 10.2.39.0/24, 2001:470:f026:239::/64  # booth 329, block C2, switch ExpoC2
+vlan vendor_vlan_240 240 color "#e2ddfc" subnet 10.2.40.0/24, 2001:470:f026:240::/64  # booth 428, block C2, switch ExpoC2
+vlan vendor_vlan_241 241 color "#e2ddfc" subnet 10.2.41.0/24, 2001:470:f026:241::/64  # booth 331, block C2, switch ExpoC2
+vlan vendor_vlan_242 242 color "#e2ddfc" subnet 10.2.42.0/24, 2001:470:f026:242::/64  # booth 430, block C2, switch ExpoC2
+vlan vendor_vlan_243 243 color "#e2ddfc" subnet 10.2.43.0/24, 2001:470:f026:243::/64  # booth 401, block A3, switch ExpoA3
+vlan vendor_vlan_244 244 color "#e2ddfc" subnet 10.2.44.0/24, 2001:470:f026:244::/64  # booth 500, block A3, switch ExpoA3
+vlan vendor_vlan_245 245 color "#e2ddfc" subnet 10.2.45.0/24, 2001:470:f026:245::/64  # booth 403, block A3, switch ExpoA3
+vlan vendor_vlan_246 246 color "#e2ddfc" subnet 10.2.46.0/24, 2001:470:f026:246::/64  # booth 502, block A3, switch ExpoA3
+vlan vendor_vlan_247 247 color "#e2ddfc" subnet 10.2.47.0/24, 2001:470:f026:247::/64  # booth 405, block A3, switch ExpoA3
+vlan vendor_vlan_248 248 color "#e2ddfc" subnet 10.2.48.0/24, 2001:470:f026:248::/64  # booth 504, block A3, switch ExpoA3
+vlan vendor_vlan_249 249 color "#e2ddfc" subnet 10.2.49.0/24, 2001:470:f026:249::/64  # booth 411, block B3, switch ExpoB3
+vlan vendor_vlan_250 250 color "#e2ddfc" subnet 10.2.50.0/24, 2001:470:f026:250::/64  # booth 510, block B3, switch ExpoB3
+vlan vendor_vlan_251 251 color "#e2ddfc" subnet 10.2.51.0/24, 2001:470:f026:251::/64  # booth 413, block B3, switch ExpoB3
+vlan vendor_vlan_252 252 color "#e2ddfc" subnet 10.2.52.0/24, 2001:470:f026:252::/64  # booth 512, block B3, switch ExpoB3
+vlan vendor_vlan_253 253 color "#e2ddfc" subnet 10.2.53.0/24, 2001:470:f026:253::/64  # booth 415, block B3, switch ExpoB3
+vlan vendor_vlan_254 254 color "#e2ddfc" subnet 10.2.54.0/24, 2001:470:f026:254::/64  # booth 514, block B3, switch ExpoB3
+vlan vendor_vlan_255 255 color "#e2ddfc" subnet 10.2.55.0/24, 2001:470:f026:255::/64  # booth 417, block B3, switch ExpoB3
+vlan vendor_vlan_256 256 color "#e2ddfc" subnet 10.2.56.0/24, 2001:470:f026:256::/64  # booth 516, block B3, switch ExpoB3
+vlan vendor_vlan_257 257 color "#e2ddfc" subnet 10.2.57.0/24, 2001:470:f026:257::/64  # booth 419, block B3, switch ExpoB3
+vlan vendor_vlan_258 258 color "#e2ddfc" subnet 10.2.58.0/24, 2001:470:f026:258::/64  # booth 518, block B3, switch ExpoB3
+vlan vendor_vlan_259 259 color "#e2ddfc" subnet 10.2.59.0/24, 2001:470:f026:259::/64  # booth 427, block C3, switch ExpoC3
+vlan vendor_vlan_260 260 color "#e2ddfc" subnet 10.2.60.0/24, 2001:470:f026:260::/64  # booth 526, block C3, switch ExpoC3
+vlan vendor_vlan_261 261 color "#e2ddfc" subnet 10.2.61.0/24, 2001:470:f026:261::/64  # booth 429, block C3, switch ExpoC3
+vlan vendor_vlan_262 262 color "#e2ddfc" subnet 10.2.62.0/24, 2001:470:f026:262::/64  # booth 528, block C3, switch ExpoC3
+vlan vendor_vlan_263 263 color "#e2ddfc" subnet 10.2.63.0/24, 2001:470:f026:263::/64  # booth 431, block C3, switch ExpoC3
+vlan vendor_vlan_264 264 color "#e2ddfc" subnet 10.2.64.0/24, 2001:470:f026:264::/64  # booth 530, block C3, switch ExpoC3
+vlan vendor_vlan_265 265 color "#e2ddfc" subnet 10.2.65.0/24, 2001:470:f026:265::/64  # booth 501, block A4, no switch for this block
+vlan vendor_vlan_266 266 color "#e2ddfc" subnet 10.2.66.0/24, 2001:470:f026:266::/64  # booth 600, block A4, no switch for this block
+vlan vendor_vlan_267 267 color "#e2ddfc" subnet 10.2.67.0/24, 2001:470:f026:267::/64  # booth 503, block A4, no switch for this block
+vlan vendor_vlan_268 268 color "#e2ddfc" subnet 10.2.68.0/24, 2001:470:f026:268::/64  # booth 602, block A4, no switch for this block
+vlan vendor_vlan_269 269 color "#e2ddfc" subnet 10.2.69.0/24, 2001:470:f026:269::/64  # booth 505, block A4, no switch for this block
+vlan vendor_vlan_270 270 color "#e2ddfc" subnet 10.2.70.0/24, 2001:470:f026:270::/64  # booth 604, block A4, no switch for this block
+vlan vendor_vlan_271 271 color "#e2ddfc" subnet 10.2.71.0/24, 2001:470:f026:271::/64  # booth 511, block B4, no switch for this block
+vlan vendor_vlan_272 272 color "#e2ddfc" subnet 10.2.72.0/24, 2001:470:f026:272::/64  # booth 610, block B4, no switch for this block
+vlan vendor_vlan_273 273 color "#e2ddfc" subnet 10.2.73.0/24, 2001:470:f026:273::/64  # booth 513, block B4, no switch for this block
+vlan vendor_vlan_274 274 color "#e2ddfc" subnet 10.2.74.0/24, 2001:470:f026:274::/64  # booth 612, block B4, no switch for this block
+vlan vendor_vlan_275 275 color "#e2ddfc" subnet 10.2.75.0/24, 2001:470:f026:275::/64  # booth 515, block B4, no switch for this block
+vlan vendor_vlan_276 276 color "#e2ddfc" subnet 10.2.76.0/24, 2001:470:f026:276::/64  # booth 614, block B4, no switch for this block
+vlan vendor_vlan_277 277 color "#e2ddfc" subnet 10.2.77.0/24, 2001:470:f026:277::/64  # booth 517, block B4, no switch for this block
+vlan vendor_vlan_278 278 color "#e2ddfc" subnet 10.2.78.0/24, 2001:470:f026:278::/64  # booth 616, block B4, no switch for this block
+vlan vendor_vlan_279 279 color "#e2ddfc" subnet 10.2.79.0/24, 2001:470:f026:279::/64  # booth 519, block B4, no switch for this block
+vlan vendor_vlan_280 280 color "#e2ddfc" subnet 10.2.80.0/24, 2001:470:f026:280::/64  # booth 618, block B4, no switch for this block
+vlan vendor_vlan_281 281 color "#e2ddfc" subnet 10.2.81.0/24, 2001:470:f026:281::/64  # booth 527, block C4, switch ExpoC4
+vlan vendor_vlan_282 282 color "#e2ddfc" subnet 10.2.82.0/24, 2001:470:f026:282::/64  # booth 626, block C4, switch ExpoC4
+vlan vendor_vlan_283 283 color "#e2ddfc" subnet 10.2.83.0/24, 2001:470:f026:283::/64  # booth 529, block C4, switch ExpoC4
+vlan vendor_vlan_284 284 color "#e2ddfc" subnet 10.2.84.0/24, 2001:470:f026:284::/64  # booth 628, block C4, switch ExpoC4
+vlan vendor_vlan_285 285 color "#e2ddfc" subnet 10.2.85.0/24, 2001:470:f026:285::/64  # booth 531, block C4, switch ExpoC4
+vlan vendor_vlan_286 286 color "#e2ddfc" subnet 10.2.86.0/24, 2001:470:f026:286::/64  # booth 630, block C4, switch ExpoC4
+vlan vendor_vlan_287 287 color "#e2ddfc" subnet 10.2.87.0/24, 2001:470:f026:287::/64  # booth 601, block A5, no switch for this block
+vlan vendor_vlan_288 288 color "#e2ddfc" subnet 10.2.88.0/24, 2001:470:f026:288::/64  # booth 700, block A5, no switch for this block
+vlan vendor_vlan_289 289 color "#e2ddfc" subnet 10.2.89.0/24, 2001:470:f026:289::/64  # booth 603, block A5, no switch for this block
+vlan vendor_vlan_290 290 color "#e2ddfc" subnet 10.2.90.0/24, 2001:470:f026:290::/64  # booth 702, block A5, no switch for this block
+vlan vendor_vlan_291 291 color "#e2ddfc" subnet 10.2.91.0/24, 2001:470:f026:291::/64  # booth 605, block A5, no switch for this block
+vlan vendor_vlan_292 292 color "#e2ddfc" subnet 10.2.92.0/24, 2001:470:f026:292::/64  # booth 704, block A5, no switch for this block
+vlan vendor_vlan_293 293 color "#e2ddfc" subnet 10.2.93.0/24, 2001:470:f026:293::/64  # booth 611, block B5, switch ExpoB5
+vlan vendor_vlan_294 294 color "#e2ddfc" subnet 10.2.94.0/24, 2001:470:f026:294::/64  # booth 710, block B5, switch ExpoB5
+vlan vendor_vlan_295 295 color "#e2ddfc" subnet 10.2.95.0/24, 2001:470:f026:295::/64  # booth 613, block B5, switch ExpoB5
+vlan vendor_vlan_296 296 color "#e2ddfc" subnet 10.2.96.0/24, 2001:470:f026:296::/64  # booth 712, block B5, switch ExpoB5
+vlan vendor_vlan_297 297 color "#e2ddfc" subnet 10.2.97.0/24, 2001:470:f026:297::/64  # booth 615, block B5, switch ExpoB5
+vlan vendor_vlan_298 298 color "#e2ddfc" subnet 10.2.98.0/24, 2001:470:f026:298::/64  # booth 714, block B5, switch ExpoB5
+vlan vendor_vlan_299 299 color "#e2ddfc" subnet 10.2.99.0/24, 2001:470:f026:299::/64  # booth 617, block B5, switch ExpoB5
+vlan vendor_vlan_300 300 color "#e2ddfc" subnet 10.2.100.0/24, 2001:470:f026:300::/64  # booth 716, block B5, switch ExpoB5
+vlan vendor_vlan_301 301 color "#e2ddfc" subnet 10.2.101.0/24, 2001:470:f026:301::/64  # booth 619, block B5, switch ExpoB5
+vlan vendor_vlan_302 302 color "#e2ddfc" subnet 10.2.102.0/24, 2001:470:f026:302::/64  # booth 718, block B5, switch ExpoB5
+vlan vendor_vlan_303 303 color "#e2ddfc" subnet 10.2.103.0/24, 2001:470:f026:303::/64  # booth 627, block C5, switch ExpoC5
+vlan vendor_vlan_304 304 color "#e2ddfc" subnet 10.2.104.0/24, 2001:470:f026:304::/64  # booth 726, block C5, switch ExpoC5
+vlan vendor_vlan_305 305 color "#e2ddfc" subnet 10.2.105.0/24, 2001:470:f026:305::/64  # booth 629, block C5, switch ExpoC5
+vlan vendor_vlan_306 306 color "#e2ddfc" subnet 10.2.106.0/24, 2001:470:f026:306::/64  # booth 728, block C5, switch ExpoC5
+vlan vendor_vlan_307 307 color "#e2ddfc" subnet 10.2.107.0/24, 2001:470:f026:307::/64  # booth 631, block C5, switch ExpoC5
+vlan vendor_vlan_308 308 color "#e2ddfc" subnet 10.2.108.0/24, 2001:470:f026:308::/64  # booth 730, block C5, switch ExpoC5
+vlan vendor_vlan_309 309 color "#e2ddfc" subnet 10.2.109.0/24, 2001:470:f026:309::/64  # booth 701, block AW, switch ExpoAW
+vlan vendor_vlan_310 310 color "#e2ddfc" subnet 10.2.110.0/24, 2001:470:f026:310::/64  # booth 703, block AW, switch ExpoAW
+vlan vendor_vlan_311 311 color "#e2ddfc" subnet 10.2.111.0/24, 2001:470:f026:311::/64  # booth 705, block AW, switch ExpoAW
+vlan vendor_vlan_312 312 color "#e2ddfc" subnet 10.2.112.0/24, 2001:470:f026:312::/64  # booth 707, block AW, switch ExpoAW
+vlan vendor_vlan_313 313 color "#e2ddfc" subnet 10.2.113.0/24, 2001:470:f026:313::/64  # booth 709, block AW, switch ExpoAW
+vlan vendor_vlan_314 314 color "#e2ddfc" subnet 10.2.114.0/24, 2001:470:f026:314::/64  # booth 711, block AW, switch ExpoAW
+vlan vendor_vlan_315 315 color "#e2ddfc" subnet 10.2.115.0/24, 2001:470:f026:315::/64  # booth 713, block AW, switch ExpoAW
+vlan vendor_vlan_316 316 color "#e2ddfc" subnet 10.2.116.0/24, 2001:470:f026:316::/64  # booth 715, block AW, switch ExpoAW
+vlan vendor_vlan_317 317 color "#e2ddfc" subnet 10.2.117.0/24, 2001:470:f026:317::/64  # booth 717, block AW, switch ExpoAW
+vlan vendor_vlan_318 318 color "#e2ddfc" subnet 10.2.118.0/24, 2001:470:f026:318::/64  # booth 719, block AW, switch ExpoAW
+vlan vendor_vlan_319 319 color "#e2ddfc" subnet 10.2.119.0/24, 2001:470:f026:319::/64  # booth 721, block AW, switch ExpoAW
+vlan vendor_vlan_320 320 color "#e2ddfc" subnet 10.2.120.0/24, 2001:470:f026:320::/64  # booth 723, block AW, switch ExpoAW
+vlan vendor_vlan_321 321 color "#e2ddfc" subnet 10.2.121.0/24, 2001:470:f026:321::/64  # booth 725, block AW, switch ExpoAW
+vlan vendor_vlan_322 322 color "#e2ddfc" subnet 10.2.122.0/24, 2001:470:f026:322::/64  # booth 727, block AW, switch ExpoAW
+vlan vendor_vlan_323 323 color "#e2ddfc" subnet 10.2.123.0/24, 2001:470:f026:323::/64  # booth 729, block AW, switch ExpoAW
+vlan vendor_vlan_324 324 color "#e2ddfc" subnet 10.2.124.0/24, 2001:470:f026:324::/64  # booth 731, block AW, switch ExpoAW
+
+# Trunk sets (trunktypes)
+trunk exUplink vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone
+trunk exDownlink vlans exInfra, exw-SLOW, exw-FAST, exReg, exSpkr, exAV, exSigns, exVmVndr, vendor_backbone
+trunk exAP vlans exInfra, exw-SLOW, exw-FAST
+trunk cfUplink vlans cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV, cfNOC, cfSigns
+trunk cfDownlink vlans cfInfra, cfw-SLOW, cfw-FAST, cfSpkr, cfAV, cfNOC, cfSigns
+trunk cfAP vlans cfInfra, cfw-SLOW, cfw-FAST
+trunk massflash vlans cfInfra
+
+cloud internet "Internet (COGENT transit)"
+
+# Routers
+device br-mdf-01 kind router note "routerlist IPv6 2001:470:f026:103::2"
+  wan cogent on ge-0/0/0 vlan 999
+  router
+  ports ge-0/0/0, ge-0/0/1
+  vlan-iface vlan104 on ge-0/0/1 vlan 104 address 10.0.4.1/24, 2001:470:f026:104::1/64
+device ex-mdf-01 kind router note "routerlist IPv6 2001:470:f026:103::1"
+  wan vlan104 on ge-0/0/0 vlan 104
+  router
+  ports ge-0/0/0, ge-0/0/1, ge-0/0/2
+  address vlan104 10.0.4.2/24, 2001:470:f026:104::2/64
+  vlan-iface vlan900 on ge-0/0/1 vlan 900 address 172.20.0.1/24, 2001:470:f026:8000::1/64
+  vlan-iface vlan103 on ge-0/0/2 vlan 103 address 10.0.3.1/24, 2001:470:f026:103::1/64
+  vlan-iface vlan100 on ge-0/0/2 vlan 100 address 10.0.128.1/21, 2001:470:f026:100::1/64
+  vlan-iface vlan101 on ge-0/0/2 vlan 101 address 10.0.136.1/21, 2001:470:f026:101::1/64
+  vlan-iface vlan110 on ge-0/0/2 vlan 110 address 10.0.10.1/24, 2001:470:f026:110::1/64
+  vlan-iface vlan102 on ge-0/0/2 vlan 102 address 10.0.2.1/24, 2001:470:f026:102::1/64
+  vlan-iface vlan105 on ge-0/0/2 vlan 105 address 10.0.5.1/24, 2001:470:f026:105::1/64
+  vlan-iface vlan107 on ge-0/0/2 vlan 107 address 2001:470:f026:107::1/64
+  vlan-iface vlan112 on ge-0/0/2 vlan 112 address 10.0.144.1/20, 2001:470:f026:112::1/64
+  vlan-iface vlan499 on ge-0/0/2 vlan 499 address 10.1.0.1/24, 2001:470:f026:499::1/64
+device cf-mdf-01 kind router note "routerlist IPv6 2001:470:f026:503::1"
+  wan vlan900 on ge-0/0/0 vlan 900
+  router
+  ports ge-0/0/0, ge-0/0/1
+  address vlan900 172.20.0.2/24, 2001:470:f026:8000::2/64
+  vlan-iface vlan503 on ge-0/0/1 vlan 503 address 10.128.3.1/24, 2001:470:f026:503::1/64
+  vlan-iface vlan500 on ge-0/0/1 vlan 500 address 10.128.128.1/21, 2001:470:f026:500::1/64
+  vlan-iface vlan501 on ge-0/0/1 vlan 501 address 10.128.136.1/21, 2001:470:f026:501::1/64
+  vlan-iface vlan502 on ge-0/0/1 vlan 502 address 10.128.2.1/24, 2001:470:f026:502::1/64
+  vlan-iface vlan505 on ge-0/0/1 vlan 505 address 10.128.5.1/24, 2001:470:f026:505::1/64
+  vlan-iface vlan506 on ge-0/0/1 vlan 506 address 10.128.6.1/24, 2001:470:f026:506::1/64
+  vlan-iface vlan507 on ge-0/0/1 vlan 507 address 2001:470:f026:507::1/64
+
+# Switches
+device noc "NOC" kind switch model "ex4200-48p"  # cfNOC I.9
+device sparek "SpareK" kind switch model "ex4200-48p"  # cfIDF Z.9 (unused)
+device nw-idf "NW-IDF" kind switch model "ex4200-48p"  # exIDF F.1
+device ne-idf "NE-IDF" kind switch model "ex4200-48p"  # exIDF C.1
+device sparel "SpareL" kind switch model "ex4200-48p"  # exIDF Z.9 (unused)
+device expo-catwalk "Expo-Catwalk" kind switch model "ex4200-48p"  # Catwalk W.1
+device massflash "MassFlash" kind switch model "ex4200-48p"  # MassFlash Z.9 (unused)
+device avswitch "AVSwitch" kind switch model "ex4200-48p"  # cfAV I.9
+device deceased1 "DECEASED1" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
+device rm211 "Rm211" kind switch model "ex4200-48p"  # cfRoom I.9
+device rm215 "Rm215" kind switch model "ex4200-48p"  # cfRoom I.9
+device deceased3 "DECEASED3" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
+device rm207 "Rm207" kind switch model "ex4200-48p"  # cfRoom I.9
+device spareh "SpareH" kind switch model "ex4200-48p"  # cfRoom Z.9 (unused)
+device rm105 "Rm105" kind switch model "ex4200-48p"  # cfRoom I.9
+device rm106 "Rm106" kind switch model "ex4200-48p"  # cfRoom I.9
+device rm107 "Rm107" kind switch model "ex4200-48p"  # cfRoom I.9
+device sparea "SpareA" kind switch model "ex4200-48p"  # cfCTF Z.4 (unused)
+device spareb "SpareB" kind switch model "ex4200-48p"  # cfCTF Z.5 (unused)
+device sparec "SpareC" kind switch model "ex4200-48p"  # cfCTF Z.6 (unused)
+device spared "SpareD" kind switch model "ex4200-48p"  # cfCTF Z.7 (unused)
+device sparee "SpareE" kind switch model "ex4200-48p"  # cfCTF Z.8 (unused)
+device sparef "SpareF" kind switch model "ex4200-48p"  # cfCTF Z.9 (unused)
+device expoaw "ExpoAW" kind switch model "ex4200-48p"  # Booth W.9
+device deceased4 "DECEASED4" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
+device expoa2 "ExpoA2" kind switch model "ex4200-48p"  # Booth W.9
+device expoa3 "ExpoA3" kind switch model "ex4200-48p"  # Booth W.9
+device expod1 "ExpoD1" kind switch model "ex4200-48p"  # Booth W.9
+device expod2 "ExpoD2" kind switch model "ex4200-48p"  # Booth W.9
+device expob1 "ExpoB1" kind switch model "ex4200-48p"  # Booth W.9
+device expob2 "ExpoB2" kind switch model "ex4200-48p"  # Booth W.9
+device expob3 "ExpoB3" kind switch model "ex4200-48p"  # Booth W.9
+device expoa1 "ExpoA1" kind switch model "ex4200-48p"  # Booth W.9
+device expob5 "ExpoB5" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
+device expoc1 "ExpoC1" kind switch model "ex4200-48p"  # Booth W.9
+device expoc2 "ExpoC2" kind switch model "ex4200-48p"  # Booth W.9
+device expoc3 "ExpoC3" kind switch model "ex4200-48p"  # Booth W.9
+device expoc4 "ExpoC4" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
+device expoc5 "ExpoC5" kind switch model "ex4200-48p"  # Booth Z.9 (unused)
+device sparei "SpareI" kind switch model "ex4200-48p"  # exRoom Z.9 (unused)
+device ballroomb "BallroomB" kind switch model "ex4200-48p"  # exRoom C.9
+device ballroomc "BallroomC" kind switch model "ex4200-48p"  # exRoom C.9
+device ballroomd "BallroomD" kind switch model "ex4200-48p"  # exRoom F.9
+device ballroomf "BallroomF" kind switch model "ex4200-48p"  # exRoom F.9
+device ballroome "BallroomE" kind switch model "ex4200-48p"  # exRoom F.9
+device deceased2 "DECEASED2" kind switch model "ex4200-48p"  # exRoom Z.9 (unused)
+device rm209-210 "Rm209-210" kind switch model "ex4200-48p"  # cfRoom I.9
+device rm101-102 "Rm101-102" kind switch model "ex4200-48p"  # cfRoom I.9
+device ballroomh "BallroomH" kind switch model "ex4200-48p"  # exRoom F.9
+device rm208 "Rm208" kind switch model "ex4200-48p"  # cfRoom I.9
+device donotuse "DONOTUSE" kind switch model "ex4200-48px"  # swatch Z.9 (unused)
+device regdesk "RegDesk" kind switch model "ex4200-48px"  # registration X.9
+device expoidf "ExpoIDF" kind switch model "ex4300-48p"  # exIDF X.1
+device ballrooma "BallroomA" kind switch model "ex2300-c-12p"  # exMicro C.9
+device ballroomg "BallroomG" kind switch model "ex2300-c-12p"  # exMicro F.9
+device room103 "Room103" kind switch model "ex2300-c-12p"  # cfMicro I.9
+device confidf "ConfIDF" kind switch model "ex4300-48p"  # cfIDF I.1
+device room104 "Room104" kind switch model "ex2300-c-12p"  # cfMicro I.9
+
+# Access points
+device rm101-a "Rm101-a" kind ap  # 10.128.3.100
+device rm101-b "Rm101-b" kind ap  # 10.128.3.101
+device rm101-c "Rm101-c" kind ap  # 10.128.3.102
+device rm101-d "Rm101-d" kind ap  # 10.128.3.103
+device rm101-e "Rm101-e" kind ap  # 10.128.3.104
+device rm101-f "Rm101-f" kind ap  # 10.128.3.105
+device hall-9 "Hall-9" kind ap  # 10.0.3.106
+device rm103-a "Rm103-a" kind ap  # 10.128.3.107
+device rm103-b "Rm103-b" kind ap  # 10.128.3.108
+device rm103-c "Rm103-c" kind ap  # 10.128.3.109
+device rm104-a "Rm104-a" kind ap  # 10.128.3.110
+device rm104-b "Rm104-b" kind ap  # 10.128.3.111
+device rm104-c "Rm104-c" kind ap  # 10.128.3.112
+device rm104-d "Rm104-d" kind ap  # 10.128.3.113
+device hall-10 "Hall-10" kind ap  # 10.0.3.114
+device rm105-a "Rm105-a" kind ap  # 10.128.3.115
+device rm105-b "Rm105-b" kind ap  # 10.128.3.116
+device rm105-c "Rm105-c" kind ap  # 10.128.3.117
+device rm106-d "Rm106-d" kind ap  # 10.128.3.118
+device rm106-e "Rm106-e" kind ap  # 10.128.3.119
+device rm106-a "Rm106-a" kind ap  # 10.128.3.120
+device rm106-b "Rm106-b" kind ap  # 10.128.3.121
+device rm106-c "Rm106-c" kind ap  # 10.128.3.122
+device rm207-c "Rm207-c" kind ap  # 10.128.3.124
+device rm107-a "Rm107-a" kind ap  # 10.128.3.125
+device rm107-b "Rm107-b" kind ap  # 10.128.3.126
+device rm107-c "Rm107-c" kind ap  # 10.128.3.127
+device rm107-d "Rm107-d" kind ap  # 10.128.3.128
+device rm107-e "Rm107-e" kind ap  # 10.128.3.129
+device av-1 "AV-1" kind ap  # 10.128.3.130
+device av-2 "AV-2" kind ap  # 10.128.3.131
+device av-3 "AV-3" kind ap  # 10.128.3.132
+device rm207-b "Rm207-b" kind ap  # 10.128.3.133
+device rm208-a "Rm208-a" kind ap  # 10.128.3.134
+device rm208-c "Rm208-c" kind ap  # 10.128.3.135
+device rm207-a "Rm207-a" kind ap  # 10.128.3.136
+device rm209-a "Rm209-a" kind ap  # 10.128.3.137
+device rm209-b "Rm209-b" kind ap  # 10.128.3.138
+device rm211-a "Rm211-a" kind ap  # 10.128.3.139
+device rm211-b "Rm211-b" kind ap  # 10.128.3.140
+device rm211-c "Rm211-c" kind ap  # 10.128.3.141
+device rm211-d "Rm211-d" kind ap  # 10.128.3.142
+device rm211-e "Rm211-e" kind ap  # 10.128.3.143
+device rm208-b "Rm208-b" kind ap  # 10.128.3.144
+device rm209-c "Rm209-c" kind ap  # 10.128.3.147
+device lowconf-8 kind ap  # 10.128.3.148
+device rm215-a "Rm215-a" kind ap  # 10.128.3.150
+device rm215-b "Rm215-b" kind ap  # 10.128.3.151
+device ballrooma-1 "BallroomA-1" kind ap  # 10.0.3.152
+device ballrooma-2 "BallroomA-2" kind ap  # 10.0.3.153
+device ballrooma-3 "BallroomA-3" kind ap  # 10.0.3.154
+device ballrooma-4 "BallroomA-4" kind ap  # 10.0.3.155
+device ballrooma-5 "BallroomA-5" kind ap  # 10.0.3.156
+device ballroomb-1 "BallroomB-1" kind ap  # 10.0.3.157
+device ballroomb-2 "BallroomB-2" kind ap  # 10.0.3.158
+device ballroomb-3 "BallroomB-3" kind ap  # 10.0.3.159
+device ballroomb-4 "BallroomB-4" kind ap  # 10.0.3.160
+device ballroomb-5 "BallroomB-5" kind ap  # 10.0.3.161
+device ballroomc-1 "BallroomC-1" kind ap  # 10.0.3.162
+device ballroomc-2 "BallroomC-2" kind ap  # 10.0.3.163
+device ballroomc-3 "BallroomC-3" kind ap  # 10.0.3.164
+device ballroomc-4 "BallroomC-4" kind ap  # 10.0.3.165
+device ballroomc-5 "BallroomC-5" kind ap  # 10.0.3.166
+device ballroomde-1 "BallroomDE-1" kind ap  # 10.0.3.167
+device ballroomde-2 "BallroomDE-2" kind ap  # 10.0.3.168
+device ballroomde-3 "BallroomDE-3" kind ap  # 10.0.3.169
+device ballroomde-4 "BallroomDE-4" kind ap  # 10.0.3.170
+device ballroomde-5 "BallroomDE-5" kind ap  # 10.0.3.171
+device ballroomde-6 "BallroomDE-6" kind ap  # 10.0.3.172
+device ballroomde-7 "BallroomDE-7" kind ap  # 10.0.3.173
+device ballroomde-8 "BallroomDE-8" kind ap  # 10.0.3.174
+device ballroomde-9 "BallroomDE-9" kind ap  # 10.0.3.175
+device ballroomde-10 "BallroomDE-10" kind ap  # 10.0.3.176
+device ballroomf-1 "BallroomF-1" kind ap  # 10.0.3.177
+device ballroomf-2 "BallroomF-2" kind ap  # 10.0.3.178
+device ballroomf-3 "BallroomF-3" kind ap  # 10.0.3.179
+device ballroomf-4 "BallroomF-4" kind ap  # 10.0.3.180
+device ballroomf-5 "BallroomF-5" kind ap  # 10.0.3.181
+device ballroomg-1 "BallroomG-1" kind ap  # 10.0.3.182
+device ballroomg-2 "BallroomG-2" kind ap  # 10.0.3.183
+device ballroomg-3 "BallroomG-3" kind ap  # 10.0.3.184
+device ballroomg-4 "BallroomG-4" kind ap  # 10.0.3.185
+device ballroomg-5 "BallroomG-5" kind ap  # 10.0.3.186
+device ballroomh-1 "BallroomH-1" kind ap  # 10.0.3.187
+device ballroomh-2 "BallroomH-2" kind ap  # 10.0.3.188
+device ballroomh-3 "BallroomH-3" kind ap  # 10.0.3.189
+device ballroomh-4 "BallroomH-4" kind ap  # 10.0.3.190
+device ballroomh-5 "BallroomH-5" kind ap  # 10.0.3.191
+device ballroomi-1 "BallroomI-1" kind ap  # 10.0.3.192
+device ballroomj-1 "BallroomJ-1" kind ap  # 10.0.3.193
+device hall-1 "Hall-1" kind ap  # 10.0.3.194
+device hall-2 "Hall-2" kind ap  # 10.0.3.195
+device hall-3 "Hall-3" kind ap  # 10.0.3.196
+device hall-4 "Hall-4" kind ap  # 10.0.3.197
+device hall-5 "Hall-5" kind ap  # 10.0.3.198
+device hall-6 "Hall-6" kind ap  # 10.0.3.199
+device hall-7 "Hall-7" kind ap  # 10.0.3.200
+device hall-8 "Hall-8" kind ap  # 10.0.3.201
+device expoaw-a "ExpoAW-a" kind ap  # 10.0.3.204
+device expoa1-a "ExpoA1-a" kind ap  # 10.0.3.205
+device expoa2-a "ExpoA2-a" kind ap  # 10.0.3.226
+device expoc1-a "ExpoC1-a" kind ap  # 10.0.3.206
+device expoc2-a "ExpoC2-a" kind ap  # 10.0.3.227
+device expob1-a "ExpoB1-a" kind ap  # 10.0.3.229
+device expob2-a "ExpoB2-a" kind ap  # 10.0.3.207
+device expoa3-a "ExpoA3-a" kind ap  # 10.0.3.208
+device expoc3-a "ExpoC3-a" kind ap  # 10.0.3.209
+device expob3-a "ExpoB3-a" kind ap  # 10.0.3.228
+device expob4-a "ExpoB4-a" kind ap  # 10.0.3.210
+device game-1 kind ap  # 10.0.3.211
+device game-2 kind ap  # 10.0.3.212
+device game-3 kind ap  # 10.0.3.213
+device lowconf-1 kind ap  # 10.128.3.214
+device lowconf-2 kind ap  # 10.128.3.215
+device lowconf-3 kind ap  # 10.128.3.216
+device lowconf-4 kind ap  # 10.128.3.217
+device lowconf-5 kind ap  # 10.128.3.218
+device lowconf-6 kind ap  # 10.128.3.219
+device lowconf-7 kind ap  # 10.128.3.220
+device reghall-1 kind ap  # 10.0.3.221
+device reghall-2 kind ap  # 10.0.3.222
+device reghall-3 kind ap  # 10.0.3.223
+device reghall-4 kind ap  # 10.0.3.224
+device reghall-5 kind ap  # 10.0.3.225
+device rm205-a "Rm205-a" kind ap  # 10.128.3.226
+device noc-1 "NOC-1" kind ap  # 10.128.3.227
+device noc-2 "NOC-2" kind ap  # 10.128.3.228
+
+# Links
+link br-mdf-01.ge-0/0/0 -- internet vlans COGENT
+link br-mdf-01.ge-0/0/1 -- ex-mdf-01.ge-0/0/0 vlans exMDF
+link ex-mdf-01.ge-0/0/1 -- cf-mdf-01.ge-0/0/0 vlans MDF_LINK
+link confidf -- noc trunk cfUplink
+link expoidf -- nw-idf trunk exUplink
+link expoidf -- ne-idf trunk exUplink
+link expoidf -- expo-catwalk trunk exUplink
+link confidf -- avswitch trunk cfUplink
+link confidf -- rm211 trunk cfUplink
+link confidf -- rm215 trunk cfUplink
+link confidf -- rm207 trunk cfUplink
+link confidf -- rm105 trunk cfUplink
+link confidf -- rm106 trunk cfUplink
+link confidf -- rm107 trunk cfUplink
+link expo-catwalk -- expoaw trunk exUplink
+link expo-catwalk -- expoa2 trunk exUplink
+link expo-catwalk -- expoa3 trunk exUplink
+link expo-catwalk -- expod1 trunk exUplink
+link expo-catwalk -- expod2 trunk exUplink
+link expo-catwalk -- expob1 trunk exUplink
+link expo-catwalk -- expob2 trunk exUplink
+link expo-catwalk -- expob3 trunk exUplink
+link expo-catwalk -- expoa1 trunk exUplink
+link expo-catwalk -- expoc1 trunk exUplink
+link expo-catwalk -- expoc2 trunk exUplink
+link expo-catwalk -- expoc3 trunk exUplink
+link ne-idf -- ballroomb trunk exUplink
+link ne-idf -- ballroomc trunk exUplink
+link nw-idf -- ballroomd trunk exUplink
+link nw-idf -- ballroomf trunk exUplink
+link nw-idf -- ballroome trunk exUplink
+link confidf -- rm209-210 trunk cfUplink
+link confidf -- rm101-102 trunk cfUplink
+link nw-idf -- ballroomh trunk exUplink
+link confidf -- rm208 trunk cfUplink
+link expoidf -- regdesk trunk exUplink
+link ex-mdf-01.ge-0/0/2 -- expoidf trunk exUplink
+link ne-idf -- ballrooma trunk exAP
+link nw-idf -- ballroomg trunk exAP
+link confidf -- room103 trunk cfAP
+link cf-mdf-01.ge-0/0/1 -- confidf trunk cfUplink
+link confidf -- room104 trunk cfAP
+link rm101-102 -- rm101-a trunk cfAP
+link rm101-102 -- rm101-b trunk cfAP
+link rm101-102 -- rm101-c trunk cfAP
+link rm101-102 -- rm101-d trunk cfAP
+link rm101-102 -- rm101-e trunk cfAP
+link rm101-102 -- rm101-f trunk cfAP
+link expoidf -- hall-9 trunk exAP
+link room103 -- rm103-a trunk cfAP
+link room103 -- rm103-b trunk cfAP
+link room103 -- rm103-c trunk cfAP
+link room104 -- rm104-a trunk cfAP
+link room104 -- rm104-b trunk cfAP
+link room104 -- rm104-c trunk cfAP
+link room104 -- rm104-d trunk cfAP
+link expoidf -- hall-10 trunk exAP
+link rm105 -- rm105-a trunk cfAP
+link rm105 -- rm105-b trunk cfAP
+link rm105 -- rm105-c trunk cfAP
+link rm106 -- rm106-d trunk cfAP
+link rm106 -- rm106-e trunk cfAP
+link rm106 -- rm106-a trunk cfAP
+link rm106 -- rm106-b trunk cfAP
+link rm106 -- rm106-c trunk cfAP
+link rm207 -- rm207-c trunk cfAP
+link rm107 -- rm107-a trunk cfAP
+link rm107 -- rm107-b trunk cfAP
+link rm107 -- rm107-c trunk cfAP
+link rm107 -- rm107-d trunk cfAP
+link rm107 -- rm107-e trunk cfAP
+link avswitch -- av-1 trunk cfAP
+link avswitch -- av-2 trunk cfAP
+link avswitch -- av-3 trunk cfAP
+link rm207 -- rm207-b trunk cfAP
+link rm208 -- rm208-a trunk cfAP
+link rm208 -- rm208-c trunk cfAP
+link rm207 -- rm207-a trunk cfAP
+link rm209-210 -- rm209-a trunk cfAP
+link rm209-210 -- rm209-b trunk cfAP
+link rm211 -- rm211-a trunk cfAP
+link rm211 -- rm211-b trunk cfAP
+link rm211 -- rm211-c trunk cfAP
+link rm211 -- rm211-d trunk cfAP
+link rm211 -- rm211-e trunk cfAP
+link rm208 -- rm208-b trunk cfAP
+link rm209-210 -- rm209-c trunk cfAP
+link confidf -- lowconf-8 trunk cfAP
+link rm215 -- rm215-a trunk cfAP
+link rm215 -- rm215-b trunk cfAP
+link ballrooma -- ballrooma-1 trunk exAP
+link ballrooma -- ballrooma-2 trunk exAP
+link ballrooma -- ballrooma-3 trunk exAP
+link ballrooma -- ballrooma-4 trunk exAP
+link ballrooma -- ballrooma-5 trunk exAP
+link ballroomb -- ballroomb-1 trunk exAP
+link ballroomb -- ballroomb-2 trunk exAP
+link ballroomb -- ballroomb-3 trunk exAP
+link ballroomb -- ballroomb-4 trunk exAP
+link ballroomb -- ballroomb-5 trunk exAP
+link ballroomc -- ballroomc-1 trunk exAP
+link ballroomc -- ballroomc-2 trunk exAP
+link ballroomc -- ballroomc-3 trunk exAP
+link ballroomc -- ballroomc-4 trunk exAP
+link ballroomc -- ballroomc-5 trunk exAP
+link ballroomd -- ballroomde-1 trunk exAP
+link ballroomd -- ballroomde-2 trunk exAP
+link ballroomd -- ballroomde-3 trunk exAP
+link ballroomd -- ballroomde-4 trunk exAP
+link ballroomd -- ballroomde-5 trunk exAP
+link ballroomd -- ballroomde-6 trunk exAP
+link ballroomd -- ballroomde-7 trunk exAP
+link ballroomd -- ballroomde-8 trunk exAP
+link ballroomd -- ballroomde-9 trunk exAP
+link ballroomd -- ballroomde-10 trunk exAP
+link ballroomf -- ballroomf-1 trunk exAP
+link ballroomf -- ballroomf-2 trunk exAP
+link ballroomf -- ballroomf-3 trunk exAP
+link ballroomf -- ballroomf-4 trunk exAP
+link ballroomf -- ballroomf-5 trunk exAP
+link ballroomg -- ballroomg-1 trunk exAP
+link ballroomg -- ballroomg-2 trunk exAP
+link ballroomg -- ballroomg-3 trunk exAP
+link ballroomg -- ballroomg-4 trunk exAP
+link ballroomg -- ballroomg-5 trunk exAP
+link ballroomh -- ballroomh-1 trunk exAP
+link ballroomh -- ballroomh-2 trunk exAP
+link ballroomh -- ballroomh-3 trunk exAP
+link ballroomh -- ballroomh-4 trunk exAP
+link ballroomh -- ballroomh-5 trunk exAP
+link expoidf -- ballroomi-1 trunk exAP
+link expoidf -- ballroomj-1 trunk exAP
+link expoidf -- hall-1 trunk exAP
+link expoidf -- hall-2 trunk exAP
+link expoidf -- hall-3 trunk exAP
+link expoidf -- hall-4 trunk exAP
+link expoidf -- hall-5 trunk exAP
+link expoidf -- hall-6 trunk exAP
+link expoidf -- hall-7 trunk exAP
+link expoidf -- hall-8 trunk exAP
+link expoaw -- expoaw-a trunk exAP
+link expoa1 -- expoa1-a trunk exAP
+link expoa2 -- expoa2-a trunk exAP
+link expoc1 -- expoc1-a trunk exAP
+link expoc2 -- expoc2-a trunk exAP
+link expob1 -- expob1-a trunk exAP
+link expob2 -- expob2-a trunk exAP
+link expoa3 -- expoa3-a trunk exAP
+link expoc3 -- expoc3-a trunk exAP
+link expob3 -- expob3-a trunk exAP
+link expoidf -- expob4-a trunk exAP
+link expoidf -- game-1 trunk exAP
+link expoidf -- game-2 trunk exAP
+link expoidf -- game-3 trunk exAP
+link confidf -- lowconf-1 trunk cfAP
+link confidf -- lowconf-2 trunk cfAP
+link confidf -- lowconf-3 trunk cfAP
+link confidf -- lowconf-4 trunk cfAP
+link confidf -- lowconf-5 trunk cfAP
+link confidf -- lowconf-6 trunk cfAP
+link confidf -- lowconf-7 trunk cfAP
+link regdesk -- reghall-1 trunk exAP
+link regdesk -- reghall-2 trunk exAP
+link regdesk -- reghall-3 trunk exAP
+link regdesk -- reghall-4 trunk exAP
+link regdesk -- reghall-5 trunk exAP
+link confidf -- rm205-a trunk cfAP
+link noc -- noc-1 trunk cfAP
+link noc -- noc-2 trunk cfAP

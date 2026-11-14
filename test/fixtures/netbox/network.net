@@ -1,0 +1,284 @@
+# NetBox demo data (v4.7), converted from the public netbox-demo-data repo.
+# Source: https://github.com/netbox-community/netbox-demo-data at commit faeae5904a29ce6ad519a3de270ca218a7b050f9, sql/netbox-demo-v4.7.sql
+# Retrieved 2026-11-14. Licence: MIT (see LICENSE beside this file).
+# Converted by a throwaway script; this file is the source of truth.
+#
+# Mapping:
+# - Devices: the 26 devices that end at least one interface-to-interface cable; power,
+#   console, front/rear-port (patch panel) and circuit cables are not links. Kind = device role,
+#   model = device type. Ports are the cabled interfaces, names as in NetBox.
+# - Links: one per interface-to-interface cable, port to port. The dump assigns no VLANs to any
+#   interface (no mode, no tagged/untagged VLANs), so links carry no VLANs.
+# - Routers (role router) get `router`, a `wan` line per interface cabled to a circuit, and an
+#   `address` line per IP assigned to an interface. The dump assigns none of its
+#   180 IP addresses to an interface (180 unassigned), so there are no address lines.
+# - VLANs: all of them. Names clash across sites (Data, Voice, Wireless, Admin), so each clashing
+#   name is suffixed with its VLAN group slug, or its site slug when it has no group.
+# - Prefixes: the 39 tied to a VLAN are that VLAN's subnet. The 51 tied to no VLAN have no
+#   place in the DSL and are listed below as comments.
+# - Rewrites: none needed (no port name has a character the DSL rejects).
+#
+# Prefixes without a VLAN (scope: prefix [description]):
+#   global: 10.112.0.0/17 [DM HQ]
+#   global: 10.112.0.0/15
+#   global: 10.112.128.0/17 [DM branch offices]
+#   global: 192.168.0.0/22
+#   global: 172.16.0.0/24
+#   global: 172.16.1.0/24
+#   global: 172.16.0.0/16
+#   global: 172.16.2.0/24
+#   global: 172.17.0.0/24
+#   global: 172.17.1.0/24
+#   global: 172.17.0.0/16
+#   global: 172.17.2.0/24
+#   global: 172.18.0.0/24
+#   global: 172.18.1.0/24
+#   global: 172.18.0.0/16
+#   global: 172.18.2.0/24
+#   global: 172.19.0.0/24
+#   global: 172.19.1.0/24
+#   global: 172.19.0.0/16
+#   global: 172.19.2.0/24
+#   global: 172.20.0.0/24
+#   global: 172.20.1.0/24
+#   global: 172.20.0.0/16
+#   global: 172.20.2.0/24
+#   global: 192.168.0.0/20 [Shared services]
+#   dm-akron: 10.112.128.0/28
+#   dm-akron: 10.112.128.0/22
+#   dm-albany: 10.112.132.0/28
+#   dm-albany: 10.112.132.0/22
+#   dm-binghamton: 10.112.136.0/28
+#   dm-binghamton: 10.112.136.0/22
+#   dm-buffalo: 10.112.140.0/28
+#   dm-buffalo: 10.112.140.0/22
+#   dm-camden: 10.112.144.0/28
+#   dm-camden: 10.112.144.0/22
+#   dm-nashua: 10.112.148.0/28
+#   dm-nashua: 10.112.148.0/22
+#   dm-pittsfield: 10.112.152.0/28
+#   dm-pittsfield: 10.112.152.0/22
+#   dm-rochester: 10.112.156.0/28
+#   dm-rochester: 10.112.156.0/22
+#   dm-scranton: 10.112.160.0/28
+#   dm-scranton: 10.112.160.0/22
+#   dm-stamford: 10.112.164.0/28
+#   dm-stamford: 10.112.164.0/22
+#   dm-syracuse: 10.112.168.0/28
+#   dm-syracuse: 10.112.168.0/22
+#   dm-utica: 10.112.172.0/28
+#   dm-utica: 10.112.172.0/22
+#   dm-yonkers: 10.112.176.0/28
+#   dm-yonkers: 10.112.176.0/22
+title "NetBox demo data"
+subtitle "netbox-community/netbox-demo-data v4.7"
+
+# VLANs
+vlan Data-dm-akron 100 subnet 10.112.129.0/24
+vlan Voice-dm-akron 200 subnet 10.112.130.0/24
+vlan Data-dm-albany 100 subnet 10.112.133.0/24
+vlan Voice-dm-albany 200 subnet 10.112.134.0/24
+vlan Data-dm-binghamton 100 subnet 10.112.137.0/24
+vlan Voice-dm-binghamton 200 subnet 10.112.138.0/24
+vlan Data-dm-buffalo 100 subnet 10.112.141.0/24
+vlan Voice-dm-buffalo 200 subnet 10.112.142.0/24
+vlan Data-dm-camden 100 subnet 10.112.145.0/24
+vlan Voice-dm-camden 200 subnet 10.112.146.0/24
+vlan Data-dm-nashua 100 subnet 10.112.149.0/24
+vlan Voice-dm-nashua 200 subnet 10.112.150.0/24
+vlan Data-dm-pittsfield 100 subnet 10.112.153.0/24
+vlan Voice-dm-pittsfield 200 subnet 10.112.154.0/24
+vlan Data-dm-rochester 100 subnet 10.112.157.0/24
+vlan Voice-dm-rochester 200 subnet 10.112.158.0/24
+vlan Data-dm-scranton 100 subnet 10.112.161.0/24
+vlan Voice-dm-scranton 200 subnet 10.112.162.0/24
+vlan Data-dm-stamford 100 subnet 10.112.165.0/24
+vlan Voice-dm-stamford 200 subnet 10.112.166.0/24
+vlan Data-dm-syracuse 100 subnet 10.112.169.0/24
+vlan Voice-dm-syracuse 200 subnet 10.112.170.0/24
+vlan Data-dm-utica 100 subnet 10.112.173.0/24
+vlan Voice-dm-utica 200 subnet 10.112.174.0/24
+vlan Data-dm-yonkers 100 subnet 10.112.177.0/24
+vlan Voice-dm-yonkers 200 subnet 10.112.178.0/24
+vlan Wireless-dm-akron 300 subnet 10.112.131.0/24
+vlan Wireless-dm-albany 300 subnet 10.112.135.0/24
+vlan Wireless-dm-binghamton 300 subnet 10.112.139.0/24
+vlan Wireless-dm-buffalo 300 subnet 10.112.143.0/24
+vlan Wireless-dm-camden 300 subnet 10.112.147.0/24
+vlan Wireless-dm-nashua 300 subnet 10.112.151.0/24
+vlan Wireless-dm-pittsfield 300 subnet 10.112.155.0/24
+vlan Wireless-dm-rochester 300 subnet 10.112.159.0/24
+vlan Wireless-dm-scranton 300 subnet 10.112.163.0/24
+vlan Wireless-dm-stamford 300 subnet 10.112.167.0/24
+vlan Wireless-dm-syracuse 300 subnet 10.112.171.0/24
+vlan Wireless-dm-utica 300 subnet 10.112.175.0/24
+vlan Wireless-dm-yonkers 300 subnet 10.112.179.0/24
+vlan Data-jbb104 201
+vlan Voice-jbb104 202
+vlan Wireless-jbb104 203
+vlan Admin-jbb104 204
+vlan Data-jbb109 201
+vlan Voice-jbb109 202
+vlan Wireless-jbb109 203
+vlan Admin-jbb109 204
+vlan Data-jb115 201
+vlan Voice-jb115 202
+vlan Wireless-jb115 203
+vlan Admin-jb115 204
+vlan Data-jbb120 201
+vlan Voice-jbb120 202
+vlan Wireless-jbb120 203
+vlan Admin-jbb120 204
+vlan Data-jbb127 201
+vlan Voice-jbb127 202
+vlan Wireless-jbb127 203
+vlan Admin-jbb127 204
+vlan Data-jbb133 201
+vlan Voice-jbb133 202
+vlan Wireless-jbb133 203
+vlan Admin-jbb133 204
+
+# Site DM-Akron (dm-akron)
+device dmi01-akron-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-akron-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Albany (dm-albany)
+device dmi01-albany-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-albany-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Binghamton (dm-binghamton)
+device dmi01-binghamton-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-binghamton-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Buffalo (dm-buffalo)
+device dmi01-buffalo-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-buffalo-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Camden (dm-camden)
+device dmi01-camden-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-camden-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Nashua (dm-nashua)
+device dmi01-nashua-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-nashua-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Pittsfield (dm-pittsfield)
+device dmi01-pittsfield-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-pittsfield-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Rochester (dm-rochester)
+device dmi01-rochester-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-rochster-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Scranton (dm-scranton)
+device dmi01-scranton-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-scranton-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Stamford (dm-stamford)
+device dmi01-stamford-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-stamford-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Syracuse (dm-syracuse)
+device dmi01-syracuse-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-syracuse-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Utica (dm-utica)
+device dmi01-utica-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-utica-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Site DM-Yonkers (dm-yonkers)
+device dmi01-yonkers-rtr01 kind router model "ISR 1111-8P"
+  wan GigabitEthernet0/0/0
+  wan GigabitEthernet0/0/1
+  router
+  ports GigabitEthernet0/1/0, GigabitEthernet0/1/1
+device dmi01-yonkers-sw01 kind access-switch model "C9200-48P"
+  ports GigabitEthernet1/0/1, GigabitEthernet1/0/2
+
+# Links (cables)
+link dmi01-akron-rtr01.GigabitEthernet0/1/0 -- dmi01-akron-sw01.GigabitEthernet1/0/1
+link dmi01-akron-rtr01.GigabitEthernet0/1/1 -- dmi01-akron-sw01.GigabitEthernet1/0/2
+link dmi01-albany-rtr01.GigabitEthernet0/1/0 -- dmi01-albany-sw01.GigabitEthernet1/0/1
+link dmi01-albany-rtr01.GigabitEthernet0/1/1 -- dmi01-albany-sw01.GigabitEthernet1/0/2
+link dmi01-binghamton-rtr01.GigabitEthernet0/1/0 -- dmi01-binghamton-sw01.GigabitEthernet1/0/1
+link dmi01-binghamton-rtr01.GigabitEthernet0/1/1 -- dmi01-binghamton-sw01.GigabitEthernet1/0/2
+link dmi01-buffalo-rtr01.GigabitEthernet0/1/0 -- dmi01-buffalo-sw01.GigabitEthernet1/0/1
+link dmi01-buffalo-rtr01.GigabitEthernet0/1/1 -- dmi01-buffalo-sw01.GigabitEthernet1/0/2
+link dmi01-camden-rtr01.GigabitEthernet0/1/0 -- dmi01-camden-sw01.GigabitEthernet1/0/1
+link dmi01-camden-rtr01.GigabitEthernet0/1/1 -- dmi01-camden-sw01.GigabitEthernet1/0/2
+link dmi01-nashua-rtr01.GigabitEthernet0/1/0 -- dmi01-nashua-sw01.GigabitEthernet1/0/1
+link dmi01-nashua-rtr01.GigabitEthernet0/1/1 -- dmi01-nashua-sw01.GigabitEthernet1/0/2
+link dmi01-pittsfield-rtr01.GigabitEthernet0/1/0 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/1
+link dmi01-pittsfield-rtr01.GigabitEthernet0/1/1 -- dmi01-pittsfield-sw01.GigabitEthernet1/0/2
+link dmi01-rochester-rtr01.GigabitEthernet0/1/0 -- dmi01-rochster-sw01.GigabitEthernet1/0/1
+link dmi01-rochester-rtr01.GigabitEthernet0/1/1 -- dmi01-rochster-sw01.GigabitEthernet1/0/2
+link dmi01-scranton-rtr01.GigabitEthernet0/1/0 -- dmi01-scranton-sw01.GigabitEthernet1/0/1
+link dmi01-scranton-rtr01.GigabitEthernet0/1/1 -- dmi01-scranton-sw01.GigabitEthernet1/0/2
+link dmi01-stamford-rtr01.GigabitEthernet0/1/0 -- dmi01-stamford-sw01.GigabitEthernet1/0/1
+link dmi01-stamford-rtr01.GigabitEthernet0/1/1 -- dmi01-stamford-sw01.GigabitEthernet1/0/2
+link dmi01-syracuse-rtr01.GigabitEthernet0/1/0 -- dmi01-syracuse-sw01.GigabitEthernet1/0/1
+link dmi01-syracuse-rtr01.GigabitEthernet0/1/1 -- dmi01-syracuse-sw01.GigabitEthernet1/0/2
+link dmi01-utica-rtr01.GigabitEthernet0/1/0 -- dmi01-utica-sw01.GigabitEthernet1/0/1
+link dmi01-utica-rtr01.GigabitEthernet0/1/1 -- dmi01-utica-sw01.GigabitEthernet1/0/2
+link dmi01-yonkers-rtr01.GigabitEthernet0/1/0 -- dmi01-yonkers-sw01.GigabitEthernet1/0/1
+link dmi01-yonkers-rtr01.GigabitEthernet0/1/1 -- dmi01-yonkers-sw01.GigabitEthernet1/0/2
