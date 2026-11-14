@@ -239,7 +239,7 @@ export function cli(argv: string[]): Argv {
             describe: "keep devices carrying this VLAN (name or id; repeatable)",
           })
           .option("around", { type: "string", requiresArg: true, describe: "keep devices near this device" })
-          .option("depth", { type: "number", default: 1, describe: "links from --around to keep" })
+          .option("depth", { type: "number", describe: "links from --around to keep (default 1)" })
           .option("path", {
             type: "string",
             array: true,
@@ -256,7 +256,9 @@ export function cli(argv: string[]): Argv {
             if (a.address !== undefined && !parseCidr(a.address))
               throw new Error(`--address "${a.address}" is not an IP address or prefix`);
             // thrown, not returned: yargs would call .fail() again for the Usage error .fail() throws
-            if (!Number.isInteger(a.depth) || a.depth < 0) throw new Error("--depth must be a whole number, 0 or more");
+            if (a.depth !== undefined && (!Number.isInteger(a.depth) || a.depth < 0))
+              throw new Error("--depth must be a whole number, 0 or more");
+            if (a.depth !== undefined && a.around === undefined) throw new Error("--depth needs --around");
             return true;
           }),
       go((a) => render(a, "render")),
@@ -337,7 +339,8 @@ function editCmd(req: EditRequest, file: string, json: boolean): number {
   }
   let diags: Diag[];
   try {
-    diags = checkModel(loadModel(file));
+    // "has no links" / "carried by no link" are expected mid-build, one command at a time: check and render still say it
+    diags = checkModel({ ...loadModel(file), usage: [] });
   } catch (e) {
     diags = [
       {

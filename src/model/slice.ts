@@ -88,7 +88,15 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
         .filter((v) => v.subnets.some(near) && model.links.some((l) => l.lanes.includes(v.name)))
         .map((v) => v.name),
     );
-    const own = new Set([...model.nodes.filter((n) => n.addresses?.some(near)).map((n) => n.id), ...carrying(vs)]);
+    // a bare IP a device owns (its address or lease) means that device, not everything on its VLAN
+    const ip = (a: string) => a.split("/")[0];
+    const host = !x.includes("/") || x.endsWith("/32");
+    const owners = host ? model.nodes.filter((n) => n.addresses?.some((a) => ip(a) === ip(x))).map((n) => n.id) : [];
+    const own = new Set(
+      owners.length
+        ? owners
+        : [...model.nodes.filter((n) => n.addresses?.some(near)).map((n) => n.id), ...carrying(vs)],
+    );
     if (!own.size) return { error: `nothing has an address in ${x}` };
     keep = new Set([...keep].filter((id) => own.has(id)));
     if (vs.size) only = vs;

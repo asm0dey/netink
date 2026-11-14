@@ -448,3 +448,18 @@ test("a label too wide to sit beside its line splits into two lines there, inste
   expect(lines.map((m) => m[3])).toEqual(["guests, after", "hotspot login"]);
   for (const m of lines) expect(Number(m[1])).toBeGreaterThanOrEqual(106);
 });
+
+test("a slice's dashed cut-off boxes get a legend entry; the full picture has none", async () => {
+  const { sliceModel } = await import("../../src/model/slice");
+  const full = loadModel(HOME);
+  const r = sliceModel(full, { around: "core", depth: 0 });
+  if ("error" in r) throw new Error(r.error);
+  const legend = (m: Model) => async () => {
+    const svg = renderSvg(m, await layout(m));
+    return svg.slice(svg.indexOf('<g class="legend"'));
+  };
+  const sliced = await legend(r.model)();
+  expect(sliced).toContain(">not in this slice<");
+  expect(sliced).toContain('stroke-dasharray="4 3"');
+  expect(await legend(full)()).not.toContain("not in this slice");
+});

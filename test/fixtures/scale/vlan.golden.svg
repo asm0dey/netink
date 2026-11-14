@@ -246,5 +246,7 @@
 <text x="1023.8" y="1433.5" class="t">doesn't carry ExSpkr</text>
 <path d="M1427.7,1429 L1467.7,1429" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <text x="1479.7" y="1433.5" class="t">routed</text>
+<rect x="1879.6" y="1421" width="44" height="16" rx="4" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="1935.6" y="1433.5" class="t">not in this slice</text>
 </g>
 </svg>

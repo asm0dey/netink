@@ -240,6 +240,15 @@ test("init then add", () => {
   // human mode: the written lines on stdout
   expect(run("vlan", "add", "home", "10", "--file", f).out).toBe("vlan home 10\n");
 });
+test("building a file one command at a time does not warn about unlinked items; check still does", () => {
+  const f = fresh("build.net");
+  run("init", f);
+  for (const r of [run("device", "add", "a", "--file", f), run("vlan", "add", "v", "10", "--file", f)]) {
+    expect(r.code).toBe(0);
+    expect(r.err).toBe("");
+  }
+  expect(run("check", "--file", f).err).toMatch(/device a has no links[\s\S]*vlan v is defined but carried by no link/);
+});
 test("init refuses existing", () => {
   const f = fresh("twice.net");
   expect(run("init", f).code).toBe(0);
@@ -418,7 +427,10 @@ test("show links --json carries trunk and expanded lanes", () => {
 });
 
 test("render slices: a negative --depth is a usage error, an unknown device a slice error", () => {
-  expect(run("render", "--file", HOME, "--depth", "-1", "--json").code).toBe(2);
+  expect(run("render", "--file", HOME, "--around", "core", "--depth", "-1", "--json").code).toBe(2);
+  const lone = run("render", "--file", HOME, "--depth", "2", "--json");
+  expect(lone.code).toBe(2);
+  expect(JSON.parse(lone.out).error).toBe("--depth needs --around");
   const r = run("render", "--file", HOME, "--around", "nope", "--json");
   expect(r.code).toBe(1);
   expect(JSON.parse(r.out)).toEqual({

@@ -231,6 +231,16 @@ test("--address: an IP keeps the devices owning or containing it; a prefix selec
   consistent(lan);
 });
 
+test("--address: a bare IP a device owns keeps just that device, not its whole VLAN", () => {
+  // core is kept too: it holds the DHCP lease for the printer's address
+  expect(kept(ok(HOME, { address: "192.168.0.200" }))).toEqual(["core", "printer"]);
+  expect(kept(ok(HOME, { address: "192.168.0.200/32" }))).toEqual(["core", "printer"]);
+  expect(kept(ok(HOME, { address: "192.168.0.200" })).length).toBeLessThan(kept(ok(HOME, { vlans: ["lan"] })).length);
+  expect(kept(ok(HOME, { address: "192.168.0.1" }))).toEqual(["core"]);
+  // an IP nobody owns still finds where it would live: its subnet's owners and VLAN
+  expect(kept(ok(HOME, { address: "192.168.0.99" }))).toContain("core");
+});
+
 test("--address on SCaLE: IPv4 subnet owners and its VLAN; IPv6 owner", () => {
   const scale = loadModel("test/fixtures/scale/network.net");
   const m = ok(scale, { address: "10.0.4.17" });

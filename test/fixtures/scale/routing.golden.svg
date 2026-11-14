@@ -239,5 +239,7 @@
 <text x="1707.9" y="2107.5" class="t">trunk: named set or more than 4 VLANs</text>
 <path d="M1655.9,2129 L1695.9,2129" fill="none" stroke="#6A1B9A" stroke-width="4" marker-start="url(#ap)" marker-end="url(#ap)"/>
 <text x="1707.9" y="2133.5" class="t">routed / NAT</text>
+<rect x="1651.9" y="2147" width="44" height="16" rx="4" fill="#fff" stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="1707.9" y="2159.5" class="t">not in this slice</text>
 </g>
 </svg>

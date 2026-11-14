@@ -245,7 +245,7 @@ function drawNodes(
 
 type Line = { owner: string; lane: string; points: P[] };
 /** `list`: a trunk set's VLANs, wrapped onto continuation rows (`more`, no swatch) when long. */
-type Entry = { key: string; label: string; sub?: string; lane: string; list?: string[]; more?: boolean };
+type Entry = { key: string; label: string; sub?: string; lane: string; list?: string[]; more?: boolean; box?: true };
 
 // the router chip label is the only place the model records NAT
 const nats = (ns: MNode[]) => walk(ns).some((n) => n.kind === "router" && n.label.includes("NAT"));
@@ -290,6 +290,10 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
       .filter((t) => model.links.some((l) => l.trunk === t.name))
       .map((t) => ({ key: t.name, label: `${t.name} → ${t.vlans.join(", ")}`, lane: "trunk", list: t.vlans })),
     ...kinds.filter((k) => used.has(k.lane)),
+    // a slice draws a cut-off neighbour as a dashed box (style "stub" in drawNodes)
+    ...(model.nodes.some((n) => n.style === "stub")
+      ? [{ key: "stub", label: "not in this slice", lane: "wire", box: true as const }]
+      : []),
     ...model.legend.add.map((a) => ({ key: a.text, label: a.text, lane: lanes.has(a.style) ? a.style : "wire" })),
   ];
   const gone = new Set(model.legend.remove.map((r) => r.toLowerCase()));
@@ -349,7 +353,11 @@ function drawLegend(
       ey = y + top + (i % rows) * rowH;
     const s = lanes.get(e.lane)!,
       [x0, x1] = e.lane === "route" ? [ex + 4, ex + 44] : [ex, ex + (e.lane === "allow" ? 38 : 44)];
-    if (!e.more)
+    if (e.box)
+      out.push(
+        `<rect x="${f(ex)}" y="${f(ey - 8)}" width="44" height="16" rx="4" fill="#fff" ${strokeAttrs({ stroke: "#9E9E9E", w: 1.5, dash: "4 3" })}/>`,
+      );
+    else if (!e.more)
       out.push(`<path d="M${f(x0)},${f(ey)} L${f(x1)},${f(ey)}" fill="none" ${strokeAttrs(s)}${markers(e.lane)}/>`);
     out.push(
       `<text x="${f(ex + 56)}" y="${f(ey + 4.5)}" class="t">${esc(e.label)}${e.sub ? ` <tspan class="s">${esc(e.sub)}</tspan>` : ""}</text>`,
