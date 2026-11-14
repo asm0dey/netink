@@ -431,7 +431,13 @@ export function renderSvg(model: Model, placed: Placed): string {
       .map((n) => n.id),
   );
   /** Rects of the labels placed so far: a later label must not touch them. */
-  const taken: Rect[] = [];
+  const taken: Rect[] = walk(model.nodes).flatMap((n) => {
+    const b = placed.boxes.get(n.id);
+    if (!b || !n.children.length) return [];
+    // a container's title and sub lines (drawn as in drawNodes: baseline y+24, 17 px apart, from x+14)
+    const w = Math.max(textWidth(n.label, 15, true), ...n.sub.map((t) => textWidth(t, 12.5, false)));
+    return [{ x0: b.x + 14, y0: b.y + 11, x1: b.x + 14 + w, y1: b.y + 28 + 17 * n.sub.length }];
+  });
   /** A label must not touch a leaf box, another label, nor cross a container border (inside a container is fine). */
   /** Does any line not owned by `owner` pass through `r`? Lines are orthogonal; a diagonal section is skipped. */
   const crossed = (r: Rect, owner: string) =>

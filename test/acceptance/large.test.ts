@@ -116,3 +116,24 @@ test("SCaLE: every VLAN lane has its own stroke, width and dash", () => {
   });
   expect(new Set(looks).size).toBe(looks.length);
 });
+
+test("home: every view × slice renders with no overlap", async () => {
+  const home = loadModel("examples/home/network.net");
+  const slices: Slice[] = [
+    {},
+    { around: "core" },
+    { vlans: ["lte"] },
+    { path: ["ap1", "internet"] },
+    { address: "10.50.0.0/24" },
+  ];
+  const bad: string[] = [];
+  for (const view of ["combined", "physical", "vlans", "routing"] as const)
+    for (const s of slices) {
+      const r = sliceModel(home, { ...s, view });
+      if ("error" in r) continue; // routing keeps only routers: some slices are empty there
+      const m = collapseSiblings(r.model);
+      const p = await layout(m);
+      for (const o of overlaps(renderSvg(m, p), p)) bad.push(`${view} ${JSON.stringify(s)}: ${o}`);
+    }
+  expect(bad).toEqual([]);
+}, 30_000);
