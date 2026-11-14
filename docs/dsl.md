@@ -1083,9 +1083,6 @@ left out to keep the picture small; `netink render --all` draws them. A
   `<route|allow>:<from>-><to>` from the child ids `netink show` prints.
 - An address as a `route` or `allow` end works for IPv4 only, and an address
   that no client leases draws no arrow, without a warning.
-- A `vlans` list on a cable from a device with a block to an end without
-  one draws, but `check` warns that it disagrees with the inference, because
-  an end without a block never carries a tagged VLAN.
 - Ids use lowercase letters only: `Gw` is an error.
 - A comment-only line right after a line ending in a comma ends the
   continuation.
