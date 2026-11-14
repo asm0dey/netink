@@ -457,3 +457,26 @@ test("render --around draws stubs dashed, labels small", () => {
   expect(svg).toContain('stroke="#9E9E9E" stroke-width="1.5" stroke-dasharray="4 3"');
   expect(svg).toMatch(/<text [^>]*class="s"[^>]*>internet</);
 });
+
+test("--version from source is 0.0.0-dev", () => {
+  const r = run("--version");
+  expect(r.code).toBe(0);
+  expect(r.out.trim()).toBe("0.0.0-dev");
+});
+
+test("--version is listed in --help", () => {
+  expect(run("--help").out).toContain("--version");
+});
+
+const built = (version?: string) => {
+  const env: Record<string, string | undefined> = { ...process.env, VERSION: version };
+  const b = Bun.spawnSync(["mise", "run", "build"], { env: env as Record<string, string> });
+  expect(b.exitCode).toBe(0);
+  return Bun.spawnSync(["./dist/netink", "--version"]).stdout.toString().trim();
+};
+test("compiled build without VERSION is 0.0.0-dev", () => {
+  expect(built()).toBe("0.0.0-dev");
+}, 60000);
+test("compiled build with VERSION=9.8.7 prints it", () => {
+  expect(built("9.8.7")).toBe("9.8.7");
+}, 60000);

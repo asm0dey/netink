@@ -25,6 +25,7 @@ export function manPage(): string {
 
 Render network diagrams from a line-oriented DSL plus optional MikroTik .rsc exports.
 Every command reads \`--file\` (default ./network.net) and takes \`--json\`.
+\`netink --version\` prints the version.
 
 ## COMMANDS
 

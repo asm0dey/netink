@@ -30,6 +30,7 @@ import { renderSvg } from "./render/svg";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
 import type { DeviceFacts, Diag, MNode, Model, VlanDef } from "./types";
+import { VERSION } from "./version";
 
 const out = (s: string) => process.stdout.write(s.endsWith("\n") ? s : `${s}\n`);
 const err = (s: string) => process.stderr.write(`${s}\n`);
@@ -203,6 +204,7 @@ export function cli(argv: string[]): Argv {
     )
     .epilogue(EPILOGUE)
     .alias("h", "help")
+    .version("version", "print the netink version", VERSION)
     .wrap(Math.min(130, process.stdout.columns ?? 120))
     .demandCommand(1, "missing command")
     .fail((msg, e) => {
