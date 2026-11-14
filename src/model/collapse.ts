@@ -57,7 +57,7 @@ export function collapseSiblings(model: Model): Model {
       ids[0]!,
       Object.assign({}, first.n, {
         id,
-        label: `${ids.length}× ${prefix ? [prefix, tail].filter(Boolean).join(" ") : tail || first.n.label}`,
+        label: `${ids.length}× ${prefix ? [prefix, tail].filter(Boolean).join(" ") : tail || "devices"}`,
         sub: [ranges(ids).join(", "), ...first.n.sub],
         members: ids,
       }),

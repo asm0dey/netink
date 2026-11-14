@@ -79,3 +79,9 @@ test("an arrow endpoint and a hinted member never collapse", () => {
   expect(h.hints).toHaveLength(1);
   expect(h.nodes.some((n) => n.id === "c2")).toBe(true);
 });
+
+test("members sharing no id prefix are labelled N× devices", () => {
+  const src =
+    "title T\ndevice sw kind switch\nclient aa\nclient bb\nclient cc\nlink sw -- aa\nlink sw -- bb\nlink sw -- cc\n";
+  expect(collapseSiblings(model(src)).nodes.find((n) => n.members)!.label).toBe("3× devices");
+});

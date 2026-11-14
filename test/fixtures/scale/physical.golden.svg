@@ -338,7 +338,7 @@
 <text x="3850" y="1385" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Room104</text>
 <text x="543" y="1481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">6× rm</text>
 <text x="543" y="1498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm101-a, rm101-b, rm101-c, rm101-d, rm101-e, rm101-f</text>
-<text x="5467.9" y="1243" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">16× Hall-9</text>
+<text x="5467.9" y="1243" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">16× devices</text>
 <text x="5467.9" y="1260" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">expob4-a, hall-1–10, ballroomi-1, ballroomj-1, game-1–3</text>
 <text x="3467" y="1481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">3× rm</text>
 <text x="3467" y="1498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm103-a, rm103-b, rm103-c</text>
@@ -360,7 +360,7 @@
 <text x="2548.5" y="1498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm209-a, rm209-b, rm209-c</text>
 <text x="2804" y="1481" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">5× rm</text>
 <text x="2804" y="1498" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm211-a, rm211-b, rm211-c, rm211-d, rm211-e</text>
-<text x="200" y="1377" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× lowconf-8</text>
+<text x="200" y="1377" class="h" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">9× devices</text>
 <text x="200" y="1394" class="s" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">rm205-a, lowconf-1–8</text>
 <text x="3228.7" y="1481" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Rm215-a</text>
 <text x="3364.9" y="1481" class="h" text-anchor="middle" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">Rm215-b</text>
