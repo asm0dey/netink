@@ -98,6 +98,7 @@ export type MNode = {
   sub: string[];
   children: MNode[];
   tier: number;
+  /** Set on a node standing for several identical leaf siblings: their ids, in model order. */ members?: string[];
 };
 export type MLink = {
   id: string;

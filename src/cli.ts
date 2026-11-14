@@ -23,6 +23,7 @@ import { layout } from "./layout/elk";
 import { loadModel } from "./load";
 import { manPage } from "./man";
 import { checkModel } from "./model/check";
+import { collapseSiblings } from "./model/collapse";
 import { renderSvg } from "./render/svg";
 import { importRsc } from "./rsc/import";
 import { translate } from "./rsc/translate";
@@ -167,6 +168,7 @@ type Args = {
   json: boolean;
   as?: string;
   all?: boolean;
+  collapse?: boolean;
   o?: string;
   what?: string;
   rsc?: string;
@@ -213,6 +215,7 @@ export function cli(argv: string[]): Argv {
       (y) =>
         y
           .option("all", all)
+          .option("collapse", { type: "boolean", default: true, describe: "draw identical leaf siblings one by one" })
           .option("o", { type: "string", requiresArg: true, describe: "output SVG file (default: stdout)" }),
       go((a) => render(a, "render")),
     )
@@ -345,8 +348,8 @@ function render(a: Args, cmd: "render" | "check"): number | Promise<number> {
     }
     let svg: string, width: number, height: number;
     try {
-      const placed = await layout(model);
-      svg = renderSvg(model, placed);
+      const drawn = a.collapse === false ? model : collapseSiblings(model);
+      svg = renderSvg(drawn, await layout(drawn));
       // the SVG's own size: the legend can make it larger than the layout
       const m = /^<svg [^>]*?width="([\d.]+)" height="([\d.]+)"/.exec(svg)!;
       width = Number(m[1]);

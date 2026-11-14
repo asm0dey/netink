@@ -1,6 +1,7 @@
 import { expect, test } from "bun:test";
 import { layout } from "../../src/layout/elk";
 import { loadModel } from "../../src/load";
+import { collapseSiblings } from "../../src/model/collapse";
 import { laneOfStyle } from "../../src/model/style";
 import { esc, laneStyles, renderSvg } from "../../src/render/svg";
 import type { MNode, Model, Placed } from "../../src/types";
@@ -57,6 +58,12 @@ const render = (f: string) => {
 test.each([SCALE, NETBOX])("%s: full render has no overlaps", async (f) => {
   const [, p, svg] = await render(f);
   expect(overlaps(svg, p)).toEqual([]);
+});
+
+test.each([SCALE, NETBOX])("%s: collapsed render has no overlaps", async (f) => {
+  const m = collapseSiblings(loadModel(f)),
+    p = await layout(m);
+  expect(overlaps(renderSvg(m, p), p)).toEqual([]);
 });
 
 test.each([SCALE, NETBOX])(
