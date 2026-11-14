@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v5
       - run: bun install --frozen-lockfile
       - run: mise run test
       - run: bash scripts/release-notes.sh "$GITHUB_REF_NAME" > notes.md
