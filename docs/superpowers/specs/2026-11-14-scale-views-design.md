@@ -202,3 +202,10 @@ link cf-mdf-01 -- cf-idf-01 trunk cfuplink
   column-breaking rule.
 - How the overlap helper measures text (reuse `textWidth`).
 - Order of work; the fix-firsts go first.
+
+## Addendum (2026-11-14, owner decisions during execution)
+
+- **Pale VLAN colours**: lane strokes below 3:1 contrast against white are darkened (same hue) for the line; tints stay from the original colour.
+- **`--vlan` context links**: a kept link that carries none of the selected VLANs (including links to stubs) is drawn as a thin light-grey line, legend "doesn't carry <X>", not as a plain cable — so a VLAN missing from an uplink is visible.
+- **`--path <a> <b>`**: keeps every top-level device on any shortest path (fewest links) between `a` and `b`; their other neighbours are stubs. Ids resolve like `--around` (child id → top-level device; a cloud id such as `internet` works). With `--vlan`, the path's devices are all kept and only lanes are filtered (context links per above), so a break in VLAN X along the path shows. Unknown id → closest hint; no path → error `no path between <a> and <b>`.
+- **`--address <ip|prefix>`**: keeps top-level devices owning an address (interface, bridge, vlan-iface, `address`, WAN, lease) inside or containing the prefix, plus — when a VLAN subnet contains it — that VLAN as if given to `--vlan`. Invalid address → usage error (exit 2); nothing matches → error `nothing has an address in <x>`.
