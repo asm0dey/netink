@@ -130,3 +130,14 @@ test("routing view of a model with no router is empty", () => {
     error: "the slice is empty",
   });
 });
+
+test("physical view of home renders no VLAN in strokes or legend", async () => {
+  const { layout } = await import("../../src/layout/elk");
+  const { laneStyles, renderSvg } = await import("../../src/render/svg");
+  const m = ok(HOME, { view: "physical" });
+  const svg = renderSvg(m, await layout(m));
+  const legend = svg.slice(svg.indexOf('<g class="legend"'));
+  for (const v of HOME.vlans) expect(legend).not.toMatch(new RegExp(`>${v.name}\\b`, "i"));
+  const lanes = laneStyles(HOME.vlans);
+  for (const v of HOME.vlans) expect(svg).not.toContain(`stroke="${lanes.get(v.name)!.stroke}"`);
+});

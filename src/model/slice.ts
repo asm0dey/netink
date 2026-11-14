@@ -13,6 +13,13 @@ const top = (id: string) => id.split("/")[0]!;
 const walk = (ns: MNode[]): MNode[] => ns.flatMap((n) => [n, ...walk(n.children)]);
 
 /** Keep the devices the slice asks for (spec §6, flags intersect); a cut-off neighbour linked to a kept one becomes a stub. */
+// physical view draws no VLAN: a node coloured by one falls back to the plain box
+const plain = (n: MNode): MNode => ({
+  ...n,
+  style: laneOfStyle(n.style) === undefined ? n.style : "box",
+  children: n.children.map(plain),
+});
+
 export function sliceModel(model: Model, s: Slice): { model: Model } | { error: string; hint?: string } {
   const miss = (what: string, x: string, among: string[]) => {
     const c = closest(x, among);
@@ -75,7 +82,7 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
       ...model,
       nodes: model.nodes.flatMap((n) =>
         keep.has(n.id)
-          ? [n]
+          ? [s.view === "physical" ? plain(n) : n]
           : stub.has(n.id)
             ? [{ id: n.id, kind: "device" as const, style: "stub", label: n.id, sub: [], children: [], tier: n.tier }]
             : [],
