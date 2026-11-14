@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, normalize } from "node:path";
 import { BLOCK, KEYWORDS } from "../src/dsl/parse";
@@ -33,18 +33,22 @@ test("dsl.md examples run", async () => {
 }, 60_000);
 
 test("example failures name file and line", async () => {
-  const f = join(mkdtempSync(join(tmpdir(), "netink-doc-")), "bad.md");
+  const d = mkdtempSync(join(tmpdir(), "netink-doc-"));
+  const f = join(d, "bad.md");
   writeFileSync(f, "# x\n\n```console\n$ netink check --file nope.net\n```\n");
   const r = await runExamples(f);
+  rmSync(d, { recursive: true, force: true });
   expect(r).toHaveLength(1);
   expect(r[0]).toMatch(/^.*\.md:\d+: /);
   expect(r[0]).toContain("exit 1");
 });
 
 test("a console command that is not netink is reported", async () => {
-  const f = join(mkdtempSync(join(tmpdir(), "netink-doc-")), "typo.md");
+  const d = mkdtempSync(join(tmpdir(), "netink-doc-"));
+  const f = join(d, "typo.md");
   writeFileSync(f, "# x\n\n```console\n$ netnik check\n```\n");
   const r = await runExamples(f);
+  rmSync(d, { recursive: true, force: true });
   expect(r).toHaveLength(1);
   expect(r[0]).toMatch(/typo\.md:4: not a netink command/);
 });

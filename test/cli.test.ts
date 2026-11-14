@@ -469,8 +469,8 @@ test("--version is listed in --help", () => {
 });
 
 const built = (version?: string) => {
-  // same define quoting as mise.toml's build task, but into a temp dir so dist/ is untouched
-  const out = join(mkdtempSync(join(tmpdir(), "netink-ver-")), "netink");
+  // same define quoting as mise.toml's build task, but into the cleaned-up temp dir so dist/ is untouched
+  const out = join(dir, `netink-${version ?? "dev"}`);
   const b = Bun.spawnSync(
     [
       "bun",

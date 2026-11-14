@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -106,38 +106,42 @@ export async function runExamples(file: string): Promise<string[]> {
   const dir = mkdtempSync(join(tmpdir(), "netink-docs-")),
     fails: string[] = [];
   const firstLine = (s: string) => s.trim().split("\n")[0] ?? "";
-  for (const b of blocks(readFileSync(file, "utf8"))) {
-    const named = /(?:^|\s)file=(\S+)/.exec(b.info)?.[1];
-    // any block with file=<name> is written for later blocks (e.g. an .rsc export); only net blocks are checked
-    if (named && b.lang !== "net") writeFileSync(join(dir, named), `${b.body}\n`);
-    if (b.lang === "net") {
-      const name = named ?? "network.net";
-      writeFileSync(join(dir, name), `${b.body}\n`);
-      const r = await netink(["check", "--file", name], dir);
-      if (r.code !== 0) fails.push(`${file}:${b.line}: check ${name}: exit ${r.code}: ${firstLine(r.err + r.out)}`);
-    } else if (b.lang === "console") {
-      const lines = b.body.split("\n");
-      for (let i = 0; i < lines.length; i++) {
-        const m = /^\$ netink(?:\s+(.*))?$/.exec(lines[i]!);
-        if (!m) {
-          if (lines[i]!.startsWith("$ ")) fails.push(`${file}:${b.line + 1 + i}: not a netink command: ${lines[i]}`);
-          continue;
+  try {
+    for (const b of blocks(readFileSync(file, "utf8"))) {
+      const named = /(?:^|\s)file=(\S+)/.exec(b.info)?.[1];
+      // any block with file=<name> is written for later blocks (e.g. an .rsc export); only net blocks are checked
+      if (named && b.lang !== "net") writeFileSync(join(dir, named), `${b.body}\n`);
+      if (b.lang === "net") {
+        const name = named ?? "network.net";
+        writeFileSync(join(dir, name), `${b.body}\n`);
+        const r = await netink(["check", "--file", name], dir);
+        if (r.code !== 0) fails.push(`${file}:${b.line}: check ${name}: exit ${r.code}: ${firstLine(r.err + r.out)}`);
+      } else if (b.lang === "console") {
+        const lines = b.body.split("\n");
+        for (let i = 0; i < lines.length; i++) {
+          const m = /^\$ netink(?:\s+(.*))?$/.exec(lines[i]!);
+          if (!m) {
+            if (lines[i]!.startsWith("$ ")) fails.push(`${file}:${b.line + 1 + i}: not a netink command: ${lines[i]}`);
+            continue;
+          }
+          const at = b.line + 1 + i,
+            expected: string[] = [];
+          while (i + 1 < lines.length && !lines[i + 1]!.startsWith("$ ")) expected.push(lines[++i]!);
+          const cmd = m[1] ?? "",
+            exit = /\s#\s*exit\s+(\d+)\s*$/.exec(cmd),
+            want = exit ? Number(exit[1]) : 0;
+          const r = await netink(argv(exit ? cmd.slice(0, exit.index) : cmd), dir);
+          if (r.code !== want)
+            fails.push(`${file}:${at}: netink ${cmd}: exit ${r.code}, expected ${want}: ${firstLine(r.err + r.out)}`);
+          else if (tidy(r.out) !== tidy(expected.join("\n")))
+            fails.push(
+              `${file}:${at}: netink ${cmd}: stdout differs:\n--- expected\n${tidy(expected.join("\n"))}\n--- got\n${tidy(r.out)}`,
+            );
         }
-        const at = b.line + 1 + i,
-          expected: string[] = [];
-        while (i + 1 < lines.length && !lines[i + 1]!.startsWith("$ ")) expected.push(lines[++i]!);
-        const cmd = m[1] ?? "",
-          exit = /\s#\s*exit\s+(\d+)\s*$/.exec(cmd),
-          want = exit ? Number(exit[1]) : 0;
-        const r = await netink(argv(exit ? cmd.slice(0, exit.index) : cmd), dir);
-        if (r.code !== want)
-          fails.push(`${file}:${at}: netink ${cmd}: exit ${r.code}, expected ${want}: ${firstLine(r.err + r.out)}`);
-        else if (tidy(r.out) !== tidy(expected.join("\n")))
-          fails.push(
-            `${file}:${at}: netink ${cmd}: stdout differs:\n--- expected\n${tidy(expected.join("\n"))}\n--- got\n${tidy(r.out)}`,
-          );
       }
     }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
   }
   return fails;
 }
