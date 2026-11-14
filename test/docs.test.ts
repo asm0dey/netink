@@ -3,7 +3,8 @@ import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, normalize } from "node:path";
 import { BLOCK, KEYWORDS } from "../src/dsl/parse";
-import { GRAMMAR } from "../src/help";
+import { NOUNS } from "../src/edit/table";
+import { DESC, GRAMMAR } from "../src/help";
 import { blocks, headingCodes, relLinks, runExamples, sections } from "./helpers/docs";
 
 const dsl = () => readFileSync("docs/dsl.md", "utf8");
@@ -66,3 +67,38 @@ test("doc helpers read headings, sections, blocks and links", () => {
   expect(blocks(md)).toEqual([{ lang: "net", info: "file=n.net", body: "# `c` not a heading [n](no.md)", line: 4 }]);
   expect(relLinks(md)).toEqual(["docs/x.md", "../i.svg", "logo.svg"]);
 });
+
+const cli = () => readFileSync("docs/cli.md", "utf8");
+const GLOBAL = ["--file", "--json", "--version", "--help"];
+// the section for a command or noun: its heading code is `name` or `netink name`
+const section = (md: string, name: string) => sections(md).get(name) ?? sections(md).get(`netink ${name}`);
+
+test("every command and noun has a heading in cli.md", () => {
+  const h = headingCodes(cli());
+  const names = [...Object.keys(DESC), "help", ...NOUNS.map((n) => n.name)];
+  expect(names.filter((n) => !h.has(n) && !h.has(`netink ${n}`))).toEqual([]);
+});
+
+test("every flag is documented in its section", () => {
+  const md = cli(),
+    missing: string[] = [];
+  const need = (name: string, flags: string[]) => {
+    const s = section(md, name) ?? "";
+    // a code span that starts with the flag: `--vlan` or `--vlan <v>`
+    for (const f of flags) if (!new RegExp(`\`${f}[\` =]`).test(s)) missing.push(`${name}: ${f}`);
+  };
+  for (const cmd of Object.keys(DESC).filter((c) => c !== "completion")) {
+    const help = Bun.spawnSync(["bun", "src/cli.ts", cmd, "--help"]).stdout.toString();
+    need(
+      cmd,
+      [...new Set(help.match(/--[a-z][a-z-]*/g) ?? [])].filter((f) => !GLOBAL.includes(f)),
+    );
+  }
+  for (const n of NOUNS) need(n.name, [...n.flags.map((f) => `--${f.name}`), "--after", "--before", "--select-text"]);
+  for (const f of ["--file", "--json", "--version"]) if (!md.includes(`\`${f}\``)) missing.push(`global: ${f}`);
+  expect(missing).toEqual([]);
+});
+
+test("cli.md examples run", async () => {
+  expect(await runExamples("docs/cli.md")).toEqual([]);
+}, 120_000);
