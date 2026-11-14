@@ -1,0 +1,64 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:system-ui,sans-serif;background:#f6f8fa;margin:24px;width:760px;color:#1f2328}
+.row{display:flex;gap:16px;align-items:center;justify-content:center;padding:14px}
+.card{background:#fff;border:1px solid #d0d7de;border-radius:12px;margin-bottom:14px}
+h3{margin:0;padding:12px 18px 0}p{margin:0;padding:0 18px 12px;color:#57606a}
+.dark{background:#0d1117;padding:8px;border-radius:8px;display:flex;gap:8px;align-items:center}
+.grid{position:relative}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+ <!-- C1: geometric centre: ink spans y13..51 and x11..53 -->
+ <symbol id="c1" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#1f2a44"/>
+  <path d="M18 46 L18 16 L46 16 L46 46" fill="none" stroke="#5fe3cf" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="11" y="41" width="14" height="10" rx="2" fill="#fff"/>
+  <rect x="39" y="41" width="14" height="10" rx="2" fill="#fff"/>
+ </symbol>
+ <!-- C2: optical centre: nudged 1.5px lower than geometric (heavy boxes sit on the baseline), rounded arch like a real n -->
+ <symbol id="c2" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#1f2a44"/>
+  <path d="M18 47 L18 25 Q18 17 26 17 L38 17 Q46 17 46 25 L46 47" fill="none" stroke="#5fe3cf" stroke-width="6"/>
+  <rect x="11" y="42" width="14" height="10" rx="2" fill="#fff"/>
+  <rect x="39" y="42" width="14" height="10" rx="2" fill="#fff"/>
+ </symbol>
+ <!-- C3: like a lowercase n: left stem rises above the arch -->
+ <symbol id="c3" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#1f2a44"/>
+  <path d="M18 47 L18 12 M18 20 L46 20 L46 47" fill="none" stroke="#5fe3cf" stroke-width="6" stroke-linejoin="round"/>
+  <rect x="11" y="42" width="14" height="10" rx="2" fill="#fff"/>
+  <rect x="39" y="42" width="14" height="10" rx="2" fill="#fff"/>
+ </symbol>
+</defs></svg>
+<h2 style="margin-top:0">C, centred — three takes</h2>
+<p style="padding:0 0 10px">The old one sat 3.5px low. Left copy of each has red lines through the tile's centre.</p>
+<div class="card"><h3>C1 · Exact centre</h3><div class="row">
+ <svg width="128" height="128" viewBox="0 0 64 64"><use href="#c1"/><line x1="32" y1="2" x2="32" y2="62" stroke="#ff4d4f" stroke-width=".4"/><line x1="2" y1="32" x2="62" y2="32" stroke="#ff4d4f" stroke-width=".4"/></svg>
+ <svg width="128" height="128"><use href="#c1"/></svg>
+ <div style="display:flex;flex-direction:column;gap:8px;align-items:center"><svg width="48" height="48"><use href="#c1"/></svg><svg width="16" height="16"><use href="#c1"/></svg></div>
+ <div class="dark"><svg width="48" height="48"><use href="#c1"/></svg><svg width="16" height="16"><use href="#c1"/></svg></div>
+</div><p>Same shape as before, moved up so the drawing is centred top-to-bottom and left-to-right.</p></div>
+<div class="card"><h3>C2 · Centred, rounded arch</h3><div class="row">
+ <svg width="128" height="128" viewBox="0 0 64 64"><use href="#c2"/><line x1="32" y1="2" x2="32" y2="62" stroke="#ff4d4f" stroke-width=".4"/><line x1="2" y1="32" x2="62" y2="32" stroke="#ff4d4f" stroke-width=".4"/></svg>
+ <svg width="128" height="128"><use href="#c2"/></svg>
+ <div style="display:flex;flex-direction:column;gap:8px;align-items:center"><svg width="48" height="48"><use href="#c2"/></svg><svg width="16" height="16"><use href="#c2"/></svg></div>
+ <div class="dark"><svg width="48" height="48"><use href="#c2"/></svg><svg width="16" height="16"><use href="#c2"/></svg></div>
+</div><p>Corners of the arch rounded so it reads as a real lowercase n, not a doorway. Centred by eye (a hair lower, since the boxes are heavy).</p></div>
+<div class="card"><h3>C3 · Centred, n with an ascender stub</h3><div class="row">
+ <svg width="128" height="128" viewBox="0 0 64 64"><use href="#c3"/><line x1="32" y1="2" x2="32" y2="62" stroke="#ff4d4f" stroke-width=".4"/><line x1="2" y1="32" x2="62" y2="32" stroke="#ff4d4f" stroke-width=".4"/></svg>
+ <svg width="128" height="128"><use href="#c3"/></svg>
+ <div style="display:flex;flex-direction:column;gap:8px;align-items:center"><svg width="48" height="48"><use href="#c3"/></svg><svg width="16" height="16"><use href="#c3"/></svg></div>
+ <div class="dark"><svg width="48" height="48"><use href="#c3"/></svg><svg width="16" height="16"><use href="#c3"/></svg></div>
+</div><p>Left stem pokes above the arch like a typeset n. Most letter-like; slightly busier at 16px.</p></div>
+<div class="card"><h3>D · Wordmark, gap removed, paired with the icon</h3><div class="row" style="flex-direction:column">
+ <div style="display:flex;align-items:center;gap:14px">
+  <svg width="64" height="64"><use href="#c2"/></svg>
+  <svg width="250" height="70" viewBox="0 0 250 70"><text x="4" y="46" font-family="ui-monospace,Menlo,monospace" font-size="48" font-weight="700"><tspan fill="#1f2a44">net</tspan><tspan fill="#0f9d8a">ink</tspan></text>
+  <path d="M14 58 L14 63 L170 63 L170 58" fill="none" stroke="#0f9d8a" stroke-width="3"/><circle cx="14" cy="58" r="3.5" fill="#0f9d8a"/><circle cx="92" cy="63" r="3.5" fill="#0f9d8a"/><circle cx="170" cy="58" r="3.5" fill="#0f9d8a"/></svg>
+ </div>
+ <div class="dark" style="padding:10px 16px;gap:14px">
+  <svg width="48" height="48"><use href="#c2"/></svg>
+  <svg width="190" height="53" viewBox="0 0 250 70"><text x="4" y="46" font-family="ui-monospace,Menlo,monospace" font-size="48" font-weight="700"><tspan fill="#e6edf3">net</tspan><tspan fill="#5fe3cf">ink</tspan></text>
+  <path d="M14 58 L14 63 L170 63 L170 58" fill="none" stroke="#5fe3cf" stroke-width="3"/><circle cx="14" cy="58" r="3.5" fill="#5fe3cf"/><circle cx="92" cy="63" r="3.5" fill="#5fe3cf"/><circle cx="170" cy="58" r="3.5" fill="#5fe3cf"/></svg>
+ </div>
+</div><p>README header: icon + wordmark, shown with C2.</p></div>
+</body></html>

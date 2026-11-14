@@ -1,4 +1,4 @@
-# Part E — documentation and first release
+# Part E — netink: rename, logo, documentation and first release
 
 Milestone 2, part E. Covers Acceptance 7 of `2026-11-13-netdraw-design.md`
 plus the owner's later requests (2026-11-14): a README, downloadable
@@ -13,6 +13,7 @@ without reading specs or source. Everything here serves that reader.
 
 ## Goals
 
+0. Rename the tool from netdraw to **netink**, and add its logo (below).
 1. `README.md`: what netdraw is (two sentences), an example render near the
    top with the short `.net` that produced it, install from releases, a quick
    start, links to `docs/dsl.md` and `docs/cli.md`, the licence, and what 0.x versions
@@ -73,6 +74,50 @@ without reading specs or source. Everything here serves that reader.
   owner wants the short grammar card in the terminal.
 
 ## Design
+
+### Name: netink (owner, 2026-11-14)
+
+- Why rename: "NetDraw" is an established social-network drawing program
+  (UCINET), so strangers searching for it land elsewhere. The owner wants a
+  name that says "draws network diagrams". Rejected: topodraw ("topo" is not
+  only networks), netsketch (Cisco's Network Sketcher, NetworkSketch),
+  netplot (R package), netdiag (Windows `netdiag.exe` and several other
+  *diagnostics* tools), netdraft, lanchart, netscribe.
+- Free on npm, PyPI, crates.io, Homebrew and as a GitHub repo name (checked
+  2026-11-14). The GitHub *account* `netink` is taken by an empty user, so the
+  repo lives under the owner's account.
+- Write it lowercase `netink` everywhere; the wordmark's two colours
+  (net / **ink**) prevent the "ne-tink" misreading.
+- Rename is the **first** step of the plan, before any docs are written:
+  binary and release asset names (`netink-linux-x64`, …), `netink(1)` and the
+  man page title, `--help` text and every hint ("run netink --help"), the
+  shell completion script and the function names it defines, `package.json`
+  `name` and `bin`, mise tasks, tests that spell the name, the spec text of
+  this document. Historical specs and plans in `docs/superpowers/` keep
+  "netdraw".
+- Unchanged: the `.net` extension and the default file `./network.net`.
+- The local directory name and any future repo name are the owner's business,
+  not part of the change.
+
+### Logo (owner, 2026-11-14)
+
+Sketch: `docs/superpowers/specs/assets/2026-11-14-netink-logo-sketch.html`
+(chosen: C2 + D).
+
+- **Icon (C2):** a rounded-square tile (`#1f2a44`) holding a lowercase "n"
+  drawn as a cable (`#5fe3cf`, rounded arch) that drops into two white device
+  boxes. Centred in the tile (the owner rejected an off-centre first draft;
+  verify optically and with guides). Must read at 16 px.
+- **Wordmark (D):** monospace bold "net" (`#1f2a44`) + "ink" (`#0f9d8a`) over
+  a thin cable line with three node dots; dark variant `#e6edf3` / `#5fe3cf`.
+  Text converted to paths so it renders the same without the font installed.
+- Files under `assets/`: `logo.svg` (icon), `logo-512.png` (for the GitHub
+  avatar / social preview, which the owner uploads by hand),
+  `wordmark-light.svg`, `wordmark-dark.svg` (icon + wordmark side by side).
+- README header: the wordmark via `<picture>` with a
+  `prefers-color-scheme: dark` source, so it suits both GitHub themes.
+- The sketch's colours and geometry are the starting point; the builder may
+  polish proportions but not change the concept.
 
 ### Terminal help vs docs (my call, told to the owner, not objected to)
 
