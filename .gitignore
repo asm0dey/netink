@@ -1,5 +1,6 @@
 .superpowers/
 node_modules/
 *.png
+!assets/*.png
 examples/home/network.svg
 dist/
