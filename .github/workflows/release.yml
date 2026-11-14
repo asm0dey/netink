@@ -1,0 +1,22 @@
+name: release
+on:
+  push:
+    tags:
+      - "v*.*.*"
+permissions:
+  contents: write
+concurrency:
+  group: release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+      - run: bun install --frozen-lockfile
+      - run: mise run test
+      - run: bash scripts/release-notes.sh "$GITHUB_REF_NAME" > notes.md
+      - run: VERSION="${GITHUB_REF_NAME#v}" mise run build-all
+      - run: gh release create "$GITHUB_REF_NAME" dist/netink-* dist/netink.1 --notes-file notes.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
