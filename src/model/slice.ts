@@ -80,6 +80,7 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
   return {
     model: {
       ...model,
+      ...(only ? { slice: { vlans: [...only] } } : {}),
       nodes: model.nodes.flatMap((n) =>
         keep.has(n.id)
           ? [s.view === "physical" ? plain(n) : n]
@@ -96,7 +97,7 @@ export function sliceModel(model: Model, s: Slice): { model: Model } | { error: 
             ...(lanes.length === l.lanes.length && s.view !== "physical" ? l : rest),
             from: end(l.from),
             to: end(l.to),
-            lanes: lanes.length ? lanes : ["wire"],
+            lanes: lanes.length ? lanes : [only ? "other" : "wire"],
           },
         ];
       }),

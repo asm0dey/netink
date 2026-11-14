@@ -88,6 +88,7 @@ export function contrastFloor(c: string): string {
 export function laneStyles(vlans: VlanDef[]): Map<string, Stroke> {
   const m = new Map<string, Stroke>([
     ["wire", { stroke: WIRE, w: 2.5 }],
+    ["other", { stroke: "#BDBDBD", w: 1.5 }],
     ["trunk", { stroke: WIRE, w: 8 }],
     ["route", { stroke: ROUTE, w: 4 }],
     ["allow", { stroke: ALLOW, w: 2, dash: "2 4" }],
@@ -235,6 +236,11 @@ function legendEntries(model: Model, lanes: Map<string, Stroke>, lines: Line[]):
   const kinds: Entry[] = [
     { key: "wire", label: "plain cable", lane: "wire" },
     {
+      key: "other",
+      label: `doesn't carry ${(model.slice?.vlans ?? []).map(display).join(", ")}`,
+      lane: "other",
+    },
+    {
       key: "trunk",
       label: model.links.some((l) => l.trunk)
         ? "trunk: named set or more than 4 VLANs"
@@ -350,7 +356,7 @@ export function renderSvg(model: Model, placed: Placed): string {
   for (const l of model.links)
     for (const end of [l.from, l.to]) if (!laneOf.has(end) && l.lanes[0]) laneOf.set(end, l.lanes[0]);
 
-  const order = ["allow", "wire", ...model.vlans.map((v) => v.name), "trunk", "route"];
+  const order = ["allow", "wire", "other", ...model.vlans.map((v) => v.name), "trunk", "route"];
   const rank = (lane: string) => order.indexOf(lane);
   const sorted = lines
     .map((l, i) => [l, i] as const)
@@ -468,7 +474,7 @@ export function renderSvg(model: Model, placed: Placed): string {
     const s = [l.label, vlanText].filter(Boolean).join(" · ");
     const colour = trunk
       ? "#333"
-      : l.lanes[0] && l.lanes[0] !== "wire"
+      : l.lanes[0] && l.lanes[0] !== "wire" && l.lanes[0] !== "other"
         ? (lanes.get(l.lanes[0])?.stroke ?? "#333")
         : "#333";
     if (s) label(pl.points, pl.labelAt ?? mid(pl.points), s, colour);

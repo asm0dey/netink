@@ -382,3 +382,13 @@ test("lane contrast floor: pale colours darken in hue, tints stay, dark colours 
   }
   expect(lanes.get("v2")!.stroke).toBe("#283593");
 });
+
+test("--vlan context links: faint grey line and a 'doesn't carry' legend entry", async () => {
+  const { sliceModel } = await import("../../src/model/slice");
+  const r = sliceModel(loadModel(HOME), { vlans: ["guest"] });
+  if ("error" in r) throw new Error(r.error);
+  const svg = renderSvg(r.model, await layout(r.model));
+  expect(svg).toContain(`stroke="#BDBDBD" stroke-width="1.5"`);
+  expect(svg).toContain("doesn't carry Guest");
+  expect(svg).not.toContain("plain cable");
+});

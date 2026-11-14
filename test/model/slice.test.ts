@@ -54,7 +54,7 @@ test("--vlan by name or id: kept links carry only that VLAN", () => {
   expect(ok(HOME, { vlans: ["50"] })).toEqual(m);
   expect(kept(m).sort()).toEqual(["ap1", "ap2", "core"]);
   expect(m.nodes.find((n) => n.id === "core")!.children).toEqual(HOME.nodes.find((n) => n.id === "core")!.children);
-  expect([...new Set(m.links.flatMap((l) => l.lanes))].sort()).toEqual(["guest", "wire"]);
+  expect([...new Set(m.links.flatMap((l) => l.lanes))].sort()).toEqual(["guest", "other"]);
   expect(m.links.find((l) => l.from === "core/ether4" && l.to === "ap2/ether1")!.lanes).toEqual(["guest"]);
   consistent(m);
 });
@@ -140,4 +140,12 @@ test("physical view of home renders no VLAN in strokes or legend", async () => {
   for (const v of HOME.vlans) expect(legend).not.toMatch(new RegExp(`>${v.name}\\b`, "i"));
   const lanes = laneStyles(HOME.vlans);
   for (const v of HOME.vlans) expect(svg).not.toContain(`stroke="${lanes.get(v.name)!.stroke}"`);
+});
+
+test("--vlan: links without the VLAN become context lanes, never wire", () => {
+  const m = ok(HOME, { vlans: ["guest"] });
+  expect(m.slice).toEqual({ vlans: ["guest"] });
+  const was = new Map(HOME.links.map((l) => [`${l.from}>${l.to}`, l.lanes]));
+  for (const l of m.links) if (l.lanes[0] === "wire") expect(was.get(`${l.from}>${l.to}`)).toEqual(["wire"]);
+  expect(m.links.some((l) => l.lanes.join() === "other")).toBe(true);
 });
